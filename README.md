@@ -1,2 +1,2 @@
-# apps4students-team-6
-apps4students-team-6 created by GitHub Classroom
+# campus-connected-team-6
+campus-connected-team-6 created by GitHub Classroom
