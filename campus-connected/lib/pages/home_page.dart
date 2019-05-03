@@ -168,7 +168,7 @@ class _HomePageState extends State<HomePage> {
     _textEditingController.clear();
     await showDialog<String>(
         context: context,
-      builder: (BuildContext context) {
+        builder: (BuildContext context) {
           return AlertDialog(
             content: new Row(
               children: <Widget>[
@@ -195,7 +195,7 @@ class _HomePageState extends State<HomePage> {
                   })
             ],
           );
-      }
+        }
     );
   }
 
@@ -235,7 +235,7 @@ class _HomePageState extends State<HomePage> {
             );
           });
     } else {
-      return Center(child: Text("Welcome. Your list is empty",
+      return Center(child: Text("Welcome to CC",
         textAlign: TextAlign.center,
         style: TextStyle(fontSize: 30.0),));
     }
@@ -245,7 +245,7 @@ class _HomePageState extends State<HomePage> {
   Widget build(BuildContext context) {
     return new Scaffold(
         appBar: new AppBar(
-          title: new Text('Flutter login demo'),
+          title: new Text('Campus-Connected'),
           actions: <Widget>[
             new FlatButton(
                 child: new Text('Logout',
