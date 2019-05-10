@@ -246,6 +246,7 @@ class _HomePageState extends State<HomePage> {
     return new Scaffold(
         appBar: new AppBar(
           title: new Text('Campus-Connected'),
+          //
           actions: <Widget>[
             new FlatButton(
                 child: new Text('Logout',
