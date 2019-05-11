@@ -1,7 +1,7 @@
 import 'package:flutter/material.dart';
+import 'package:flutter_login_demo/models/myevent.dart';
 import 'package:flutter_login_demo/services/authentication.dart';
 import 'package:firebase_database/firebase_database.dart';
-import 'package:flutter_login_demo/models/todo.dart';
 import 'dart:async';
 
 class HomePage extends StatefulWidget {
@@ -17,16 +17,17 @@ class HomePage extends StatefulWidget {
 }
 
 class _HomePageState extends State<HomePage> {
-  List<Todo> _todoList;
+  List<Myevent> _myEventList;
 
   final FirebaseDatabase _database = FirebaseDatabase.instance;
   final GlobalKey<FormState> formKey = GlobalKey<FormState>();
 
   final _textEditingController = TextEditingController();
-  StreamSubscription<Event> _onTodoAddedSubscription;
-  StreamSubscription<Event> _onTodoChangedSubscription;
 
-  Query _todoQuery;
+  StreamSubscription<Event> _onEventAddedSubscription;
+  StreamSubscription<Event> _onEventChangedSubscription;
+
+  Query _eventQuery;
 
   bool _isEmailVerified = false;
 
@@ -36,14 +37,17 @@ class _HomePageState extends State<HomePage> {
 
     _checkEmailVerification();
 
-    _todoList = new List();
-    _todoQuery = _database
+    _myEventList = new List();
+    _eventQuery = _database
         .reference()
-        .child("todo")
+        .child("myevent")
         .orderByChild("userId")
         .equalTo(widget.userId);
-    _onTodoAddedSubscription = _todoQuery.onChildAdded.listen(_onEntryAdded);
-    _onTodoChangedSubscription = _todoQuery.onChildChanged.listen(_onEntryChanged);
+
+    _onEventAddedSubscription =
+        _eventQuery.onChildAdded.listen(_onEntryAddedEvent);
+    _onEventChangedSubscription =
+        _eventQuery.onChildChanged.listen(_onEntryChangedEvent);
   }
 
   void _checkEmailVerification() async {
@@ -53,7 +57,7 @@ class _HomePageState extends State<HomePage> {
     }
   }
 
-  void _resentVerifyEmail(){
+  void _resentVerifyEmail() {
     widget.auth.sendEmailVerification();
     _showVerifyEmailSentDialog();
   }
@@ -93,7 +97,8 @@ class _HomePageState extends State<HomePage> {
         // return object of type Dialog
         return AlertDialog(
           title: new Text("Verify your account"),
-          content: new Text("Link to verify account has been sent to your email"),
+          content:
+              new Text("Link to verify account has been sent to your email"),
           actions: <Widget>[
             new FlatButton(
               child: new Text("Dismiss"),
@@ -109,25 +114,9 @@ class _HomePageState extends State<HomePage> {
 
   @override
   void dispose() {
-    _onTodoAddedSubscription.cancel();
-    _onTodoChangedSubscription.cancel();
+    _onEventAddedSubscription.cancel();
+    _onEventChangedSubscription.cancel();
     super.dispose();
-  }
-
-  _onEntryChanged(Event event) {
-    var oldEntry = _todoList.singleWhere((entry) {
-      return entry.key == event.snapshot.key;
-    });
-
-    setState(() {
-      _todoList[_todoList.indexOf(oldEntry)] = Todo.fromSnapshot(event.snapshot);
-    });
-  }
-
-  _onEntryAdded(Event event) {
-    setState(() {
-      _todoList.add(Todo.fromSnapshot(event.snapshot));
-    });
   }
 
   _signOut() async {
@@ -139,27 +128,46 @@ class _HomePageState extends State<HomePage> {
     }
   }
 
-  _addNewTodo(String todoItem) {
-    if (todoItem.length > 0) {
+  _onEntryChangedEvent(Event event) {
+    var oldEntryevent = _myEventList.singleWhere((entry) {
+      return entry.key == event.snapshot.key;
+    });
+    setState(() {
+      _myEventList[_myEventList.indexOf(oldEntryevent)] =
+          Myevent.fromSnapshot(event.snapshot);
+    });
+  }
 
-      Todo todo = new Todo(todoItem.toString(), widget.userId, false);
-      _database.reference().child("todo").push().set(todo.toJson());
+  _onEntryAddedEvent(Event event) {
+    setState(() {
+      _myEventList.add(Myevent.fromSnapshot(event.snapshot));
+    });
+  }
+
+  _addNewEvent(String eventItem) {
+    if (eventItem.length > 0) {
+      Myevent myevent =
+          new Myevent(eventItem.toString(), "name", widget.userId, 1);
+      _database.reference().child("myevent").push().set(myevent.toJson());
     }
   }
 
-  _updateTodo(Todo todo){
+  _updateEvent(Myevent myevent) {
     //Toggle completed
-    todo.completed = !todo.completed;
-    if (todo != null) {
-      _database.reference().child("todo").child(todo.key).set(todo.toJson());
+    if (myevent != null) {
+      _database
+          .reference()
+          .child("myevent")
+          .child(myevent.key)
+          .set(myevent.toJson());
     }
   }
 
-  _deleteTodo(String todoId, int index) {
-    _database.reference().child("todo").child(todoId).remove().then((_) {
-      print("Delete $todoId successful");
+  _deleteEvent(String eventId, int index) {
+    _database.reference().child("myevent").child(eventId).remove().then((_) {
+      print("Delete $eventId successful");
       setState(() {
-        _todoList.removeAt(index);
+        _myEventList.removeAt(index);
       });
     });
   }
@@ -172,7 +180,8 @@ class _HomePageState extends State<HomePage> {
           return AlertDialog(
             content: new Row(
               children: <Widget>[
-                new Expanded(child: new TextField(
+                new Expanded(
+                    child: new TextField(
                   controller: _textEditingController,
                   autofocus: true,
                   decoration: new InputDecoration(
@@ -190,54 +199,57 @@ class _HomePageState extends State<HomePage> {
               new FlatButton(
                   child: const Text('Save'),
                   onPressed: () {
-                    _addNewTodo(_textEditingController.text.toString());
+                    _addNewEvent(_textEditingController.text.toString());
                     Navigator.pop(context);
                   })
             ],
           );
-        }
-    );
+        });
   }
 
-  Widget _showTodoList() {
-    if (_todoList.length > 0) {
+  Widget _showEventList() {
+    if (_myEventList.length > 0) {
       return ListView.builder(
           shrinkWrap: true,
-          itemCount: _todoList.length,
+          itemCount: _myEventList.length,
           itemBuilder: (BuildContext context, int index) {
-            String todoId = _todoList[index].key;
-            String subject = _todoList[index].subject;
-            bool completed = _todoList[index].completed;
-            String userId = _todoList[index].userId;
+            String eventId = _myEventList[index].key;
+            String category = _myEventList[index].category;
+            String eventname = _myEventList[index].eventname;
+            int counter = _myEventList[index].counter;
+            String userId = _myEventList[index].userId;
             return Dismissible(
-              key: Key(todoId),
+              key: Key(eventId),
               background: Container(color: Colors.red),
               onDismissed: (direction) async {
-                _deleteTodo(todoId, index);
+                _deleteEvent(eventId, index);
               },
               child: ListTile(
                 title: Text(
-                  subject,
+                  category,
                   style: TextStyle(fontSize: 20.0),
                 ),
                 trailing: IconButton(
-                    icon: (completed)
+                    icon: (false)
                         ? Icon(
-                      Icons.done_outline,
-                      color: Colors.green,
-                      size: 20.0,
-                    )
+                            Icons.done_outline,
+                            color: Colors.green,
+                            size: 20.0,
+                          )
                         : Icon(Icons.done, color: Colors.grey, size: 20.0),
                     onPressed: () {
-                      _updateTodo(_todoList[index]);
+                      _updateEvent(_myEventList[index]);
                     }),
               ),
             );
           });
     } else {
-      return Center(child: Text("Welcome to CC",
+      return Center(
+          child: Text(
+        "Welcome to CC",
         textAlign: TextAlign.center,
-        style: TextStyle(fontSize: 30.0),));
+        style: TextStyle(fontSize: 30.0),
+      ));
     }
   }
 
@@ -246,7 +258,6 @@ class _HomePageState extends State<HomePage> {
     return new Scaffold(
         appBar: new AppBar(
           title: new Text('Campus-Connected'),
-          //
           actions: <Widget>[
             new FlatButton(
                 child: new Text('Logout',
@@ -254,14 +265,13 @@ class _HomePageState extends State<HomePage> {
                 onPressed: _signOut)
           ],
         ),
-        body: _showTodoList(),
+        body: _showEventList(),
         floatingActionButton: FloatingActionButton(
           onPressed: () {
             _showDialog(context);
           },
           tooltip: 'Increment',
           child: Icon(Icons.add),
-        )
-    );
+        ));
   }
 }
