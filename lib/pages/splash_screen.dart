@@ -12,7 +12,7 @@ class ImageSplashScreen extends StatefulWidget {
 
 class SplashScreenState extends State<ImageSplashScreen> {
   startTime() async {
-    var _duration = new Duration(seconds: 1);
+    var _duration = new Duration(milliseconds: 900);
     return new Timer(_duration, navigationPage);
   }
 
@@ -30,9 +30,18 @@ class SplashScreenState extends State<ImageSplashScreen> {
   @override
   Widget build(BuildContext context) {
     return new Scaffold(
-      body: new Stack(
-        fit: StackFit.expand,
-        children: <Widget>[new Image.asset('assets/flutter-icon.png')],
+      body: new Stack(fit: StackFit.expand, children: <Widget>[
+        _showLogo()
+      ]),
+    );
+  }
+
+  Widget _showLogo() {
+    return new Material(
+      color: Colors.grey,
+      child: Padding(
+        padding: EdgeInsets.fromLTRB(0.0, 10.0, 0.0, 0.0),
+        child: Image.asset('assets/flutter-icon.png'),
       ),
     );
   }
