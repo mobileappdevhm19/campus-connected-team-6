@@ -1,4 +1,5 @@
 import 'package:flutter/material.dart';
+import 'package:flutter_login_demo/pages/MyForm.dart';
 import './pages/splash_screen.dart';
 
 
@@ -17,7 +18,7 @@ class MyApp extends StatelessWidget {
         theme: new ThemeData(
           primarySwatch: Colors.red,
         ),
-        home: new ImageSplashScreen()
+        home: new MyForm(),
     );
   }
 }
