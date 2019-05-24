@@ -11,11 +11,15 @@ import 'package:flutter_login_demo/main.dart';
 
 import 'package:flutter_login_demo/pages/splash_screen.dart';
 
+import 'testHelper.dart';
+
 void main() {
   testWidgets("Splash Screen wird getestet", (WidgetTester tester) async {
-    await tester.pumpWidget(MyApp());
+    await tester.pumpWidget(TestHelper.buildPage(ImageSplashScreen()));
 
-    final widget = find.byWidget(ImageSplashScreen());
+    await tester.pump(new Duration(seconds: 1));
+
+    final widget = find.byType(Image);
     expect(widget, findsOneWidget);
   });
 }
