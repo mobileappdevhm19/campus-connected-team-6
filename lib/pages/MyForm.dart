@@ -1,5 +1,8 @@
 import 'package:flutter/material.dart';
-
+import 'package:flutter_login_demo/models/registration.dart';
+import 'package:flutter_login_demo/services/authentication.dart';
+import 'package:firebase_database/firebase_database.dart';
+import 'dart:async';
 enum GenderList { male, female }
 
 class MyForm extends StatefulWidget {
@@ -11,6 +14,29 @@ class MyFormState extends State<MyForm>{
   final _formKey = GlobalKey<FormState>();
   GenderList _gender;
   bool _agreement = false;
+  String userId;
+  String name;
+  String lastname;
+  String hobby;
+  String faculty;
+  final FirebaseDatabase _database = FirebaseDatabase.instance;
+  Query _registrationQuery;
+
+  @override
+  void initState() {
+    super.initState();
+    _registrationQuery = _database
+        .reference()
+        .child("profile")
+        .orderByChild("userId")
+        .equalTo(userId);
+  }
+
+  void _addNewProfile(String firstname,  String lastname, String faculty, String hobby) {
+    Registration registration =
+    new Registration(firstname, lastname, userId, faculty, hobby);
+    _database.reference().child("profile").push().set(registration.toJson());
+  }
 
   Widget build(BuildContext context) {
     return Scaffold(
@@ -27,16 +53,17 @@ class MyFormState extends State<MyForm>{
 
               new Text('First Name:', style: TextStyle(fontSize: 14.0)),
               new TextFormField(validator: (value) {
+                name=value.toString();
                 if (value.isEmpty) return 'Please enter a first name';
               }),
               new SizedBox(height: 6.0),
               new Text('Last Name:', style: TextStyle(fontSize: 14.0)),
               new TextFormField(validator: (value) {
+                lastname=value.toString();
                 if (value.isEmpty) return 'Please enter a last name';
               }),
               new SizedBox(height: 6.0),
               new Text('Gender:', style: TextStyle(fontSize: 14.0),),
-
 
               Row(
                 children: <Widget>[
@@ -73,6 +100,7 @@ class MyFormState extends State<MyForm>{
 
               new Text('Faculty:', style: TextStyle(fontSize: 14.0),),
               new TextFormField(validator: (value) {
+                faculty = value.toString();
                 if (value.isEmpty) return 'Please enter faculty';
               }),
 
@@ -80,6 +108,7 @@ class MyFormState extends State<MyForm>{
 
               new Text('Hobby:', style: TextStyle(fontSize: 14.0),),
               new TextFormField(validator: (value) {
+                hobby = value.toString();
                 if (value.isEmpty) return 'Please enter hobby';
               }),
 
@@ -99,14 +128,18 @@ class MyFormState extends State<MyForm>{
                 if (_formKey.currentState.validate()) {
                   Color color = Colors.red;
                   String text;
+                  _addNewProfile(name, lastname, faculty, hobby);
+
 
                   if (_gender == null)
                     text = 'Please enter your gender';
                   else if (_agreement == false)
                     text = 'Please agree to the terms and condition';
                   else {
+
                     text = 'Your profile is created';
                     color = Colors.green;
+
                   }
 
                   Scaffold.of(context).showSnackBar(
@@ -115,12 +148,10 @@ class MyFormState extends State<MyForm>{
               },
                 child: Text('Create'),
                 color: Colors.red,
-
-
                 textColor: Colors.white,),
             ],)
           ),
-          ),
+        ),
       ),
     );
   }
