@@ -53,6 +53,7 @@ class _RootPageState extends State<RootPage> {
     setState(() {
       authStatus = AuthStatus.NOT_LOGGED_IN;
       _userId = "";
+      Navigator.of(context).pop();
     });
   }
 
@@ -79,7 +80,11 @@ class _RootPageState extends State<RootPage> {
         break;
       case AuthStatus.LOGGED_IN:
         if (_userId.length > 0 && _userId != null) {
-          return new WelcomePage();
+          return new WelcomePage(
+            userId: _userId,
+            auth: widget.auth,
+            onSignedOut: _onSignedOut,
+          );
 //          return new HomePage(
 //            userId: _userId,
 //    auth: widget.auth,

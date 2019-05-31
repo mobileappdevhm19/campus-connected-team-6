@@ -4,9 +4,17 @@ import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_login_demo/pages/home_page.dart';
 import 'package:flutter_login_demo/services/authentication.dart';
+
 import './splash_screen.dart';
 
 class WelcomePage extends StatefulWidget {
+  WelcomePage({Key key, this.auth, this.userId, this.onSignedOut})
+      : super(key: key);
+
+  final BaseAuth auth;
+  final VoidCallback onSignedOut;
+  final String userId;
+
   @override
   WelcomPageState createState() => new WelcomPageState();
 }
@@ -17,9 +25,13 @@ class WelcomPageState extends State<WelcomePage> {
     return new Timer(_duration, navigationPage);
   }
 
-  void navigationPage() {
+  navigationPage() {
     Navigator.of(context).push(new MaterialPageRoute(
-        builder: (BuildContext context) => new HomePage()));
+        builder: (BuildContext context) => new HomePage(
+              userId: widget.userId,
+              auth: widget.auth,
+              onSignedOut: widget.onSignedOut,
+            )));
   }
 
   @override
@@ -89,10 +101,10 @@ class WelcomPageState extends State<WelcomePage> {
       padding: const EdgeInsets.fromLTRB(0.0, 40.0, 0.0, 0.0),
       child: IconButton(
           icon: new Icon(
-            Icons.mood,
-            color: Colors.red,
-            size: 100.0,
-          )),
+        Icons.mood,
+        color: Colors.red,
+        size: 100.0,
+      )),
     );
   }
 }
