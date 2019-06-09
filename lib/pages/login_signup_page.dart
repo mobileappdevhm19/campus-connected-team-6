@@ -1,266 +1,295 @@
 import 'package:flutter/material.dart';
-import 'package:flutter_login_demo/services/authentication.dart';
+import 'package:flutter_campus_connected/helper/authentication.dart';
+import 'package:flutter_campus_connected/utils/screen_aware_size.dart';
+
+import 'home_page.dart';
 
 class LoginSignUpPage extends StatefulWidget {
-  LoginSignUpPage({this.auth, this.onSignedIn});
-
-  final BaseAuth auth;
-  final VoidCallback onSignedIn;
-
   @override
   State<StatefulWidget> createState() => new _LoginSignUpPageState();
 }
 
-enum FormMode { LOGIN, SIGNUP }
+class _LoginSignUpPageState extends State<LoginSignUpPage>
+    with SingleTickerProviderStateMixin {
+  Auth auth = new Auth();
 
-class _LoginSignUpPageState extends State<LoginSignUpPage> {
   final _formKey = new GlobalKey<FormState>();
+  final _scaffoldKey = new GlobalKey<ScaffoldState>();
 
   String _email;
   String _password;
-  String _errorMessage;
-
-  // Initial form is login form
-  FormMode _formMode = FormMode.LOGIN;
-  bool _isIos;
+  static final RegExp _emailRegExp = RegExp(
+    r'^[a-zA-Z0-9.!#$%&’*+/=?^_`{|}~-]+@hm.edu$',
+  );
+  AnimationController _animationController;
+  Animation _animation;
   bool _isLoading;
+
+  @override
+  void initState() {
+    _isLoading = false;
+    super.initState();
+    _animationController = new AnimationController(
+        vsync: this, duration: Duration(microseconds: 500));
+    _animation = Tween(
+      begin: 0.0,
+      end: 1.0,
+    ).animate(_animationController);
+    _animationController.forward();
+  }
+
+  @override
+  void dispose() {
+    super.dispose();
+    _animationController.dispose();
+  }
+
+  //it will show when procesing to login
+  Widget _showCircularProgressIndicator() {
+    if (_isLoading) {
+      return Container(
+        margin: EdgeInsets.all(10),
+        width: 25,
+        height: 25,
+        child: CircularProgressIndicator(
+          valueColor: AlwaysStoppedAnimation<Color>(Colors.white),
+        ),
+      );
+    }
+    return Container(
+      height: 0.0,
+      width: 0.0,
+    );
+  }
+
+  //for showing response we will from the firebase
+  void _showSnackBar(String msg) {
+    SnackBar snackBar = new SnackBar(
+      content: new Text(
+        msg,
+        style: TextStyle(color: Colors.white),
+      ),
+      duration: new Duration(seconds: 2),
+      backgroundColor: Colors.black,
+      action: SnackBarAction(
+          label: "Undo", textColor: Colors.white, onPressed: () {}),
+    );
+    _scaffoldKey.currentState.showSnackBar(snackBar);
+  }
+
+  @override
+  Widget build(BuildContext context) {
+    return new Scaffold(
+      key: _scaffoldKey,
+      body: SingleChildScrollView(
+        child: Container(
+          height: MediaQuery.of(context).size.height,
+          width: MediaQuery.of(context).size.width,
+          decoration: BoxDecoration(
+              gradient: LinearGradient(colors: [Colors.red, Colors.redAccent])),
+          child: Stack(
+            alignment: Alignment.topCenter,
+            children: <Widget>[
+              Align(
+                child: _showCircularProgressIndicator(),
+                alignment: Alignment.bottomCenter,
+              ),
+              Positioned(
+                  top: MediaQuery.of(context).size.height * 0.12,
+                  child: _showLogo()),
+              Positioned(
+                  width: MediaQuery.of(context).size.width - 30,
+                  top: MediaQuery.of(context).size.height * 0.35,
+                  child: _showBody()),
+            ],
+          ),
+        ),
+      ),
+    );
+  }
 
   // Check if form is valid before perform login or signup
   bool _validateAndSave() {
     final form = _formKey.currentState;
     if (form.validate()) {
+      FocusScope.of(context).requestFocus(new FocusNode()); //keyboard close
       form.save();
       return true;
     }
     return false;
   }
 
-  // Perform login or signup
+  // Perform login
   void _validateAndSubmit() async {
-    setState(() {
-      _errorMessage = "";
-      _isLoading = true;
-    });
     if (_validateAndSave()) {
+      setState(() {
+        _isLoading = true;
+      });
       String userId = "";
       try {
-        if (_formMode == FormMode.LOGIN) {
-          userId = await widget.auth.signIn(_email, _password);
-          print('Signed in: $userId');
-        } else {
-          userId = await widget.auth.signUp(_email, _password);
-          widget.auth.sendEmailVerification();
-          _showVerifyEmailSentDialog();
-          print('Signed up user: $userId');
+        userId = await auth.signIn(_email, _password);
+        if (userId != null) {
+          Navigator.of(context).push(new MaterialPageRoute(
+              builder: (BuildContext context) => new HomePage(
+                userId: userId,
+                auth: auth,
+              )));
         }
         setState(() {
           _isLoading = false;
         });
 
-        if (userId.length > 0 && userId != null && _formMode == FormMode.LOGIN) {
-          widget.onSignedIn();
-        }
-
+        if (userId.length > 0 && userId != null) {}
       } catch (e) {
-        print('Error: $e');
-        setState(() {
-          _isLoading = false;
-          if (_isIos) {
-            _errorMessage = e.details;
-          } else
-            _errorMessage = e.message;
-        });
+        if (e.toString().contains('PlatformException')) {
+          print('Error: $e');
+          setState(() {
+            _isLoading = false;
+            if (e.toString().contains('ERROR_USER_NOT_FOUND')) {
+              _showSnackBar(
+                  'There is no user record corresponding to this identifier. The user may have been deleted');
+            } else if (e.toString().contains('ERROR_WRONG_PASSWORD')) {
+              _showSnackBar(
+                  'The password is invalid or the user does not have a password');
+            } else {
+              _showSnackBar(e.toString());
+            }
+          });
+        }
       }
     }
   }
 
-
-  @override
-  void initState() {
-    _errorMessage = "";
-    _isLoading = false;
-    super.initState();
-  }
-
-  void _changeFormToSignUp() {
-    _formKey.currentState.reset();
-    _errorMessage = "";
-    setState(() {
-      _formMode = FormMode.SIGNUP;
-    });
-  }
-
-  void _changeFormToLogin() {
-    _formKey.currentState.reset();
-    _errorMessage = "";
-    setState(() {
-      _formMode = FormMode.LOGIN;
-    });
-  }
-
-  @override
-  Widget build(BuildContext context) {
-    _isIos = Theme.of(context).platform == TargetPlatform.iOS;
-    return new Scaffold(
-        appBar: new AppBar(
-            title: new Text('Campus-Connected login'),
-            centerTitle: true
-        ),
-        body: Stack(
-          children: <Widget>[
-            _showBody(),
-            _showCircularProgress(),
-          ],
-        ));
-  }
-
-  Widget _showCircularProgress(){
-    if (_isLoading) {
-      return Center(child: CircularProgressIndicator());
-    } return Container(height: 0.0, width: 0.0,);
-
-  }
-
-  void _showVerifyEmailSentDialog() {
-    showDialog(
-      context: context,
-      builder: (BuildContext context) {
-        // return object of type Dialog
-        return AlertDialog(
-          title: new Text("Verify your account"),
-          content: new Text("Link to verify account has been sent to your email"),
-          actions: <Widget>[
-            new FlatButton(
-              child: new Text("Dismiss"),
-              onPressed: () {
-                _changeFormToLogin();
-                Navigator.of(context).pop();
-              },
-            ),
-          ],
-        );
-      },
-    );
-  }
-
-  Widget _showBody(){
-    return new Container(
-        padding: EdgeInsets.all(16.0),
+  //White Card
+  Widget _showBody() {
+    return Container(
         child: new Form(
           key: _formKey,
-          child: new ListView(
-            shrinkWrap: true,
-            children: <Widget>[
-              _showLogo(),
-              _showEmailInput(),
-              _showPasswordInput(),
-              _showPrimaryButton(),
-              _showSecondaryButton(),
-              _showErrorMessage(),
-            ],
+          child: Card(
+            elevation: 10,
+            shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(10)),
+            child: Column(
+              mainAxisSize: MainAxisSize.min,
+              children: <Widget>[
+                SizedBox(height: screenAwareSize(20, context)),
+                _showEmailInput(),
+                _showPasswordInput(),
+                SizedBox(height: screenAwareSize(20, context)),
+                _showPrimaryButton(context),
+                SizedBox(height: screenAwareSize(10, context)),
+                _showSecondaryButton(),
+              ],
+            ),
           ),
         ));
   }
 
-  Widget _showErrorMessage() {
-    if (_errorMessage.length > 0 && _errorMessage != null) {
-      return new Text(
-        _errorMessage,
-        style: TextStyle(
-            fontSize: 13.0,
-            color: Colors.red,
-            height: 1.0,
-            fontWeight: FontWeight.w300),
-      );
-    } else {
-      return new Container(
-        height: 0.0,
-      );
-    }
-  }
-
+  //app Logo
   Widget _showLogo() {
     return new Hero(
-      tag: 'hero',
-      child: Padding(
-        padding: EdgeInsets.fromLTRB(0.0, 70.0, 0.0, 0.0),
-        child: CircleAvatar(
-          backgroundColor: Colors.transparent,
-          radius: 70.0,
-          child: Image.asset('assets/flutter-icon.png'),
-        ),
-      ),
-    );
+        tag: 'hero',
+        child: AnimatedBuilder(
+          animation: _animation,
+          builder: (BuildContext context, Widget widger) {
+            return FlutterLogo(
+              size: _animation.value * screenAwareSize(90, context),
+            );
+          },
+        ));
   }
 
+  //user email
   Widget _showEmailInput() {
     return Padding(
-      padding: const EdgeInsets.fromLTRB(0.0, 100.0, 0.0, 0.0),
-      child: new TextFormField(
+      padding: const EdgeInsets.only(left: 14.0, right: 14.0, bottom: 10),
+      child: TextFormField(
         maxLines: 1,
         keyboardType: TextInputType.emailAddress,
         autofocus: false,
         decoration: new InputDecoration(
-            hintText: 'Email',
-            icon: new Icon(
+            border: OutlineInputBorder(
+              borderRadius: BorderRadius.circular(5),
+            ),
+            contentPadding: EdgeInsets.all(0.0),
+            filled: true,
+            labelText: 'Email',
+            fillColor: Colors.white,
+            prefixIcon: new Icon(
               Icons.mail,
-              color: Colors.grey,
             )),
-        validator: (value) => value.isEmpty ? 'Email can\'t be empty' : null,
+        validator: (value) {
+          if (value.isEmpty) {
+            return 'Email can\'t be empty';
+          } else if (!_emailRegExp.hasMatch(value)) {
+            return 'Invalid Email. Try example@hm.edu';
+          }
+        },
         onSaved: (value) => _email = value,
       ),
     );
   }
 
+  //user Password
   Widget _showPasswordInput() {
     return Padding(
-      padding: const EdgeInsets.fromLTRB(0.0, 15.0, 0.0, 0.0),
-      child: new TextFormField(
+      padding: const EdgeInsets.only(left: 14.0, right: 14),
+      child: TextFormField(
         maxLines: 1,
         obscureText: true,
         autofocus: false,
         decoration: new InputDecoration(
-            hintText: 'Password',
-            icon: new Icon(
+            border: OutlineInputBorder(borderRadius: BorderRadius.circular(5)),
+            filled: true,
+            labelText: 'Password',
+            contentPadding: EdgeInsets.all(0.0),
+            fillColor: Colors.white,
+            prefixIcon: new Icon(
               Icons.lock,
-              color: Colors.grey,
             )),
-        validator: (value) => value.isEmpty ? 'Password can\'t be empty' : null,
+        validator: (value) {
+          if (value.isEmpty) {
+            return 'Password can\'t be empty';
+          } else if (value.length < 6) {
+            return 'Password can\'t be less than 6 character';
+          }
+        },
         onSaved: (value) => _password = value,
       ),
     );
   }
 
+  //to navigate to the sign up page
   Widget _showSecondaryButton() {
-    return new FlatButton(
-      child: _formMode == FormMode.LOGIN
-          ? new Text('Create an account',
-          style: new TextStyle(fontSize: 18.0, fontWeight: FontWeight.w300))
-          : new Text('Have an account? Sign in',
-          style:
-          new TextStyle(fontSize: 18.0, fontWeight: FontWeight.w300)),
-      onPressed: _formMode == FormMode.LOGIN
-          ? _changeFormToSignUp
-          : _changeFormToLogin,
+    return Align(
+      child: FlatButton(
+        child: new Text('Create an account',
+            style: new TextStyle(
+                fontSize: screenAwareSize(18, context),
+                fontWeight: FontWeight.w600,
+                color: Colors.black)),
+        onPressed: () {
+          Navigator.of(context).pushNamed('/signup');
+        },
+      ),
+      alignment: Alignment.bottomCenter,
     );
   }
 
-  Widget _showPrimaryButton() {
-    return new Padding(
-        padding: EdgeInsets.fromLTRB(0.0, 45.0, 0.0, 0.0),
-        child: SizedBox(
-          height: 40.0,
-          child: new RaisedButton(
-            elevation: 5.0,
-            shape: new RoundedRectangleBorder(borderRadius: new BorderRadius.circular(30.0)),
-            color: Colors.red,
-            child: _formMode == FormMode.LOGIN
-                ? new Text('Login',
-                style: new TextStyle(fontSize: 20.0, color: Colors.white))
-                : new Text('Create account',
-                style: new TextStyle(fontSize: 20.0, color: Colors.white)),
-            onPressed: _validateAndSubmit,
-          ),
-        ));
+  //login button
+  Widget _showPrimaryButton(context) {
+    return SizedBox(
+      width: screenAwareSize(200, context),
+      height: screenAwareSize(40, context),
+      child: RaisedButton(
+        elevation: 8.0,
+        shape: new RoundedRectangleBorder(
+            borderRadius: new BorderRadius.circular(10.0)),
+        color: _isLoading == false ? Colors.red : Colors.redAccent,
+        child: new Text('Login',
+            style: new TextStyle(
+                fontSize: screenAwareSize(18, context), color: Colors.white)),
+        onPressed: _isLoading == false ? _validateAndSubmit : null,
+      ),
+    );
   }
 }

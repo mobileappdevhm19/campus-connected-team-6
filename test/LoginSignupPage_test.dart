@@ -1,5 +1,5 @@
 import 'package:flutter/material.dart';
-import 'package:flutter_login_demo/pages/login_signup_page.dart';
+import 'package:flutter_campus_connected/pages/login_signup_page.dart';
 import 'package:flutter_test/flutter_test.dart';
 
 import 'testHelper.dart';
@@ -18,22 +18,16 @@ void main() {
 
     //final findIcon = find.byIcon(InputDecoration);
 
-
     final testCircle = find.byType(CircleAvatar);
     expect(testCircle, findsOneWidget);
-
 
     final buttonFlat = find.byType(FlatButton);
     expect(buttonFlat, findsOneWidget);
 
-
-    final  buttonRaised = find.byType(RaisedButton);
+    final buttonRaised = find.byType(RaisedButton);
     expect(buttonRaised, findsOneWidget);
 
     final testHero = find.byType(Hero);
     expect(testHero, findsOneWidget);
-
-
-
   });
 }
