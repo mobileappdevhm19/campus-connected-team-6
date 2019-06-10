@@ -3,10 +3,13 @@ import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_campus_connected/helper/authentication.dart';
 import 'package:flutter_campus_connected/models/event_model.dart';
+import 'package:flutter_campus_connected/pages/create_event.dart';
+import 'package:flutter_campus_connected/pages/profile.dart';
 import 'package:flutter_campus_connected/pages/search_events.dart';
+import 'package:flutter_campus_connected/pages/users_profile.dart';
 import 'package:flutter_campus_connected/pages/view_event.dart';
 import 'package:flutter_campus_connected/utils/screen_aware_size.dart';
-import 'package:flutter_campus_connected/pages/create_event.dart';
+//import 'package:flutter_campus_connected/pages/create_event.dart';
 
 class Dashboard extends StatefulWidget {
   @override
@@ -66,6 +69,9 @@ class _DashboardState extends State<Dashboard> {
             isLoggedIn
                 ? Container()
                 : drawerItem(context, 'Login', Icons.account_circle, 'login'),
+            isLoggedIn
+                ? drawerItem(context, 'Users', Icons.person, 'users')
+                : Container(),
             drawerItem(context, 'Events', Icons.event_available, 'events'),
             drawerItem(context, 'Create Events', Icons.event, 'login'),
             isLoggedIn
@@ -213,7 +219,14 @@ class _DashboardState extends State<Dashboard> {
                       ),
                     ),
                   ),
-                  onTap: null,
+            onTap: () async {
+              Navigator.of(context)
+                  .push(MaterialPageRoute(builder: (context) {
+                return ProfilePage(
+                  firebaseUser: firebaseUser,
+                );
+              }));
+            },
                 )
               : Container();
         },
@@ -243,6 +256,14 @@ class _DashboardState extends State<Dashboard> {
                     currentUser: firebaseUser,
                   );
                 }))
+              : Navigator.of(context).pushNamed('/login');
+        } else if (route == 'users') {
+          Navigator.of(context).pop();
+          isLoggedIn
+              ? Navigator.of(context)
+              .push(new MaterialPageRoute(builder: (BuildContext context) {
+            return UsersProfile();
+          }))
               : Navigator.of(context).pushNamed('/login');
         } else {
           Navigator.of(context).pop();
