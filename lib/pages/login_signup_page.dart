@@ -2,8 +2,6 @@ import 'package:flutter/material.dart';
 import 'package:flutter_campus_connected/helper/authentication.dart';
 import 'package:flutter_campus_connected/utils/screen_aware_size.dart';
 
-import 'home_page.dart';
-
 class LoginSignUpPage extends StatefulWidget {
   @override
   State<StatefulWidget> createState() => new _LoginSignUpPageState();
@@ -129,11 +127,7 @@ class _LoginSignUpPageState extends State<LoginSignUpPage>
       try {
         userId = await auth.signIn(_email, _password);
         if (userId != null) {
-          Navigator.of(context).push(new MaterialPageRoute(
-              builder: (BuildContext context) => new HomePage(
-                userId: userId,
-                auth: auth,
-              )));
+          Navigator.of(context).pushReplacementNamed('/dashboard');
         }
         setState(() {
           _isLoading = false;
@@ -164,24 +158,24 @@ class _LoginSignUpPageState extends State<LoginSignUpPage>
   Widget _showBody() {
     return Container(
         child: new Form(
-          key: _formKey,
-          child: Card(
-            elevation: 10,
-            shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(10)),
-            child: Column(
-              mainAxisSize: MainAxisSize.min,
-              children: <Widget>[
-                SizedBox(height: screenAwareSize(20, context)),
-                _showEmailInput(),
-                _showPasswordInput(),
-                SizedBox(height: screenAwareSize(20, context)),
-                _showPrimaryButton(context),
-                SizedBox(height: screenAwareSize(10, context)),
-                _showSecondaryButton(),
-              ],
-            ),
-          ),
-        ));
+      key: _formKey,
+      child: Card(
+        elevation: 10,
+        shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(10)),
+        child: Column(
+          mainAxisSize: MainAxisSize.min,
+          children: <Widget>[
+            SizedBox(height: screenAwareSize(20, context)),
+            _showEmailInput(),
+            _showPasswordInput(),
+            SizedBox(height: screenAwareSize(20, context)),
+            _showPrimaryButton(context),
+            SizedBox(height: screenAwareSize(10, context)),
+            _showSecondaryButton(),
+          ],
+        ),
+      ),
+    ));
   }
 
   //app Logo
