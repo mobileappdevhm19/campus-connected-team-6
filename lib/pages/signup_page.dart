@@ -4,6 +4,8 @@ import 'package:flutter_campus_connected/helper/authentication.dart';
 import 'package:flutter_campus_connected/helper/cloud_firestore_helper.dart';
 import 'package:flutter_campus_connected/utils/screen_aware_size.dart';
 
+import '../main.dart';
+
 class SignUpPage extends StatefulWidget {
   @override
   _SignUpPageState createState() => _SignUpPageState();
@@ -123,7 +125,9 @@ class _SignUpPageState extends State<SignUpPage>
               var result = await cloudhelper.storeNewUser(currentUser);
               print(result);
               if (result) {
-                Navigator.of(context).pushReplacementNamed('/dashboard');
+                //Navigator.of(context).pushReplacementNamed('/dashboard');
+                Navigator.of(context).pushReplacementNamed('/home');
+
               }
             }
           });

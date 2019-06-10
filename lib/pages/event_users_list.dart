@@ -61,10 +61,11 @@ class EventUsersList extends StatelessWidget {
           style: TextStyle(fontSize: screenAwareSize(20, context)),
         ),
       ),
-      onTap: () {
+     /* onTap: () {
         //_showAlertDialouge(snapshot.data.documents[ind]['name'],
         //  snapshot.data.documents[ind]['email'], context);
       },
+      */
     );
   }
 
@@ -73,6 +74,7 @@ class EventUsersList extends StatelessWidget {
     return AppBar(
       backgroundColor: Colors.red,
       elevation: 0.0,
+      /*
       leading: new IconButton(
         icon: new Icon(
           Icons.arrow_back_ios,
@@ -82,6 +84,7 @@ class EventUsersList extends StatelessWidget {
           Navigator.of(context).pop();
         },
       ),
+      */
       title: new Text('Interested People'),
     );
   }

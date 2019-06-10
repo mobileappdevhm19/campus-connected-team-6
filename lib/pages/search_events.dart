@@ -3,6 +3,7 @@ import 'package:flutter/material.dart';
 import 'package:flutter_campus_connected/pages/view_event.dart';
 import 'package:flutter_campus_connected/utils/screen_aware_size.dart';
 
+
 class SearchEvent extends StatefulWidget {
   @override
   _SearchEventState createState() => _SearchEventState();
@@ -64,7 +65,14 @@ class _SearchEventState extends State<SearchEvent> {
 
   @override
   Widget build(BuildContext context) {
-    return Scaffold(
+
+    return WillPopScope(
+      onWillPop: () {
+        Navigator.of(context).pushReplacementNamed('/home');
+      },
+
+    child: Scaffold(
+
       appBar: AppBar(
         title: Container(
           decoration: BoxDecoration(
@@ -83,24 +91,31 @@ class _SearchEventState extends State<SearchEvent> {
             },
           ),
         ),
+        /*
         leading: new IconButton(
           icon: new Icon(
             Icons.arrow_back_ios,
           ),
           color: Colors.white,
           onPressed: () {
-            Navigator.of(context).pop();
+            Navigator.of(context)
+                .push(MaterialPageRoute(builder: (context) {
+              return MyHomePage();
+            }));
           },
         ),
+        */
       ),
       body: Container(
         child: listItem(tempSearchStore),
       ),
+    ),
     );
   }
 
   listItem(snapshot) {
     return ListView.builder(
+
         itemCount: snapshot.length,
         itemBuilder: (context, index) {
           return Card(
@@ -150,5 +165,6 @@ class _SearchEventState extends State<SearchEvent> {
             ),
           );
         });
+
   }
 }
