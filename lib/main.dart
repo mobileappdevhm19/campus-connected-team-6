@@ -1,5 +1,6 @@
 import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/material.dart';
+
 import 'helper/authentication.dart';
 import 'pages/create_event.dart';
 import 'pages/dashboard.dart';
@@ -58,21 +59,15 @@ class _MyHomePageState extends State<MyHomePage> {
     auth.getCurrentUser().then((user) {
       setState(() {
         firebaseUser = user;
-
         dashboard = Dashboard();
         searchEvent = SearchEvent();
         createEvent = CreateEvent(currentUser: firebaseUser);
         // profilePage= ProfilePage(firebaseUser: firebaseUser);
-        print('this is fierbassssssssse' + firebaseUser.toString());
         pages = [dashboard, searchEvent, createEvent];
       });
     });
-
     pages = [dashboard, searchEvent, createEvent];
-
     currentPage = dashboard;
-
-    print(pages.length);
   }
 
   @override

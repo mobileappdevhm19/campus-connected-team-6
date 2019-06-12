@@ -14,8 +14,6 @@ class RootPage extends StatelessWidget {
             return _buildWaitingScreen();
           } else {
             if (snapshot.hasData) {
-              print("HomePage" + snapshot.hasData.toString());
-
               return MyHomePage();
             }
             return LoginSignUpPage();
