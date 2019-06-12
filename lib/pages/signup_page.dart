@@ -24,6 +24,7 @@ class _SignUpPageState extends State<SignUpPage>
   );
   AnimationController _animationController;
   Animation _animation;
+
   // Initial form is login form
   bool _isLoading;
 
@@ -123,7 +124,8 @@ class _SignUpPageState extends State<SignUpPage>
               var result = await cloudhelper.storeNewUser(currentUser);
               print(result);
               if (result) {
-                Navigator.of(context).pushReplacementNamed('/dashboard');
+                //Navigator.of(context).pushReplacementNamed('/dashboard');
+                Navigator.of(context).pushReplacementNamed('/home');
               }
             }
           });

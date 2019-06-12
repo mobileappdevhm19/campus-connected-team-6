@@ -127,7 +127,7 @@ class _LoginSignUpPageState extends State<LoginSignUpPage>
       try {
         userId = await auth.signIn(_email, _password);
         if (userId != null) {
-          Navigator.of(context).pushReplacementNamed('/dashboard');
+          Navigator.of(context).pushReplacementNamed('/home');
         }
         setState(() {
           _isLoading = false;

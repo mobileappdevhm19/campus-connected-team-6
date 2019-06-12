@@ -5,10 +5,11 @@ import 'package:flutter_campus_connected/helper/authentication.dart';
 import 'package:flutter_campus_connected/models/event_model.dart';
 import 'package:flutter_campus_connected/pages/create_event.dart';
 import 'package:flutter_campus_connected/pages/profile.dart';
-import 'package:flutter_campus_connected/pages/search_events.dart';
 import 'package:flutter_campus_connected/pages/users_profile.dart';
 import 'package:flutter_campus_connected/pages/view_event.dart';
 import 'package:flutter_campus_connected/utils/screen_aware_size.dart';
+
+import 'login_signup_page.dart';
 //import 'package:flutter_campus_connected/pages/create_event.dart';
 
 class Dashboard extends StatefulWidget {
@@ -158,6 +159,7 @@ class _DashboardState extends State<Dashboard> {
   AppBar appBar(BuildContext context) {
     return AppBar(
       title: Text('Campus Connected'),
+      /*
       actions: <Widget>[
         IconButton(
           icon: Icon(Icons.search),
@@ -168,6 +170,7 @@ class _DashboardState extends State<Dashboard> {
           },
         )
       ],
+      */
     );
   }
 
@@ -219,14 +222,14 @@ class _DashboardState extends State<Dashboard> {
                       ),
                     ),
                   ),
-            onTap: () async {
-              Navigator.of(context)
-                  .push(MaterialPageRoute(builder: (context) {
-                return ProfilePage(
-                  firebaseUser: firebaseUser,
-                );
-              }));
-            },
+                  onTap: () async {
+                    Navigator.of(context)
+                        .push(MaterialPageRoute(builder: (context) {
+                      return ProfilePage(
+                        firebaseUser: firebaseUser,
+                      );
+                    }));
+                  },
                 )
               : Container();
         },
@@ -242,7 +245,10 @@ class _DashboardState extends State<Dashboard> {
       leading: Icon(icon),
       onTap: () {
         if (route == 'logout') {
-          Navigator.of(context).pop();
+          //  Navigator.of(context).pop();
+          Navigator.of(context).push(MaterialPageRoute(builder: (context) {
+            return LoginSignUpPage();
+          }));
           FirebaseAuth.instance.signOut();
           _isLoggedIn();
         } else if (route == 'events') {
@@ -261,9 +267,9 @@ class _DashboardState extends State<Dashboard> {
           Navigator.of(context).pop();
           isLoggedIn
               ? Navigator.of(context)
-              .push(new MaterialPageRoute(builder: (BuildContext context) {
-            return UsersProfile();
-          }))
+                  .push(new MaterialPageRoute(builder: (BuildContext context) {
+                  return UsersProfile();
+                }))
               : Navigator.of(context).pushNamed('/login');
         } else {
           Navigator.of(context).pop();

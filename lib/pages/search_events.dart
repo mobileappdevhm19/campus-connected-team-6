@@ -64,37 +64,47 @@ class _SearchEventState extends State<SearchEvent> {
 
   @override
   Widget build(BuildContext context) {
-    return Scaffold(
-      appBar: AppBar(
-        title: Container(
-          decoration: BoxDecoration(
-            borderRadius: BorderRadius.circular(10),
-            color: Colors.white,
-          ),
-          margin: EdgeInsets.all(5),
-          child: new TextField(
-            decoration: new InputDecoration(
-              prefixIcon: new Icon(Icons.search),
-              border: InputBorder.none,
-              hintText: 'Search...',
+    return WillPopScope(
+      onWillPop: () {
+        Navigator.of(context).pushReplacementNamed('/home');
+      },
+      child: Scaffold(
+        appBar: AppBar(
+          title: Container(
+            decoration: BoxDecoration(
+              borderRadius: BorderRadius.circular(10),
+              color: Colors.white,
             ),
-            onChanged: (value) {
-              initialSearch(value);
-            },
+            margin: EdgeInsets.all(5),
+            child: new TextField(
+              decoration: new InputDecoration(
+                prefixIcon: new Icon(Icons.search),
+                border: InputBorder.none,
+                hintText: 'Search...',
+              ),
+              onChanged: (value) {
+                initialSearch(value);
+              },
+            ),
           ),
-        ),
+          /*
         leading: new IconButton(
           icon: new Icon(
             Icons.arrow_back_ios,
           ),
           color: Colors.white,
           onPressed: () {
-            Navigator.of(context).pop();
+            Navigator.of(context)
+                .push(MaterialPageRoute(builder: (context) {
+              return MyHomePage();
+            }));
           },
         ),
-      ),
-      body: Container(
-        child: listItem(tempSearchStore),
+        */
+        ),
+        body: Container(
+          child: listItem(tempSearchStore),
+        ),
       ),
     );
   }

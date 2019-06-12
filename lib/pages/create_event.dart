@@ -107,21 +107,26 @@ class _CreateEventState extends State<CreateEvent> {
   Widget build(BuildContext context) {
     return WillPopScope(
       onWillPop: () {
-        uploadingStatus == true ? null : Navigator.of(context).pop();
+        uploadingStatus == true
+            ? null
+            : Navigator.of(context).pushReplacementNamed('/home');
       },
       child: Scaffold(
         appBar: new AppBar(
           backgroundColor: Colors.red,
           elevation: 0.0,
+          /*
           leading: new IconButton(
             icon: new Icon(
               Icons.arrow_back_ios,
             ),
             color: Colors.white,
             onPressed: () {
-              uploadingStatus == true ? null : Navigator.of(context).pop();
+              uploadingStatus == true ? null :  Navigator.of(context).pushReplacementNamed('/home');
             },
           ),
+          */
+
           title: new Text('Create Event'),
         ),
         body: SingleChildScrollView(
@@ -258,7 +263,8 @@ class _CreateEventState extends State<CreateEvent> {
       _formState.currentState.save();
       eventModel.createdBy = widget.currentUser.uid;
       cloudStoreHelper.addEvents(eventModel);
-      Navigator.of(context).pop();
+      //Navigator.of(context).pop();
+      Navigator.of(context).pushNamed('/home');
       _formState.currentState.reset();
     }
   }
