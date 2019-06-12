@@ -61,7 +61,7 @@ class EventUsersList extends StatelessWidget {
           style: TextStyle(fontSize: screenAwareSize(20, context)),
         ),
       ),
-     /* onTap: () {
+      /* onTap: () {
         //_showAlertDialouge(snapshot.data.documents[ind]['name'],
         //  snapshot.data.documents[ind]['email'], context);
       },

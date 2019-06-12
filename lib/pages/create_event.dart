@@ -107,7 +107,9 @@ class _CreateEventState extends State<CreateEvent> {
   Widget build(BuildContext context) {
     return WillPopScope(
       onWillPop: () {
-        uploadingStatus == true ? null : Navigator.of(context).pushReplacementNamed('/home');
+        uploadingStatus == true
+            ? null
+            : Navigator.of(context).pushReplacementNamed('/home');
       },
       child: Scaffold(
         appBar: new AppBar(

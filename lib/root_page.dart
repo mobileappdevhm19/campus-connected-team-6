@@ -1,8 +1,8 @@
 import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/material.dart';
+
 import 'main.dart';
 import 'pages/login_signup_page.dart';
-
 
 class RootPage extends StatelessWidget {
   @override

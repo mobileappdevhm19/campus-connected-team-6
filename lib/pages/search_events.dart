@@ -3,7 +3,6 @@ import 'package:flutter/material.dart';
 import 'package:flutter_campus_connected/pages/view_event.dart';
 import 'package:flutter_campus_connected/utils/screen_aware_size.dart';
 
-
 class SearchEvent extends StatefulWidget {
   @override
   _SearchEventState createState() => _SearchEventState();
@@ -65,33 +64,30 @@ class _SearchEventState extends State<SearchEvent> {
 
   @override
   Widget build(BuildContext context) {
-
     return WillPopScope(
       onWillPop: () {
         Navigator.of(context).pushReplacementNamed('/home');
       },
-
-    child: Scaffold(
-
-      appBar: AppBar(
-        title: Container(
-          decoration: BoxDecoration(
-            borderRadius: BorderRadius.circular(10),
-            color: Colors.white,
-          ),
-          margin: EdgeInsets.all(5),
-          child: new TextField(
-            decoration: new InputDecoration(
-              prefixIcon: new Icon(Icons.search),
-              border: InputBorder.none,
-              hintText: 'Search...',
+      child: Scaffold(
+        appBar: AppBar(
+          title: Container(
+            decoration: BoxDecoration(
+              borderRadius: BorderRadius.circular(10),
+              color: Colors.white,
             ),
-            onChanged: (value) {
-              initialSearch(value);
-            },
+            margin: EdgeInsets.all(5),
+            child: new TextField(
+              decoration: new InputDecoration(
+                prefixIcon: new Icon(Icons.search),
+                border: InputBorder.none,
+                hintText: 'Search...',
+              ),
+              onChanged: (value) {
+                initialSearch(value);
+              },
+            ),
           ),
-        ),
-        /*
+          /*
         leading: new IconButton(
           icon: new Icon(
             Icons.arrow_back_ios,
@@ -105,17 +101,16 @@ class _SearchEventState extends State<SearchEvent> {
           },
         ),
         */
+        ),
+        body: Container(
+          child: listItem(tempSearchStore),
+        ),
       ),
-      body: Container(
-        child: listItem(tempSearchStore),
-      ),
-    ),
     );
   }
 
   listItem(snapshot) {
     return ListView.builder(
-
         itemCount: snapshot.length,
         itemBuilder: (context, index) {
           return Card(
@@ -165,6 +160,5 @@ class _SearchEventState extends State<SearchEvent> {
             ),
           );
         });
-
   }
 }
