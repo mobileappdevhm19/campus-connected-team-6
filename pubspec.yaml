@@ -1,7 +1,7 @@
 name: flutter_campus_connected
 description: A new Flutter project.
 
-version: 1.0.0+1
+version: 1.0.1
 
 environment:
   sdk: ">=2.1.0 <3.0.0"
@@ -10,19 +10,20 @@ dependencies:
   flutter:
     sdk: flutter
 
-  firebase_auth:
-  cloud_firestore:
-  image_picker:
-  firebase_storage:
+  firebase_auth: ^0.11.1+6
+  cloud_firestore: ^0.12.5
+  firebase_storage: ^3.0.1
+  #firebase_core: ^0.4.0+5
   transparent_image:
   connectivity:
+  image_picker:
   #  google_maps_flutter:
   #  location:
   datetime_picker_formfield:
 
   cupertino_icons: ^0.1.2
-  # firebase_database: ^1.0.5
-  font_awesome_flutter: "^8.0.1"
+  #firebase_database: ^3.0.2
+  font_awesome_flutter:
 
 
 dev_dependencies:
@@ -34,7 +35,6 @@ flutter:
 
   uses-material-design: true
 
-
   assets:
     - assets/flutter-icon.png
     - assets/gallery.png
@@ -43,6 +43,6 @@ flutter:
 
 
 flutter_icons:
-#android: "launcher_icon"
-#ios: true
-#image_path: "icon/icon.png"
+  #android: "launcher_icon"
+  #ios: true
+  #image_path: "icon/icon.png"

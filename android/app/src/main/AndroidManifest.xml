@@ -1,5 +1,5 @@
 <manifest xmlns:android="http://schemas.android.com/apk/res/android"
-    package="com.jcontrer.flutter_campus_connected">
+    package="com.campus.connected">
 
     <!-- io.flutter.app.FlutterApplication is an android.app.Application that
          calls FlutterMain.staCrtInitialization(this); in its onCreate method.

@@ -8,20 +8,12 @@
   "client": [
     {
       "client_info": {
-        "mobilesdk_app_id": "1:430741395840:android:7895795496a1c8b0",
+        "mobilesdk_app_id": "1:430741395840:android:c2c68f15fe3ffdfb",
         "android_client_info": {
-          "package_name": "com.jcontrer.flutter_campus_connected"
+          "package_name": "com.campus.connected"
         }
       },
       "oauth_client": [
-        {
-          "client_id": "430741395840-7l573kvdifhbivam62oa8k5rrj0cdmke.apps.googleusercontent.com",
-          "client_type": 1,
-          "android_info": {
-            "package_name": "com.jcontrer.flutter_campus_connected",
-            "certificate_hash": "3c1e6e0c3d6cac21ffcae8b50dd630338079a307"
-          }
-        },
         {
           "client_id": "430741395840-b8f3qio9nvc71r1nbv4fn31r63tohqob.apps.googleusercontent.com",
           "client_type": 3
@@ -38,6 +30,13 @@
             {
               "client_id": "430741395840-b8f3qio9nvc71r1nbv4fn31r63tohqob.apps.googleusercontent.com",
               "client_type": 3
+            },
+            {
+              "client_id": "430741395840-3213pe5estqvnuvqtm9nkqqurdsltgkl.apps.googleusercontent.com",
+              "client_type": 2,
+              "ios_info": {
+                "bundle_id": "com.campus.connected"
+              }
             }
           ]
         }
