@@ -1,5 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_campus_connected/helper/authentication.dart';
+import 'package:flutter_campus_connected/logos/login_logo.dart';
+import 'package:flutter_campus_connected/pages/welcome_page.dart';
 import 'package:flutter_campus_connected/utils/screen_aware_size.dart';
 
 class LoginSignUpPage extends StatefulWidget {
@@ -127,7 +129,11 @@ class _LoginSignUpPageState extends State<LoginSignUpPage>
       try {
         userId = await auth.signIn(_email, _password);
         if (userId != null) {
-          Navigator.of(context).pushReplacementNamed('/home');
+          Navigator.of(context).push(MaterialPageRoute(builder: (context) {
+            return WelcomePage(
+              firebaseUser: userId,
+            );
+          }));
         }
         setState(() {
           _isLoading = false;
@@ -185,19 +191,20 @@ class _LoginSignUpPageState extends State<LoginSignUpPage>
         child: AnimatedBuilder(
           animation: _animation,
           builder: (BuildContext context, Widget widger) {
-            return FlutterLogo(
-              size: _animation.value * screenAwareSize(90, context),
+            return LoginLogo(
+              size: _animation.value * screenAwareSize(100, context),
             );
           },
         ));
   }
 
-  //user email
+//user email
   Widget _showEmailInput() {
     return Padding(
       padding: const EdgeInsets.only(left: 14.0, right: 14.0, bottom: 10),
       child: TextFormField(
-        initialValue: "another@hm.edu", //TODO: remove later
+        initialValue: "another@hm.edu",
+        //TODO: remove later
         maxLines: 1,
         keyboardType: TextInputType.emailAddress,
         autofocus: false,
@@ -224,12 +231,13 @@ class _LoginSignUpPageState extends State<LoginSignUpPage>
     );
   }
 
-  //user Password
+//user Password
   Widget _showPasswordInput() {
     return Padding(
       padding: const EdgeInsets.only(left: 14.0, right: 14),
       child: TextFormField(
-        initialValue: "123456", //TODO: remove later
+        initialValue: "123456",
+        //TODO: remove later
         maxLines: 1,
         obscureText: true,
         autofocus: false,
@@ -254,7 +262,7 @@ class _LoginSignUpPageState extends State<LoginSignUpPage>
     );
   }
 
-  //to navigate to the sign up page
+//to navigate to the sign up page
   Widget _showSecondaryButton() {
     return Align(
       child: FlatButton(
@@ -271,7 +279,7 @@ class _LoginSignUpPageState extends State<LoginSignUpPage>
     );
   }
 
-  //login button
+//login button
   Widget _showPrimaryButton(context) {
     return SizedBox(
       width: screenAwareSize(200, context),

@@ -1,5 +1,6 @@
 import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/material.dart';
+import 'package:flutter_campus_connected/pages/splash_screen.dart';
 
 import 'helper/authentication.dart';
 import 'pages/create_event.dart';
@@ -27,7 +28,8 @@ class MyApp extends StatelessWidget {
       },
       theme: new ThemeData(primarySwatch: Colors.red),
       //home: new Dashboard(),
-      home: new RootPage(),
+      //home: new RootPage(),
+      home: new SplashScreen(),
     );
   }
 }

@@ -2,6 +2,7 @@ import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_campus_connected/helper/authentication.dart';
+import 'package:flutter_campus_connected/logos/campus_logo.dart';
 import 'package:flutter_campus_connected/models/event_model.dart';
 import 'package:flutter_campus_connected/pages/create_event.dart';
 import 'package:flutter_campus_connected/pages/profile.dart';
@@ -180,10 +181,8 @@ class _DashboardState extends State<Dashboard> {
       color: Colors.redAccent,
       height: screenAwareSize(150, context),
       child: Center(
-        child: FlutterLogo(
-          size: screenAwareSize(80, context),
-        ),
-      ),
+          child: CampusLogo(//size: screenAwareSize(80, context)
+              )),
     );
   }
 
