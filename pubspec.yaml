@@ -21,7 +21,7 @@ dependencies:
   datetime_picker_formfield:
 
   cupertino_icons: ^0.1.2
-  # firebase_database: ^1.0.5
+  firebase_database: ^1.0.5
   font_awesome_flutter: "^8.0.1"
 
 

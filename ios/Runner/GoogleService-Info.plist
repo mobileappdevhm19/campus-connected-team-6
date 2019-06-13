@@ -2,39 +2,37 @@
 <!DOCTYPE plist PUBLIC "-//Apple//DTD PLIST 1.0//EN" "http://www.apple.com/DTDs/PropertyList-1.0.dtd">
 <plist version="1.0">
 <dict>
-	<key>AD_UNIT_ID_FOR_BANNER_TEST</key>
-	<string>ca-app-pub-3940256099942544/2934735716</string>
-	<key>AD_UNIT_ID_FOR_INTERSTITIAL_TEST</key>
-	<string>ca-app-pub-3940256099942544/4411468910</string>
 	<key>CLIENT_ID</key>
-	<string>503370235857-sh78fhp4s2r2qtqaajb1m32pkfd0l1s9.apps.googleusercontent.com</string>
+	<string>430741395840-3213pe5estqvnuvqtm9nkqqurdsltgkl.apps.googleusercontent.com</string>
 	<key>REVERSED_CLIENT_ID</key>
-	<string>com.googleusercontent.apps.503370235857-sh78fhp4s2r2qtqaajb1m32pkfd0l1s9</string>
+	<string>com.googleusercontent.apps.430741395840-3213pe5estqvnuvqtm9nkqqurdsltgkl</string>
+	<key>ANDROID_CLIENT_ID</key>
+	<string>430741395840-7l573kvdifhbivam62oa8k5rrj0cdmke.apps.googleusercontent.com</string>
 	<key>API_KEY</key>
-	<string>AIzaSyDQcM5m7eR7kVZ2Rl_EQOC-eXQ_h3KYWtc</string>
+	<string>AIzaSyCRQYhN5yZivZDy62eq-d8gjJrqr-87DqE</string>
 	<key>GCM_SENDER_ID</key>
-	<string>503370235857</string>
+	<string>430741395840</string>
 	<key>PLIST_VERSION</key>
 	<string>1</string>
 	<key>BUNDLE_ID</key>
-	<string>com.jcontrer.flutter_campus_connected</string>
+	<string>com.campus.connected</string>
 	<key>PROJECT_ID</key>
-	<string>flutter-login-demo-5f414</string>
+	<string>campus-connected</string>
 	<key>STORAGE_BUCKET</key>
-	<string>flutter-login-demo-5f414.appspot.com</string>
+	<string>campus-connected.appspot.com</string>
 	<key>IS_ADS_ENABLED</key>
-	<true></true>
+	<false></false>
 	<key>IS_ANALYTICS_ENABLED</key>
 	<false></false>
 	<key>IS_APPINVITE_ENABLED</key>
-	<false></false>
+	<true></true>
 	<key>IS_GCM_ENABLED</key>
 	<true></true>
 	<key>IS_SIGNIN_ENABLED</key>
 	<true></true>
 	<key>GOOGLE_APP_ID</key>
-	<string>1:503370235857:ios:fae8bbf356b4bb88</string>
+	<string>1:430741395840:ios:c2c68f15fe3ffdfb</string>
 	<key>DATABASE_URL</key>
-	<string>https://flutter-login-demo-5f414.firebaseio.com</string>
+	<string>https://campus-connected.firebaseio.com</string>
 </dict>
 </plist>
