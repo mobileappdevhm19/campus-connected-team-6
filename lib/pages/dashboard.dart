@@ -62,7 +62,7 @@ class _DashboardState extends State<Dashboard> {
   Widget build(BuildContext context) {
     return WillPopScope(
       onWillPop: () {
-        Navigator.pop();
+        Navigator.pop(context);
       },
       child: Scaffold(
         appBar: appBar(context),
