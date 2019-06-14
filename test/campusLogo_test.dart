@@ -8,7 +8,7 @@ import 'package:flutter/material.dart';
 import 'package:flutter_campus_connected/logos/campus_logo.dart';
 import 'package:flutter_test/flutter_test.dart';
 
-import 'testHelper.dart';
+import 'test_helper.dart';
 
 void main() {
   testWidgets("Campus Logo wird getestet", (WidgetTester tester) async {

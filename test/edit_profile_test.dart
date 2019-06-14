@@ -1,7 +1,7 @@
 import 'package:flutter_campus_connected/pages/edit_profile.dart';
 import 'package:flutter_test/flutter_test.dart';
 import 'package:image_test_utils/image_test_utils.dart';
-import 'testHelper.dart';
+import 'test_helper.dart';
 
 void main() {
   testWidgets('edit profile test', (WidgetTester tester) async {
