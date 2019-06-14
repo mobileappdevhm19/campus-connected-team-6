@@ -40,8 +40,8 @@ class _LoginSignUpPageState extends State<LoginSignUpPage>
 
   @override
   void dispose() {
-    super.dispose();
     _animationController.dispose();
+    super.dispose();
   }
 
   //it will show when procesing to login

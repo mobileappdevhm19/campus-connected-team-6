@@ -1,7 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_campus_connected/pages/profile.dart';
 import 'package:flutter_test/flutter_test.dart';
-import 'testHelper.dart';
+import 'test_helper.dart';
 
 void main() {
   testWidgets('profile test', (WidgetTester tester) async {

@@ -10,7 +10,7 @@ import 'package:flutter_campus_connected/pages/welcome_page.dart';
 
 import 'package:flutter_test/flutter_test.dart';
 
-import 'testHelper.dart';
+import 'test_helper.dart';
 
 String uid = "xpbXVUfPojRwTrb2j370nwWjZ8O2";
 String user = "";
