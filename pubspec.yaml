@@ -9,17 +9,19 @@ environment:
 dependencies:
   flutter:
     sdk: flutter
-
+  flutter_driver:
+    sdk: flutter
+  test: any
+  image_test_utils: ^1.0.0
   firebase_auth: ^0.11.1+6
   cloud_firestore: ^0.12.5
+  image_picker: ^0.6.0+9
   firebase_storage: ^3.0.1
-  #firebase_core: ^0.4.0+5
-  transparent_image:
-  connectivity:
-  image_picker:
+  transparent_image: ^1.0.0
+  connectivity: ^0.4.3+2
   #  google_maps_flutter:
   #  location:
-  datetime_picker_formfield:
+  datetime_picker_formfield: ^0.2.0
 
   cupertino_icons: ^0.1.2
   #firebase_database: ^3.0.2

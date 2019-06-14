@@ -60,40 +60,45 @@ class _DashboardState extends State<Dashboard> {
 
   @override
   Widget build(BuildContext context) {
-    return Scaffold(
-      appBar: appBar(context),
-      drawer: Drawer(
-        child: ListView(
-          children: <Widget>[
-            appLogo(context),
-            isLoggedIn ? profileNameAndImage(context) : Container(),
-            isLoggedIn ? Divider() : Container(),
-            isLoggedIn
-                ? Container()
-                : drawerItem(context, 'Login', Icons.account_circle, 'login'),
-            isLoggedIn
-                ? drawerItem(context, 'Users', Icons.person, 'users')
-                : Container(),
-            drawerItem(context, 'Events', Icons.event_available, 'events'),
-            drawerItem(context, 'Create Events', Icons.event, 'login'),
-            isLoggedIn
-                ? drawerItem(context, 'Log Out', Icons.exit_to_app, 'logout')
-                : Container(),
-          ],
+    return WillPopScope(
+      onWillPop: () {
+        Navigator.pop();
+      },
+      child: Scaffold(
+        appBar: appBar(context),
+        drawer: Drawer(
+          child: ListView(
+            children: <Widget>[
+              appLogo(context),
+              isLoggedIn ? profileNameAndImage(context) : Container(),
+              isLoggedIn ? Divider() : Container(),
+              isLoggedIn
+                  ? Container()
+                  : drawerItem(context, 'Login', Icons.account_circle, 'login'),
+              isLoggedIn
+                  ? drawerItem(context, 'Users', Icons.person, 'users')
+                  : Container(),
+              drawerItem(context, 'Events', Icons.event_available, 'events'),
+              drawerItem(context, 'Create Events', Icons.event, 'login'),
+              isLoggedIn
+                  ? drawerItem(context, 'Log Out', Icons.exit_to_app, 'logout')
+                  : Container(),
+            ],
+          ),
         ),
-      ),
-      body: Container(
-        height: MediaQuery.of(context).size.height,
-        child: StreamBuilder(
-          stream: Firestore.instance.collection('events').snapshots(),
-          builder: (context, snapshot) {
-            if (snapshot.connectionState == ConnectionState.waiting) {
-              return Center(
-                child: CircularProgressIndicator(),
-              );
-            }
-            return eventList(snapshot);
-          },
+        body: Container(
+          height: MediaQuery.of(context).size.height,
+          child: StreamBuilder(
+            stream: Firestore.instance.collection('events').snapshots(),
+            builder: (context, snapshot) {
+              if (snapshot.connectionState == ConnectionState.waiting) {
+                return Center(
+                  child: CircularProgressIndicator(),
+                );
+              }
+              return eventList(snapshot);
+            },
+          ),
         ),
       ),
     );
