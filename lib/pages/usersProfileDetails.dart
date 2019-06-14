@@ -49,14 +49,16 @@ class _UsersProfileDetailsPageState extends State<UsersProfileDetails> {
       ),
     );
   }
-
+  String _getUid (){
+    return (widget.details != null)?widget.details['uid'] :'123';
+  }
   // organized Event List by the user
   Expanded bottomEventListPart() {
     return Expanded(
       child: StreamBuilder(
         stream: Firestore.instance
             .collection('events')
-            .where('createdBy', isEqualTo: widget.details['uid'])
+            .where('createdBy', isEqualTo: _getUid())
             .snapshots(),
         builder: (context, snapshot) {
           if (snapshot.connectionState == ConnectionState.waiting) {
@@ -140,7 +142,7 @@ class _UsersProfileDetailsPageState extends State<UsersProfileDetails> {
         child: StreamBuilder(
           stream: Firestore.instance
               .collection('users')
-              .where('uid', isEqualTo: widget.details['uid'])
+              .where('uid', isEqualTo: _getUid())
               .snapshots(),
           builder: (context, snapshot) {
             if (snapshot.connectionState == ConnectionState.waiting) {

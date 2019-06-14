@@ -92,6 +92,10 @@ class _ProfilePageState extends State<ProfilePage> {
       ),
     );
   }
+  String _getUid()
+  {
+    return (widget.firebaseUser!=null)? widget.firebaseUser.uid:'123';
+  }
 
   // events that hosted by the user
   Expanded userEvents() {
@@ -99,7 +103,7 @@ class _ProfilePageState extends State<ProfilePage> {
       child: StreamBuilder(
         stream: Firestore.instance
             .collection('events')
-            .where('createdBy', isEqualTo: widget.firebaseUser.uid)
+            .where('createdBy', isEqualTo:  _getUid())
             .snapshots(),
         builder: (context, snapshot) {
           if (snapshot.connectionState == ConnectionState.waiting) {
@@ -194,7 +198,7 @@ class _ProfilePageState extends State<ProfilePage> {
     return StreamBuilder(
       stream: Firestore.instance
           .collection('users')
-          .where('uid', isEqualTo: widget.firebaseUser.uid)
+          .where('uid', isEqualTo: _getUid())
           .snapshots(),
       builder: (context, snapshot) {
         if (snapshot.connectionState == ConnectionState.waiting) {
