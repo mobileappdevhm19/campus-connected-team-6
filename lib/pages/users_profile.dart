@@ -7,10 +7,10 @@ import 'package:flutter_campus_connected/utils/screen_aware_size.dart';
 
 class UsersProfile extends StatefulWidget {
   @override
-  _UsersProfileState createState() => _UsersProfileState();
+  UsersProfileState createState() => UsersProfileState();
 }
 
-class _UsersProfileState extends State<UsersProfile> {
+class UsersProfileState extends State<UsersProfile> {
   var queryResultSet = [];
   var tempSearchStore = [];
   final CollectionReference collectionReference =

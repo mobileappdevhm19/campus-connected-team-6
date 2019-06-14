@@ -5,11 +5,19 @@ import 'package:flutter_test/flutter_test.dart';
 import 'testHelper.dart';
 
 void main() {
-  testWidgets('usersProfile test', (WidgetTester tester) async {
+  testWidgets('usersProfile test1', (WidgetTester tester) async {
 
-    var usersProfile = UsersProfile();
+    final StatefulWidget usersProfile = UsersProfile();
+
     var curr = TestHelper.buildPage(usersProfile) ;
     await tester.pumpWidget(curr);
+
+    final UsersProfileState state = tester.state(find.byType(UsersProfile));
+    expect(state.widget, equals(usersProfile));
+
+    var resSearch = state.initialSearch('');
+    expect (resSearch, equals(null));
+    expect(state.tempSearchStore.length, 0);
 
     final search = find.text('Search...');
     expect(search, findsOneWidget);
