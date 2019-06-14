@@ -12,11 +12,11 @@ import 'test_helper.dart';
 
 void main() {
   testWidgets("Campus Logo wird getestet", (WidgetTester tester) async {
-//    await tester.pumpWidget(TestHelper.buildPage(CampusLogo()));
-//
-//    await tester.pump(new Duration(seconds: 1));
-//
-//    final widget = find.byType(Image);
-//    expect(widget, findsOneWidget);
+    await tester.pumpWidget(TestHelper.buildPage(CampusLogo()));
+
+    await tester.pump(new Duration(seconds: 1));
+
+    final widget = find.byType(Image);
+    expect(widget, findsOneWidget);
   });
 }
