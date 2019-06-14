@@ -49,9 +49,11 @@ class _UsersProfileDetailsPageState extends State<UsersProfileDetails> {
       ),
     );
   }
-  String _getUid (){
-    return (widget.details != null)?widget.details['uid'] :'123';
+
+  String _getUid() {
+    return (widget.details != null) ? widget.details['uid'] : '123';
   }
+
   // organized Event List by the user
   Expanded bottomEventListPart() {
     return Expanded(

@@ -10,25 +10,23 @@ import 'package:flutter_campus_connected/pages/welcome_page.dart';
 
 import 'package:flutter_test/flutter_test.dart';
 
-
 import 'testHelper.dart';
-
 
 String uid = "xpbXVUfPojRwTrb2j370nwWjZ8O2";
 String user = "";
 
 void main() {
   testWidgets("Welcome Page wird getestet", (WidgetTester tester) async {
-    await tester.pumpWidget(
-        TestHelper.buildPage(WelcomePage(firebaseUser: uid)));
+    await tester
+        .pumpWidget(TestHelper.buildPage(WelcomePage(firebaseUser: uid)));
 
-
-  Stream<QuerySnapshot> userList = Firestore.instance.collection("/users")
-      .where('uid', isEqualTo: uid)
-      .snapshots();
-  userList.where((data) {
-    user = data.documents[0]['displayName'];
-  });
+    Stream<QuerySnapshot> userList = Firestore.instance
+        .collection("/users")
+        .where('uid', isEqualTo: uid)
+        .snapshots();
+    userList.where((data) {
+      user = data.documents[0]['displayName'];
+    });
 
     await tester.pump(new Duration(seconds: 4));
 

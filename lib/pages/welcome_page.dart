@@ -5,8 +5,6 @@ import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_campus_connected/main.dart';
 
-
-
 class WelcomePage extends StatefulWidget {
   final String firebaseUser;
 
@@ -24,7 +22,7 @@ class WelcomePageState extends State<WelcomePage> {
 
   navigationPage() {
     Navigator.of(context).push(new MaterialPageRoute(
-       // builder: (BuildContext context) => new Dashboard()));
+        // builder: (BuildContext context) => new Dashboard()));
         builder: (BuildContext context) => new MyHomePage()));
   }
 
@@ -47,7 +45,6 @@ class WelcomePageState extends State<WelcomePage> {
                   end: Alignment.centerRight,
                 ))),
         Column(
-
           //mainAxisAlignment: MainAxisAlignment.spaceEvenly,
           mainAxisAlignment: MainAxisAlignment.center,
           children: <Widget>[
@@ -61,7 +58,6 @@ class WelcomePageState extends State<WelcomePage> {
               padding: EdgeInsets.fromLTRB(0.0, 50.0, 0.0, 0.0),
             ),
             _boxMessage(context),
-
           ],
         ),
       ]),
@@ -83,24 +79,22 @@ class WelcomePageState extends State<WelcomePage> {
           }
           return !(snapshot.hasData && snapshot.data.documents.length == 0)
               ? new Container(
-            padding: new EdgeInsets.all(30.0),
-            child: new Text(
-                "NICE TO SEE YOU BACK        " +
-                    snapshot.data.documents[0]['displayName'] + "!", textAlign: TextAlign.center ,
-                style: new TextStyle(
-                  //color: Colors.white,
-                  color: new Color(0xFFFFCDD2),
-                  fontSize: 20.0,
-                  fontWeight: FontWeight.bold,
-
-                )),
-          )
+                  padding: new EdgeInsets.all(30.0),
+                  child: new Text(
+                      "NICE TO SEE YOU BACK        " +
+                          snapshot.data.documents[0]['displayName'] +
+                          "!",
+                      textAlign: TextAlign.center,
+                      style: new TextStyle(
+                        //color: Colors.white,
+                        color: new Color(0xFFFFCDD2),
+                        fontSize: 20.0,
+                        fontWeight: FontWeight.bold,
+                      )),
+                )
               : new Container();
         },
       ),
     );
   }
-
-
-
 }
