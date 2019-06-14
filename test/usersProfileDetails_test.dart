@@ -9,11 +9,10 @@ void main() {
     var curr = TestHelper.buildPage(editPage);
     await tester.pumpWidget(curr);
 
-    final myEvents = find.text('My Events') ;
+    final myEvents = find.text('My Events');
     expect(myEvents, findsOneWidget);
 
     final text = find.byType(Text);
     expect(text, findsWidgets);
-
   });
 }

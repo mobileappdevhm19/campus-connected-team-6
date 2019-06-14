@@ -5,13 +5,11 @@ import 'testHelper.dart';
 
 void main() {
   testWidgets('profile test', (WidgetTester tester) async {
-
     var profilePage = Dashboard();
-    var curr = TestHelper.buildPage(profilePage) ;
+    var curr = TestHelper.buildPage(profilePage);
     await tester.pumpWidget(curr);
 
-    final  drawer = find.byTooltip('Open navigation menu');
+    final drawer = find.byTooltip('Open navigation menu');
     expect(drawer, findsWidgets);
-
   });
 }

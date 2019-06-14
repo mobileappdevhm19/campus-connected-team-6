@@ -5,9 +5,10 @@ import 'testHelper.dart';
 
 void main() {
   testWidgets('profile test', (WidgetTester tester) async {
-
-    var profilePage = ProfilePage(firebaseUser: null,);
-    var curr = TestHelper.buildPage(profilePage) ;
+    var profilePage = ProfilePage(
+      firebaseUser: null,
+    );
+    var curr = TestHelper.buildPage(profilePage);
     await tester.pumpWidget(curr);
 
     final editText = find.text('Edit');
@@ -18,6 +19,5 @@ void main() {
 
     final testCircle = find.byType(Text);
     expect(testCircle, findsWidgets);
-
   });
 }

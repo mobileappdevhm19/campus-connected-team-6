@@ -9,7 +9,6 @@ import 'package:flutter_campus_connected/logos/login_logo.dart';
 
 import 'package:flutter_test/flutter_test.dart';
 
-
 import 'testHelper.dart';
 
 void main() {

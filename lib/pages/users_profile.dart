@@ -14,7 +14,7 @@ class UsersProfileState extends State<UsersProfile> {
   var queryResultSet = [];
   var tempSearchStore = [];
   final CollectionReference collectionReference =
-  Firestore.instance.collection("users");
+      Firestore.instance.collection("users");
 
   var _profileController = new StreamController();
 
@@ -29,8 +29,8 @@ class UsersProfileState extends State<UsersProfile> {
     tempSearchStore = [];
     queryResultSet.forEach((element) {
       if (element.data['displayName']
-          .toLowerCase()
-          .contains(value.toLowerCase()) ||
+              .toLowerCase()
+              .contains(value.toLowerCase()) ||
           element.data['email'].toLowerCase().contains(value.toLowerCase())) {
         counter++;
         tempSearchStore.add(element);
@@ -90,8 +90,8 @@ class UsersProfileState extends State<UsersProfile> {
         itemCount: snapshot.data.length,
         itemBuilder: (context, ind) {
           return Card(
-            shape: RoundedRectangleBorder(
-                borderRadius: BorderRadius.circular(6)),
+            shape:
+                RoundedRectangleBorder(borderRadius: BorderRadius.circular(6)),
             margin: EdgeInsets.all(6.0),
             elevation: 3.0,
             child: ListTile(
@@ -119,8 +119,7 @@ class UsersProfileState extends State<UsersProfile> {
                   ),
                 ),
               ),
-              contentPadding:
-              EdgeInsets.only(top: 15, bottom: 15, left: 15),
+              contentPadding: EdgeInsets.only(top: 15, bottom: 15, left: 15),
               onTap: () async {
                 Navigator.of(context)
                     .push(MaterialPageRoute(builder: (context) {

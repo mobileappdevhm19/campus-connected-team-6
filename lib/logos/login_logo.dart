@@ -27,8 +27,5 @@ class LoginLogo extends StatelessWidget {
         duration: duration,
         curve: curve,
         child: Image.asset('assets/flutter-icon.png'));
-
   }
-
-
 }
