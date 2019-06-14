@@ -1,33 +1,38 @@
+// This is a basic Flutter widget test.
+// To perform an interaction with a widget in your test, use the WidgetTester utility that Flutter
+// provides. For example, you can send tap and scroll gestures. You can also use WidgetTester to
+// find child widgets in the widget tree, read text, and verify that the values of widget properties
+// are correct.
+
 import 'package:flutter/material.dart';
 import 'package:flutter_campus_connected/pages/login_signup_page.dart';
+
+
 import 'package:flutter_test/flutter_test.dart';
 
 import 'testHelper.dart';
 
 void main() {
-  testWidgets("Login wird getestet", (WidgetTester tester) async {
+  testWidgets("Login Page wird getestet", (WidgetTester tester) async {
     await tester.pumpWidget(TestHelper.buildPage(LoginSignUpPage()));
 
-    //await tester.pump(new Duration(seconds: 1));
+    await tester.pump(new Duration(seconds: 1));
 
     final widget = find.byType(Image);
     expect(widget, findsOneWidget);
 
-    final textLogin = find.text('Campus-Connected login');
-    expect(textLogin, findsOneWidget);
+    final flatButton = find.byType(FlatButton);
+    expect(flatButton, findsOneWidget);
 
-    //final findIcon = find.byIcon(InputDecoration);
+    final textFlatButton = find.text('Create an account');
+    expect(textFlatButton, findsOneWidget);
 
-    final testCircle = find.byType(CircleAvatar);
-    expect(testCircle, findsOneWidget);
+    final raisedButton = find.byType(RaisedButton);
+    expect(raisedButton, findsOneWidget);
 
-    final buttonFlat = find.byType(FlatButton);
-    expect(buttonFlat, findsOneWidget);
+    final textRaisedButton = find.text('Login');
+    expect(textRaisedButton, findsOneWidget);
 
-    final buttonRaised = find.byType(RaisedButton);
-    expect(buttonRaised, findsOneWidget);
 
-    final testHero = find.byType(Hero);
-    expect(testHero, findsOneWidget);
   });
 }
