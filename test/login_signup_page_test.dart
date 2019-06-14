@@ -9,7 +9,7 @@ import 'package:flutter_campus_connected/pages/login_signup_page.dart';
 
 import 'package:flutter_test/flutter_test.dart';
 
-import 'testHelper.dart';
+import 'test_helper.dart';
 
 void main() {
   testWidgets("Login Page wird getestet", (WidgetTester tester) async {
@@ -31,7 +31,5 @@ void main() {
 
     final textRaisedButton = find.text('Login');
     expect(textRaisedButton, findsOneWidget);
-
-
   });
 }
