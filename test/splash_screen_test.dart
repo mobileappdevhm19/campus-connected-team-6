@@ -9,13 +9,10 @@ import 'package:flutter_campus_connected/pages/splash_screen.dart';
 
 import 'package:flutter_test/flutter_test.dart';
 
-
-
-import 'testHelper.dart';
+import 'test_helper.dart';
 
 void main() {
   testWidgets("Splash Screen wird getestet", (WidgetTester tester) async {
-
     await tester.pumpWidget(TestHelper.buildPage(SplashScreen()));
 
     await tester.pump(new Duration(seconds: 4));
@@ -24,19 +21,12 @@ void main() {
     expect(widget, findsOneWidget);
 
     final circleAva = find.byType(CircleAvatar);
-    expect (circleAva, findsOneWidget);
+    expect(circleAva, findsOneWidget);
 
     final textCampus = find.text("CAMPUS Connected");
     expect(textCampus, findsOneWidget);
 
-
     final background = tester.firstWidget(find.byType(Container)) as Container;
     expect((background.decoration as BoxDecoration).color, Color(0xFFB71C1C));
-
-
-
-
-
-
   });
 }

@@ -6,4 +6,10 @@ class TestHelper {
       home: page,
     );
   }
+
+  static buildWidget(page) {
+    return MaterialApp(
+      home: page,
+    );
+  }
 }

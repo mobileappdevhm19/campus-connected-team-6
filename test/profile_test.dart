@@ -1,13 +1,14 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_campus_connected/pages/profile.dart';
 import 'package:flutter_test/flutter_test.dart';
-import 'testHelper.dart';
+import 'test_helper.dart';
 
 void main() {
   testWidgets('profile test', (WidgetTester tester) async {
-
-    var profilePage = ProfilePage(firebaseUser: null,);
-    var curr = TestHelper.buildPage(profilePage) ;
+    var profilePage = ProfilePage(
+      firebaseUser: null,
+    );
+    var curr = TestHelper.buildPage(profilePage);
     await tester.pumpWidget(curr);
 
     final editText = find.text('Edit');
@@ -18,6 +19,5 @@ void main() {
 
     final testCircle = find.byType(Text);
     expect(testCircle, findsWidgets);
-
   });
 }
