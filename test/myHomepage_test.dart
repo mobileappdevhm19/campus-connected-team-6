@@ -12,7 +12,8 @@ void main() {
     await tester.tap(find.byIcon(Icons.home));
     await tester.tap(find.byIcon(Icons.search));
     await tester.tap(find.byIcon(Icons.event));
-    List<Widget> pages= myHomePage.createState().pagesNav;
-    expect(pages.length, 3);
+    var pages= myHomePage.createState().pagesNav;
+    expect(pages, null);
+
   });
 }

@@ -51,7 +51,7 @@ class _MyHomePageState extends State<MyHomePage> {
   SearchEvent searchEvent;
   CreateEvent createEvent;
   ProfilePage profilePage;
-  static List<Widget> pages;
+  List<Widget> pages;
   Widget currentPage;
   final PageStorageBucket bucket = PageStorageBucket();
 
@@ -70,6 +70,10 @@ class _MyHomePageState extends State<MyHomePage> {
     });
     pages = [dashboard, searchEvent, createEvent];
     currentPage = dashboard;
+  }
+
+  List<Widget> get pagesNav {
+    return this.pages;
   }
 
   @override
