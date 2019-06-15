@@ -5,12 +5,10 @@ import 'package:flutter_test/flutter_test.dart';
 import 'test_helper.dart';
 
 void main() {
-  EventModel eventModel;
-
   var photoUrl =
       'https://www.google.com/images/branding/googlelogo/1x/googlelogo_color_272x92dp.png';
 
-  eventModel = new EventModel();
+  EventModel eventModel = new EventModel();
   eventModel.eventName = "dummy name";
   eventModel.eventDescription = "description";
   eventModel.eventDate = "01.01.01";
@@ -21,8 +19,8 @@ void main() {
   eventModel.maximumLimit = 2;
 
   testWidgets("Create Event wird getestet", (WidgetTester tester) async {
-    //provideMockedNetworkImages(() async {
-    await tester.pumpWidget(TestHelper.buildPage(CreateEvent()));
+    await tester
+        .pumpWidget(TestHelper.buildPage(CreateEvent(currentUser: null)));
 
     final joinButtonText = find.text("Event Name");
     expect(joinButtonText, findsOneWidget);
@@ -50,6 +48,16 @@ void main() {
 
     final findEventTime = find.byIcon(Icons.access_time);
     expect(findEventTime, findsOneWidget);
-    //});
+
+    final findAddCircle = find.byIcon(Icons.add_circle);
+    expect(findAddCircle, findsOneWidget);
+
+    final createButton = find.byType(RaisedButton);
+    expect(createButton, findsOneWidget);
+//    final dropdown = find.byWidget(DropdownMenuItem<String>(
+//      child: Text('Indoor'),
+//      value: 'Indoor',
+//    ));
+//    expect(dropdown, findsOneWidget);
   });
 }
