@@ -28,13 +28,11 @@ void main() {
     final findEventTime = find.byIcon(Icons.search);
     expect(findEventTime, findsOneWidget);
 
-    final createButton = find.byType(TextField);
-    expect(createButton, findsOneWidget);
+    final findCreateButton = find.byType(TextField);
+    expect(findCreateButton, findsOneWidget);
 
     await tester.tap(find.byIcon(Icons.search));
     await tester.enterText(find.byType(TextField), "Kino");
     await tester.pump();
-
-    expect(find.byType(ListView), findsOneWidget);
   });
 }
