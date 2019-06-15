@@ -4,12 +4,15 @@ import 'package:flutter_test/flutter_test.dart';
 import 'test_helper.dart';
 
 void main() {
+
   testWidgets('Myhome Test', (WidgetTester tester) async {
-    var myHomePage = MyHomePage();
+    final myHomePage = MyHomePage();
     var curr = TestHelper.buildPage(myHomePage);
     await tester.pumpWidget(curr);
     await tester.tap(find.byIcon(Icons.home));
     await tester.tap(find.byIcon(Icons.search));
     await tester.tap(find.byIcon(Icons.event));
+    List<Widget> pages= myHomePage.createState().pagesNav;
+    expect(pages.length, 3);
   });
 }
