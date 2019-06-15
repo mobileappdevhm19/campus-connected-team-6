@@ -14,6 +14,6 @@ void main() {
     await tester.tap(find.byIcon(Icons.event));
     var pages= myHomePage.createState().pagesNav;
     expect(pages, null);
-
+    myHomePage.createState().initState();
   });
 }
