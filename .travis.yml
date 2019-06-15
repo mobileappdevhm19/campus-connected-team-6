@@ -55,21 +55,21 @@ matrix:
       script:
         - ./flutter/bin/flutter -v build apk
 
-    - os: osx
-      language: generic
-      osx_image: xcode10.2
-      before_script:
-        - pip2 install six
-        - brew update
-        - brew install --HEAD usbmuxd
-        - brew unlink usbmuxd
-        - brew link usbmuxd
-        - brew install --HEAD libimobiledevice
-        - brew install ideviceinstaller
-        - brew install ios-deploy
-        - git clone https://github.com/flutter/flutter.git -b stable
-      script:
-        - ./flutter/bin/flutter -v build ios --no-codesign
+    #- os: osx
+        #language: generic
+        #osx_image: xcode10.2
+        #before_script:
+        #- pip2 install six
+        #- brew update
+        #- brew install --HEAD usbmuxd
+        #- brew unlink usbmuxd
+        #- brew link usbmuxd
+        #- brew install --HEAD libimobiledevice
+        #- brew install ideviceinstaller
+        #- brew install ios-deploy
+        #- git clone https://github.com/flutter/flutter.git -b stable
+      #script:
+       # - ./flutter/bin/flutter -v build ios --no-codesign
 
 cache:
   directories:
