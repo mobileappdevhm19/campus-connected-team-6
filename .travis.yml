@@ -61,6 +61,7 @@ matrix:
       before_install:
         - gem install cocoapods -v 1.7.1 # Since Travis is not always on latest version
       before_script:
+        - pod repo update
         - pip2 install six
         - brew update
         - brew install --HEAD usbmuxd
