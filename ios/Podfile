@@ -63,4 +63,3 @@ post_install do |installer|
 end
 
 pod 'Firebase/Core'
-end
