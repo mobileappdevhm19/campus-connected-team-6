@@ -10,10 +10,11 @@ void main() {
     final myApp = MyApp();
     var curr = TestHelper.buildPage(myApp);
     await tester.pumpWidget(curr);
-    myApp.createElement().build();
   //  await tester.tap(find.text('Campus Connected'));
-    final title = find.text('Campus Connected');
-    expect(title, 'Campus Connected');
+    myApp.createElement();
+    find.text('C');
+    print( find.text('C'));
+   // expect(title, 'Campus Connected');
   });
-  */
+*/
 }
