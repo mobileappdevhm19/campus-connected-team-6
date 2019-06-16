@@ -61,7 +61,6 @@ matrix:
       before_install:
         - gem install cocoapods -v 1.7.1 # Since Travis is not always on latest version
       before_script:
-        - pod repo update
         - pip2 install six
         - brew update
         - brew install --HEAD usbmuxd
@@ -72,7 +71,7 @@ matrix:
         - brew install ios-deploy
         - git clone https://github.com/flutter/flutter.git -b stable
       script:
-        - ../flutter/bin/flutter -v build ios --no-codesign
+        - ./flutter/bin/flutter -v build ios --no-codesign
 
 cache:
   directories:
