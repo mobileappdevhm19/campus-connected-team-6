@@ -1,64 +1,89 @@
+import 'package:cloud_firestore/cloud_firestore.dart';
+import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/material.dart';
+import 'package:flutter_campus_connected/models/user_entity.dart';
 import 'package:flutter_campus_connected/pages/users_profile.dart';
 import 'package:flutter_test/flutter_test.dart';
 
 import 'test_helper.dart';
 
 void main() {
-  testWidgets('usersProfile test', (WidgetTester tester) async {
-    final String searchStr = 'Search...';
+  group('usersProfile test', () {
+    test('UserEntity test', () {
+      final entity = UserEntity('test', 'test.png', 'test@test.com', null);
+      expect(entity, isNotNull);
+      expect(entity.photoUrl, isNotEmpty);
+      expect(entity.email, isNotEmpty);
+      expect(entity.displayName, isNotEmpty);
+      expect(entity.data, isNull);
+    });
 
-    final StatefulWidget usersProfile = UsersProfile();
+    testWidgets('widgets test', (WidgetTester tester) async {
+      final String searchStr = 'Search...';
 
-    var curr = TestHelper.buildPage(usersProfile);
-    await tester.pumpWidget(curr);
+      final StatefulWidget usersProfile = UsersProfile();
 
-    //state test
+      var curr = TestHelper.buildPage(usersProfile);
+      await tester.pumpWidget(curr);
 
-    final UsersProfileState state = tester.state(find.byType(UsersProfile));
-    expect(state.widget, equals(usersProfile));
+      //state test
 
-    var resSearch = state.initialSearch('');
-    expect(resSearch, equals(null));
-    expect(state.tempSearchStore.length, 0);
-    expect(state.queryResultSet.length, 0);
+      final UsersProfileState state = tester.state(find.byType(UsersProfile));
+      expect(state.widget, equals(usersProfile));
 
-    resSearch = state.initialSearch('111');
-    expect(resSearch, equals(null));
-    expect(state.tempSearchStore.length, 0);
-    expect(state.queryResultSet.length, 0);
+      var resSearch = state.initialSearch('');
+      expect(resSearch, equals(null));
+      expect(state.tempSearchStore.length, 0);
+      expect(state.queryResultSet.length, 0);
 
-    var list = state.usersProfileList();
-    expect(list != null, true);
+      resSearch = state.initialSearch('111');
+      expect(resSearch, equals(null));
+      expect(state.tempSearchStore.length, 0);
+      expect(state.queryResultSet.length, 0);
 
-    final BuildContext context = tester.element(find.text(searchStr));
+      var list = state.usersProfileList();
+      expect(list != null, true);
 
-    final appBar = state.appBar(context);
-    expect(appBar != null, true);
+      final BuildContext context = tester.element(find.text(searchStr));
 
-    state.build(context);
-    expect(state != null, true);
-    try {
-      state.streamBuilder(context, null);
-    } catch (e) {}
+      final appBar = state.appBar(context);
+      expect(appBar != null, true);
 
-    //widget test
-    final search = find.text(searchStr);
-    expect(search, findsOneWidget);
+      state.build(context);
+      expect(state != null, true);
 
-    final textField = find.byType(TextField);
-    expect(textField, findsOneWidget);
+      var findListView = find.ancestor(
+          of: find.byType(StreamBuilder), matching: find.byType(ListView));
+      expect(findListView, findsNothing);
 
-    final texts = find.byType(Text);
-    expect(texts, findsWidgets);
+      final entity = UserEntity('test', 'test.png', 'test@test.com', null);
+      var item = state.getItemList(entity, 1, context);
+      expect(item != null, true);
 
-    final box = find.byType(Container);
-    expect(box, findsWidgets);
+      state.tapOnItem(context, entity);
+      expect(state != null, true);
 
-    final bt = find.byType(IconButton);
-    expect(bt, findsOneWidget);
+      var wait = state.getWaiting();
+      expect(wait, isNotNull);
 
-    await tester.tap(bt);
-    await tester.pump();
+      //widget test
+      final search = find.text(searchStr);
+      expect(search, findsOneWidget);
+
+      final textField = find.byType(TextField);
+      expect(textField, findsOneWidget);
+
+      final texts = find.byType(Text);
+      expect(texts, findsWidgets);
+
+      final box = find.byType(Container);
+      expect(box, findsWidgets);
+
+      final bt = find.byType(IconButton);
+      expect(bt, findsOneWidget);
+
+      await tester.tap(bt);
+      await tester.pump();
+    });
   });
 }
