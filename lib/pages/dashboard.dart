@@ -2,23 +2,22 @@ import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_campus_connected/helper/authentication.dart';
-import 'package:flutter_campus_connected/logos/campus_logo.dart';
+import 'package:flutter_campus_connected/models/dashboard_item.dart';
 import 'package:flutter_campus_connected/models/event_model.dart';
 import 'package:flutter_campus_connected/pages/create_event.dart';
 import 'package:flutter_campus_connected/pages/profile.dart';
+import 'package:flutter_campus_connected/pages/search_events.dart';
 import 'package:flutter_campus_connected/pages/users_profile.dart';
 import 'package:flutter_campus_connected/pages/view_event.dart';
 import 'package:flutter_campus_connected/utils/screen_aware_size.dart';
-
-import 'login_signup_page.dart';
 //import 'package:flutter_campus_connected/pages/create_event.dart';
 
 class Dashboard extends StatefulWidget {
   @override
-  _DashboardState createState() => _DashboardState();
+  DashboardState createState() => DashboardState();
 }
 
-class _DashboardState extends State<Dashboard> {
+class DashboardState extends State<Dashboard> {
   FirebaseUser firebaseUser;
   String email = '';
   Auth auth = new Auth();
@@ -44,6 +43,7 @@ class _DashboardState extends State<Dashboard> {
   @override
   void initState() {
     super.initState();
+    super.initState();
     _isLoggedIn();
     auth.getCurrentUser().then((user) {
       setState(() {
@@ -59,47 +59,50 @@ class _DashboardState extends State<Dashboard> {
 
   @override
   Widget build(BuildContext context) {
-    return WillPopScope(
-      onWillPop: () {
-        Navigator.pop(context);
-      },
-      child: Scaffold(
-        appBar: appBar(context),
-        drawer: Drawer(
-          key: Key("Drawer"),
-          child: ListView(
-            children: <Widget>[
-              appLogo(context),
-              isLoggedIn ? profileNameAndImage(context) : Container(),
-              isLoggedIn ? Divider() : Container(),
-              isLoggedIn
-                  ? Container()
-                  : drawerItem(context, 'Login', Icons.account_circle, 'login'),
-              isLoggedIn
-                  ? drawerItem(context, 'Users', Icons.person, 'users')
-                  : Container(),
-              drawerItem(context, 'Events', Icons.event_available, 'events'),
-              drawerItem(context, 'Create Events', Icons.event, 'login'),
-              isLoggedIn
-                  ? drawerItem(context, 'Log Out', Icons.exit_to_app, 'logout')
-                  : Container(),
-            ],
-          ),
-        ),
-        body: Container(
-          height: MediaQuery.of(context).size.height,
-          child: StreamBuilder(
-            stream: Firestore.instance.collection('events').snapshots(),
-            builder: (context, snapshot) {
-              if (snapshot.connectionState == ConnectionState.waiting) {
-                return Center(
-                  child: CircularProgressIndicator(),
-                );
-              }
-              return eventList(snapshot);
-            },
-          ),
-        ),
+    return Scaffold(
+      appBar: appBar(context),
+      drawer: getDrawer(context),
+      body: getBody(context),
+    );
+  }
+
+  Drawer getDrawer(BuildContext context) {
+    return Drawer(
+      key: Key("Drawer"),
+      child: ListView(
+        children: <Widget>[
+          appLogo(context),
+          isLoggedIn ? profileNameAndImage(context, _getUserData()) : Container(),
+          isLoggedIn ? Divider() : Container(),
+          isLoggedIn
+              ? Container()
+              : drawerItem(context, 'Login', Icons.account_circle, 'login'),
+          isLoggedIn
+              ? drawerItem(context, 'Users', Icons.person, 'users')
+              : Container(),
+          drawerItem(context, 'Events', Icons.event_available, 'events'),
+          drawerItem(context, 'Create Events', Icons.event, 'login'),
+          isLoggedIn
+              ? drawerItem(context, 'Log Out', Icons.exit_to_app, 'logout')
+              : Container(),
+        ],
+      ),
+    );
+  }
+
+  Container getBody(BuildContext context) {
+    return Container(
+      height: MediaQuery.of(context).size.height,
+      child: StreamBuilder(
+        stream: Firestore.instance.collection('events').snapshots(),
+        builder: (context, snapshot) {
+          if (snapshot.connectionState == ConnectionState.waiting) {
+            return Center(
+              child: CircularProgressIndicator(),
+            );
+          }
+          return eventList(snapshot);
+        },
       ),
     );
   }
@@ -165,7 +168,6 @@ class _DashboardState extends State<Dashboard> {
   AppBar appBar(BuildContext context) {
     return AppBar(
       title: Text('Campus Connected'),
-      /*
       actions: <Widget>[
         IconButton(
           icon: Icon(Icons.search),
@@ -176,7 +178,6 @@ class _DashboardState extends State<Dashboard> {
           },
         )
       ],
-      */
     );
   }
 
@@ -186,60 +187,74 @@ class _DashboardState extends State<Dashboard> {
       color: Colors.redAccent,
       height: screenAwareSize(150, context),
       child: Center(
-          child: CampusLogo(//size: screenAwareSize(80, context)
-          )),
+        child: FlutterLogo(
+          size: screenAwareSize(80, context),
+        ),
+      ),
     );
   }
 
   //drawer Item profile name and Image
-  Padding profileNameAndImage(BuildContext context) {
+  Padding profileNameAndImage(BuildContext context,  Stream<QuerySnapshot> data) {
     return Padding(
       padding: EdgeInsets.only(
           top: screenAwareSize(12.0, context),
           bottom: screenAwareSize(8.0, context)),
       child: StreamBuilder(
-        stream: Firestore.instance
-            .collection('users')
-            .where('uid', isEqualTo: firebaseUser.uid)
-            .snapshots(),
+        stream: data,
         builder: (context, snapshot) {
           if (snapshot.connectionState == ConnectionState.waiting) {
             return Container();
           }
-          return !(snapshot.hasData && snapshot.data.documents.length == 0)
-              ? ListTile(
-            title: Text(
-              snapshot.data.documents[0]['displayName'],
-              key: Key("UserName"),
-              style: TextStyle(fontSize: 18),
-              maxLines: 1,
-              overflow: TextOverflow.ellipsis,
-            ),
-            leading: ClipRRect(
-              borderRadius: BorderRadius.circular(40),
-              child: Container(
-                width: screenAwareSize(50, context),
-                height: screenAwareSize(50, context),
-                child: FadeInImage.assetNetwork(
-                  image: snapshot.data.documents[0]['photoUrl'],
-                  fit: BoxFit.cover,
-                  placeholder: 'assets/person.jpg',
-                ),
-              ),
-            ),
-            onTap: () async {
-              Navigator.of(context)
-                  .push(MaterialPageRoute(builder: (context) {
-                return ProfilePage(
-                  firebaseUser: firebaseUser,
-                );
-              }));
-            },
-          )
-              : Container();
+          final item = DashbaoardItem(snapshot.data.documents[0]['displayName'],
+            snapshot.data.documents[0]['photoUrl'],);
+          return getListItem((snapshot.hasData && snapshot.data.documents.length == 0), item, context);
         },
       ),
     );
+  }
+
+  Stream<QuerySnapshot> _getUserData() {
+    return Firestore.instance
+        .collection('users')
+        .where('uid', isEqualTo: firebaseUser.uid)
+        .snapshots();
+  }
+
+  StatelessWidget getListItem(bool val,DashbaoardItem item, BuildContext context) {
+    return !(val)
+        ? ListTile(
+      title: Text(
+        item.displayName,
+        //snapshot.data.documents[0]['displayName'],
+        style: TextStyle(fontSize: 18),
+        maxLines: 1,
+        key: Key('UserName'),
+        overflow: TextOverflow.ellipsis,
+      ),
+      leading: ClipRRect(
+        borderRadius: BorderRadius.circular(40),
+        child: Container(
+          width: screenAwareSize(50, context),
+          height: screenAwareSize(50, context),
+          child: FadeInImage.assetNetwork(
+            image: item.photoUrl,
+            //snapshot.data.documents[0]['photoUrl'],
+            fit: BoxFit.cover,
+            placeholder: 'assets/person.jpg',
+          ),
+        ),
+      ),
+      onTap: () async {
+        Navigator.of(context)
+            .push(MaterialPageRoute(builder: (context) {
+          return ProfilePage(
+            firebaseUser: firebaseUser,
+          );
+        }));
+      },
+    )
+        : Container();
   }
 
   //drawer Items
@@ -251,10 +266,7 @@ class _DashboardState extends State<Dashboard> {
       leading: Icon(icon),
       onTap: () {
         if (route == 'logout') {
-          //  Navigator.of(context).pop();
-          Navigator.of(context).push(MaterialPageRoute(builder: (context) {
-            return LoginSignUpPage();
-          }));
+          Navigator.of(context).pop();
           FirebaseAuth.instance.signOut();
           _isLoggedIn();
         } else if (route == 'events') {
