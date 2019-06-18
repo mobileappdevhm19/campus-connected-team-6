@@ -20,10 +20,10 @@ class EditProfile extends StatefulWidget {
   EditProfile({this.userInfo, this.photoUrl, this.displayName});
 
   @override
-  _EditProfileState createState() => _EditProfileState();
+  EditProfileState createState() => EditProfileState();
 }
 
-class _EditProfileState extends State<EditProfile> {
+class EditProfileState extends State<EditProfile> {
   var _formState = new GlobalKey<FormState>();
   Auth auth = new Auth();
   File sampleImage;
@@ -78,7 +78,7 @@ class _EditProfileState extends State<EditProfile> {
     InputType.time: DateFormat("h:mma"),
   };
 
-  void _submitForm() async {
+  void submitForm() async {
     FocusScope.of(context).requestFocus(new FocusNode());
     var connectionStatus = await checkInternetConnection();
     if (connectionStatus == false) {
@@ -125,7 +125,7 @@ class _EditProfileState extends State<EditProfile> {
             color: Colors.white, fontSize: screenAwareSize(20, context)),
       ),
       color: Theme.of(context).primaryColor,
-      onPressed: uploadingStatus == false ? _submitForm : null,
+      onPressed: uploadingStatus == false ? submitForm : null,
       shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(8)),
     );
   }
@@ -142,53 +142,57 @@ class _EditProfileState extends State<EditProfile> {
     showDialog(
         context: context,
         builder: (BuildContext context) {
-          return AlertDialog(
-            shape: RoundedRectangleBorder(
-                borderRadius: BorderRadius.all(Radius.circular(12.0))),
-            content: Column(
-              mainAxisSize: MainAxisSize.min,
-              mainAxisAlignment: MainAxisAlignment.center,
-              children: <Widget>[
-                SizedBox(height: screenAwareSize(10, context)),
-                Text(
-                  'No Internet 😞',
-                  style: TextStyle(
-                      color: Colors.black87,
-                      fontSize: screenAwareSize(26, context)),
-                ),
-                SizedBox(height: screenAwareSize(10, context)),
-                Padding(
-                  padding: EdgeInsets.all(screenAwareSize(8.0, context)),
-                  child: Text(
-                    'Please Check Internet Connection.',
-                    style: TextStyle(
-                        color: Colors.black87,
-                        fontSize: screenAwareSize(16, context)),
-                    textAlign: TextAlign.center,
-                  ),
-                ),
-                Align(
-                  alignment: Alignment.center,
-                  child: RaisedButton(
-                    onPressed: () {
-                      Navigator.of(context).pop();
-                    },
-                    child: Text(
-                      'CLOSE',
-                      style: TextStyle(color: Colors.white),
-                    ),
-                    color: Colors.red,
-                    shape: RoundedRectangleBorder(
-                        borderRadius: BorderRadius.circular(10)),
-                    elevation: 6.0,
-                  ),
-                )
-              ],
-            ),
-            contentPadding: EdgeInsets.all(10),
-            titlePadding: EdgeInsets.all(20),
-          );
+          return getAlertDialog(context);
         });
+  }
+
+  AlertDialog getAlertDialog(BuildContext context) {
+    return AlertDialog(
+      shape: RoundedRectangleBorder(
+          borderRadius: BorderRadius.all(Radius.circular(12.0))),
+      content: Column(
+        mainAxisSize: MainAxisSize.min,
+        mainAxisAlignment: MainAxisAlignment.center,
+        children: <Widget>[
+          SizedBox(height: screenAwareSize(10, context)),
+          Text(
+            'No Internet ðŸ˜ž',
+            style: TextStyle(
+                color: Colors.black87,
+                fontSize: screenAwareSize(26, context)),
+          ),
+          SizedBox(height: screenAwareSize(10, context)),
+          Padding(
+            padding: EdgeInsets.all(screenAwareSize(8.0, context)),
+            child: Text(
+              'Please Check Internet Connection.',
+              style: TextStyle(
+                  color: Colors.black87,
+                  fontSize: screenAwareSize(16, context)),
+              textAlign: TextAlign.center,
+            ),
+          ),
+          Align(
+            alignment: Alignment.center,
+            child: RaisedButton(
+              onPressed: () {
+                Navigator.of(context).pop();
+              },
+              child: Text(
+                'CLOSE',
+                style: TextStyle(color: Colors.white),
+              ),
+              color: Colors.red,
+              shape: RoundedRectangleBorder(
+                  borderRadius: BorderRadius.circular(10)),
+              elevation: 6.0,
+            ),
+          )
+        ],
+      ),
+      contentPadding: EdgeInsets.all(10),
+      titlePadding: EdgeInsets.all(20),
+    );
   }
 
   Future<bool> checkInternetConnection() async {
@@ -207,57 +211,61 @@ class _EditProfileState extends State<EditProfile> {
       },
       child: Scaffold(
         appBar: appBar(context),
-        body: Stack(
-          alignment: Alignment.center,
-          children: <Widget>[
-            Container(
-              padding: EdgeInsets.all(15),
-              color: Colors.red,
-              child: Center(
-                child: SingleChildScrollView(
-                  child: Form(
-                      key: _formState,
-                      child: Card(
-                          shape: RoundedRectangleBorder(
-                              borderRadius: BorderRadius.circular(7)),
-                          elevation: 10,
-                          child: Container(
-                            padding: EdgeInsets.all(20),
-                            child: Column(
-                              mainAxisSize: MainAxisSize.min,
-                              children: <Widget>[
-                                SizedBox(
-                                  height: screenAwareSize(20, context),
-                                ),
-                                imageField(),
-                                imageRequired == true
-                                    ? Padding(
-                                        padding:
-                                            const EdgeInsets.only(top: 12.0),
-                                        child: Text(
-                                          'Please Upload  Image',
-                                          style: TextStyle(color: Colors.red),
-                                        ),
-                                      )
-                                    : SizedBox(),
-                                SizedBox(
-                                  height: screenAwareSize(30, context),
-                                ),
-                                nameTextForm(context),
-                                SizedBox(
-                                  height: screenAwareSize(15, context),
-                                ),
-                                submitButton(context)
-                              ],
-                            ),
-                          ))),
-                ),
-              ),
-            ),
-            uploadingStatus ? updatingDialog(context) : SizedBox(),
-          ],
-        ),
+        body: getBody(context),
       ),
+    );
+  }
+
+  Stack getBody(BuildContext context) {
+    return Stack(
+      alignment: Alignment.center,
+      children: <Widget>[
+        Container(
+          padding: EdgeInsets.all(15),
+          color: Colors.red,
+          child: Center(
+            child: SingleChildScrollView(
+              child: Form(
+                  key: _formState,
+                  child: Card(
+                      shape: RoundedRectangleBorder(
+                          borderRadius: BorderRadius.circular(7)),
+                      elevation: 10,
+                      child: Container(
+                        padding: EdgeInsets.all(20),
+                        child: Column(
+                          mainAxisSize: MainAxisSize.min,
+                          children: <Widget>[
+                            SizedBox(
+                              height: screenAwareSize(20, context),
+                            ),
+                            imageField(),
+                            imageRequired == true
+                                ? Padding(
+                              padding:
+                              const EdgeInsets.only(top: 12.0),
+                              child: Text(
+                                'Please Upload  Image',
+                                style: TextStyle(color: Colors.red),
+                              ),
+                            )
+                                : SizedBox(),
+                            SizedBox(
+                              height: screenAwareSize(30, context),
+                            ),
+                            nameTextForm(context),
+                            SizedBox(
+                              height: screenAwareSize(15, context),
+                            ),
+                            submitButton(context)
+                          ],
+                        ),
+                      ))),
+            ),
+          ),
+        ),
+        uploadingStatus ? updatingDialog(context) : SizedBox(),
+      ],
     );
   }
 
