@@ -1,6 +1,8 @@
 import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_campus_connected/helper/cloud_firestore_helper.dart';
+import 'package:flutter_campus_connected/models/event_entity.dart';
+import 'package:flutter_campus_connected/models/user_entity.dart';
 import 'package:flutter_campus_connected/pages/view_event.dart';
 import 'package:flutter_campus_connected/utils/screen_aware_size.dart';
 
@@ -10,14 +12,15 @@ class UsersProfileDetails extends StatefulWidget {
   UsersProfileDetails({this.details});
 
   @override
-  _UsersProfileDetailsPageState createState() =>
-      _UsersProfileDetailsPageState();
+  UsersProfileDetailsPageState createState() => UsersProfileDetailsPageState();
 }
 
-class _UsersProfileDetailsPageState extends State<UsersProfileDetails> {
+class UsersProfileDetailsPageState extends State<UsersProfileDetails> {
   String photoUrl;
   String displayName;
   FireCloudStoreHelper cloudStoreHelper = new FireCloudStoreHelper();
+
+  Container get getTopPart => topPart(context);
 
   @override
   Widget build(BuildContext context) {
@@ -50,6 +53,7 @@ class _UsersProfileDetailsPageState extends State<UsersProfileDetails> {
     );
   }
 
+  //for testing purpose
   String _getUid() {
     return (widget.details != null) ? widget.details['uid'] : '123';
   }
@@ -72,65 +76,78 @@ class _UsersProfileDetailsPageState extends State<UsersProfileDetails> {
           return ListView.builder(
               itemCount: snapshot.data.documents.length,
               itemBuilder: (context, ind) {
-                return Card(
-                  margin: EdgeInsets.all(6.0),
-                  elevation: 3.0,
-                  child: ListTile(
-                    title: Text(
-                      snapshot.data.documents[ind]['eventName'],
-                      maxLines: 1,
-                      overflow: TextOverflow.ellipsis,
-                      style: TextStyle(fontSize: 20),
-                    ),
-                    subtitle: Padding(
-                      padding: const EdgeInsets.only(top: 6.0),
-                      child: Text(
-                          snapshot.data.documents[ind]['eventDescription'],
-                          maxLines: 1,
-                          overflow: TextOverflow.ellipsis,
-                          style: TextStyle(fontSize: 16)),
-                    ),
-                    leading: Padding(
-                      padding: const EdgeInsets.all(2.0),
-                      child: Hero(
-                          tag: snapshot.data.documents[ind].documentID,
-                          child: ClipRRect(
-                            borderRadius: BorderRadius.circular(6),
-                            child: SizedBox(
-                              width: screenAwareSize(80, context),
-                              height: screenAwareSize(60, context),
-                              child: FadeInImage.assetNetwork(
-                                placeholder: 'assets/loadingfailed.png',
-                                image: snapshot.data.documents[ind]
-                                    ['eventPhotoUrl'],
-                                fit: BoxFit.cover,
-                              ),
-                            ),
-                          )),
-                    ),
-                    trailing: Row(
-                      mainAxisSize: MainAxisSize.min,
-                      children: <Widget>[
-                        IconButton(
-                            icon: Icon(
-                              Icons.visibility,
-                              color: Colors.red,
-                            ),
-                            onPressed: () {
-                              Navigator.of(context).push(
-                                  new MaterialPageRoute(builder: (context) {
-                                return EventView(
-                                  snapshot.data.documents[ind],
-                                );
-                              }));
-                            }),
-                      ],
-                    ),
-                    onTap: () {},
-                  ),
-                );
+                final entity = EventEntity(
+                    snapshot.data.documents[ind]['eventName'],
+                    snapshot.data.documents[ind]['eventDescription'],
+                    snapshot.data.documents[ind]['eventPhotoUrl']);
+
+                return getItemList(
+                    entity,
+                    ind,
+                    context,
+                    snapshot.data.documents[ind].documentID,
+                    snapshot.data.documents[ind]);
               });
         },
+      ),
+    );
+  }
+
+  Card getItemList(EventEntity entity, int ind, BuildContext context,
+      String docId, dynamic data) {
+    return Card(
+      margin: EdgeInsets.all(6.0),
+      elevation: 3.0,
+      child: ListTile(
+        title: Text(
+          entity.eventName,
+          maxLines: 1,
+          overflow: TextOverflow.ellipsis,
+          style: TextStyle(fontSize: 20),
+        ),
+        subtitle: Padding(
+          padding: const EdgeInsets.only(top: 6.0),
+          child: Text(entity.eventDescription,
+              maxLines: 1,
+              overflow: TextOverflow.ellipsis,
+              style: TextStyle(fontSize: 16)),
+        ),
+        leading: Padding(
+          padding: const EdgeInsets.all(2.0),
+          child: Hero(
+              tag: docId,
+              child: ClipRRect(
+                borderRadius: BorderRadius.circular(6),
+                child: SizedBox(
+                  width: screenAwareSize(80, context),
+                  height: screenAwareSize(60, context),
+                  child: FadeInImage.assetNetwork(
+                    placeholder: 'assets/loadingfailed.png',
+                    image: entity.eventPhotoUrl,
+                    fit: BoxFit.cover,
+                  ),
+                ),
+              )),
+        ),
+        trailing: Row(
+          mainAxisSize: MainAxisSize.min,
+          children: <Widget>[
+            IconButton(
+                icon: Icon(
+                  Icons.visibility,
+                  color: Colors.red,
+                ),
+                onPressed: () {
+                  Navigator.of(context)
+                      .push(new MaterialPageRoute(builder: (context) {
+                    return EventView(
+                      data,
+                    );
+                  }));
+                }),
+          ],
+        ),
+        onTap: () {},
       ),
     );
   }
@@ -157,60 +174,64 @@ class _UsersProfileDetailsPageState extends State<UsersProfileDetails> {
             } else {
               return Container();
             }
-            return Column(
-              mainAxisAlignment: MainAxisAlignment.center,
-              children: <Widget>[
-                Stack(
-                  children: <Widget>[
-                    ClipRRect(
-                      borderRadius: BorderRadius.circular(100),
-                      child: Container(
-                        width: 120,
-                        height: 120,
-                        child: Image.asset(
-                          'assets/person.jpg',
-                          fit: BoxFit.cover,
-                        ),
-                      ),
-                    ),
-                    ClipRRect(
-                      borderRadius: BorderRadius.circular(100),
-                      child: Container(
-                          width: 120,
-                          height: 120,
-                          child: Image(
-                            image: NetworkImage(
-                                snapshot.data.documents[0]['photoUrl']),
-                            fit: BoxFit.cover,
-                          )),
-                    )
-                  ],
-                ),
-                Padding(
-                    padding: const EdgeInsets.only(top: 10.0),
-                    child: Text(
-                      snapshot.data.documents[0]['displayName'],
-                      maxLines: 1,
-                      overflow: TextOverflow.ellipsis,
-                      style: TextStyle(
-                          color: Colors.white,
-                          fontSize: screenAwareSize(20, context),
-                          fontWeight: FontWeight.bold,
-                          letterSpacing: 1),
-                    )),
-                Padding(
-                    padding: const EdgeInsets.all(2.0),
-                    child: Text(
-                      snapshot.data.documents[0]['email'],
-                      maxLines: 1,
-                      overflow: TextOverflow.ellipsis,
-                      style: TextStyle(
-                          color: Colors.white,
-                          fontSize: screenAwareSize(18, context)),
-                    ))
-              ],
-            );
+            final entity = UserEntity(
+                snapshot.data.documents[0]['displayName'],
+                snapshot.data.documents[0]['photoUrl'],
+                snapshot.data.documents[0]['email'],
+                null);
+            return getRootTop(entity, context);
           },
+        ),
+      ),
+    );
+  }
+
+  Column getRootTop(UserEntity entity, BuildContext context) {
+    return Column(
+      mainAxisAlignment: MainAxisAlignment.center,
+      children: <Widget>[
+        Stack(
+          children: <Widget>[
+            getClipRRect('assets/person.jpg'),
+            getClipRRect(entity.photoUrl)
+          ],
+        ),
+        Padding(
+            padding: const EdgeInsets.only(top: 10.0),
+            child: Text(
+              //snapshot.data.documents[0]['displayName'],
+              entity.displayName,
+              maxLines: 1,
+              overflow: TextOverflow.ellipsis,
+              style: TextStyle(
+                  color: Colors.white,
+                  fontSize: screenAwareSize(20, context),
+                  fontWeight: FontWeight.bold,
+                  letterSpacing: 1),
+            )),
+        Padding(
+            padding: const EdgeInsets.all(2.0),
+            child: Text(
+              //snapshot.data.documents[0]['email'],
+              entity.email,
+              maxLines: 1,
+              overflow: TextOverflow.ellipsis,
+              style: TextStyle(
+                  color: Colors.white, fontSize: screenAwareSize(18, context)),
+            ))
+      ],
+    );
+  }
+
+  ClipRRect getClipRRect(String image) {
+    return ClipRRect(
+      borderRadius: BorderRadius.circular(100),
+      child: Container(
+        width: 120,
+        height: 120,
+        child: Image.asset(
+          image,
+          fit: BoxFit.cover,
         ),
       ),
     );

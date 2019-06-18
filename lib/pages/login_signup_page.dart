@@ -27,8 +27,8 @@ class _LoginSignUpPageState extends State<LoginSignUpPage>
 
   @override
   void initState() {
-    _isLoading = false;
     super.initState();
+    _isLoading = false;
     _animationController = new AnimationController(
         vsync: this, duration: Duration(microseconds: 500));
     _animation = Tween(
@@ -164,24 +164,24 @@ class _LoginSignUpPageState extends State<LoginSignUpPage>
   Widget _showBody() {
     return Container(
         child: new Form(
-      key: _formKey,
-      child: Card(
-        elevation: 10,
-        shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(10)),
-        child: Column(
-          mainAxisSize: MainAxisSize.min,
-          children: <Widget>[
-            SizedBox(height: screenAwareSize(20, context)),
-            _showEmailInput(),
-            _showPasswordInput(),
-            SizedBox(height: screenAwareSize(20, context)),
-            _showPrimaryButton(context),
-            SizedBox(height: screenAwareSize(10, context)),
-            _showSecondaryButton(),
-          ],
-        ),
-      ),
-    ));
+          key: _formKey,
+          child: Card(
+            elevation: 10,
+            shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(10)),
+            child: Column(
+              mainAxisSize: MainAxisSize.min,
+              children: <Widget>[
+                SizedBox(height: screenAwareSize(20, context)),
+                _showEmailInput(),
+                _showPasswordInput(),
+                SizedBox(height: screenAwareSize(20, context)),
+                _showPrimaryButton(context),
+                SizedBox(height: screenAwareSize(10, context)),
+                _showSecondaryButton(),
+              ],
+            ),
+          ),
+        ));
   }
 
   //app Logo
@@ -203,8 +203,9 @@ class _LoginSignUpPageState extends State<LoginSignUpPage>
     return Padding(
       padding: const EdgeInsets.only(left: 14.0, right: 14.0, bottom: 10),
       child: TextFormField(
-        initialValue: "another@hm.edu",
+        //initialValue: "another@hm.edu",
         //TODO: remove later
+        key: Key("Email"),
         maxLines: 1,
         keyboardType: TextInputType.emailAddress,
         autofocus: false,
@@ -236,8 +237,9 @@ class _LoginSignUpPageState extends State<LoginSignUpPage>
     return Padding(
       padding: const EdgeInsets.only(left: 14.0, right: 14),
       child: TextFormField(
-        initialValue: "123456",
+        //initialValue: "123456",
         //TODO: remove later
+        key: Key("Password"),
         maxLines: 1,
         obscureText: true,
         autofocus: false,
@@ -285,6 +287,7 @@ class _LoginSignUpPageState extends State<LoginSignUpPage>
       width: screenAwareSize(200, context),
       height: screenAwareSize(40, context),
       child: RaisedButton(
+        key: Key("Login"),
         elevation: 8.0,
         shape: new RoundedRectangleBorder(
             borderRadius: new BorderRadius.circular(10.0)),
