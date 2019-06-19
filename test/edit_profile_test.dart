@@ -6,7 +6,9 @@ import 'test_helper.dart';
 
 void main() {
   testWidgets('edit profile test', (WidgetTester tester) async {
-    //https://iirokrankka.com/2018/09/16/image-network-widget-tests/
+    //url рисунков не работают в тестах
+    //объяснение https://iirokrankka.com/2018/09/16/image-network-widget-tests/
+    //используем  пакет "заглушку"
     provideMockedNetworkImages(() async {
 
       final String displayName = 'test';
@@ -22,17 +24,39 @@ void main() {
       expect(submit, findsOneWidget);
       final BuildContext context = tester.element(submit);
 
+
+      final btFinder = find.byKey(Key('submitBt')) ;
+      expect(btFinder, findsOneWidget);
+
       //state
       final EditProfileState state = tester.state(find.byType(EditProfile));
       expect(state, isNotNull);
       expect(state.widget, equals(editPage));
 
+      final form = state.getForm(context);
+      TestHelper.checkWidget<Form>(form);
+      expect(form.child is Card, true);
+
+      final checkNet = await state.checkInternetConnection() ;
+      expect(checkNet, true);
+
       await state.getImage();
+      expect(state.sampleImage, isNotNull);
+      expect(state.uploadingStatus, true);
+
       await state.uploadImage();
+      expect(state.uploadingStatus, true);
+      expect(state.sampleImage, isNotNull);
+
       state.submitForm();
+
+      expect(state.uploadingStatus, false);
 
       final bt = state.submitButton(context);
       TestHelper.checkWidget<RaisedButton>(bt);
+
+      tester.tap(submit);
+      expect(state.submitForm, isNull);
 
       final check = await state.checkInternetConnection();
       expect(check, true);
@@ -54,6 +78,18 @@ void main() {
 
       final alertDialog = state.getAlertDialog(context);
       TestHelper.checkWidget<AlertDialog>(alertDialog);
+      expect(alertDialog.content is Column, true);
+
+      final Column column = alertDialog.content as Column;
+      expect(column.children.length>0, true);
+
+      final textChild = column.children[1] as   Text;
+      expect(textChild, isNotNull);
+
+      expect(textChild.data =='No Internet 😞', true);
+
+      expect(state.imageUrl == state.widget.photoUrl, true);
+      expect(state.name == state.widget.displayName, true);
     });
   });
 }
