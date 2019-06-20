@@ -101,7 +101,8 @@ class ProfilePageState extends State<ProfilePage> {
           return EditProfile(
               userInfo: widget.firebaseUser,
               photoUrl: photoUrl,
-              displayName: displayName);
+              displayName: displayName,
+              cloudStoreHelper:new FireCloudStoreHelper());
         }));
       },
     );

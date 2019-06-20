@@ -37,6 +37,10 @@ void main() {
       final BuildContext context = tester.element(text);
       expect(context, isNotNull);
 
+      await state.checkIsLoggedIn();
+      expect(state.isLoggedIn, false);
+      expect(state.firebaseUser, isNull);
+
       final appBar = state.appBar(context);
       TestHelper.checkWidget<AppBar>(appBar);
 
@@ -80,10 +84,31 @@ void main() {
       final rootDrawer = state.getDrawer(context);
       TestHelper.checkWidget<Drawer>(rootDrawer);
 
+      final root = state.build(context);
+      TestHelper.checkWidget<Scaffold>(root);
+
+      state.scaffoldKey.currentState.openDrawer();
+      await tester.pump();
+
+      final lItem= find.byType(ListTile).at(0);
+      expect(lItem, isNotNull);
+      await tester.tap(lItem);
+
+      final lItem1= find.byType(ListTile).at(1);
+      expect(lItem1, isNotNull);
+      await tester.tap(lItem1);
+
+      final lItem2= find.byType(ListTile).at(1);
+      expect(lItem2, isNotNull);
+      await tester.tap(lItem2);
+
+      final tEvents = find.text('Events');
+      expect(tEvents, findsWidgets);
+
       //widget
       final  drawer = find.byTooltip('Open navigation menu');
       expect(drawer, findsWidgets);
-      tester.tap(drawer) ;
+      //tester.tap(drawer) ;
 
     });
   });

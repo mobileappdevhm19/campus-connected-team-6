@@ -16,11 +16,12 @@ class EditProfile extends StatefulWidget {
   final userInfo;
   final photoUrl;
   final displayName;
+  final FireCloudStoreHelper cloudStoreHelper;
 
-  EditProfile({this.userInfo, this.photoUrl, this.displayName});
+  EditProfile({this.userInfo, this.photoUrl, this.displayName, this.cloudStoreHelper});
 
   @override
-  EditProfileState createState() => EditProfileState();
+  EditProfileState createState() => EditProfileState(cloudStoreHelper);
 }
 
 class EditProfileState extends State<EditProfile> {
@@ -32,7 +33,11 @@ class EditProfileState extends State<EditProfile> {
 
   bool uploadingStatus = false;
   bool imageRequired = false;
-  FireCloudStoreHelper cloudStoreHelper = new FireCloudStoreHelper();
+
+
+  final FireCloudStoreHelper cloudStoreHelper;
+
+  EditProfileState(this.cloudStoreHelper);
 
   Future getImage() async {
     var connectionStatus = await checkInternetConnection();

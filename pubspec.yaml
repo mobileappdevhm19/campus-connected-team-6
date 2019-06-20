@@ -13,6 +13,9 @@ dependencies:
     sdk: flutter
   test: any
   image_test_utils: ^1.0.0
+  mockito: ^3.0.0
+
+
 
   firebase_auth: ^0.11.1+6
   cloud_firestore: ^0.12.5
@@ -32,6 +35,7 @@ dependencies:
 dev_dependencies:
   flutter_test:
     sdk: flutter
+
 
   flutter_launcher_icons: "^0.7.2"
 

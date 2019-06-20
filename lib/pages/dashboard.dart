@@ -26,7 +26,7 @@ class DashboardState extends State<Dashboard> {
   bool isLoggedIn = false;
 
   //to check if a user logged in or not , it will call from initState
-  _isLoggedIn() async {
+  checkIsLoggedIn() async {
     auth.getCurrentUser().then((user) {
       if (user != null) {
         setState(() {
@@ -44,7 +44,7 @@ class DashboardState extends State<Dashboard> {
   void initState() {
     super.initState();
     super.initState();
-    _isLoggedIn();
+    checkIsLoggedIn();
     auth.getCurrentUser().then((user) {
       setState(() {
         firebaseUser = user;
@@ -57,9 +57,11 @@ class DashboardState extends State<Dashboard> {
     super.dispose();
   }
 
+  final scaffoldKey = GlobalKey<ScaffoldState>();
   @override
   Widget build(BuildContext context) {
     return Scaffold(
+      key: scaffoldKey,
       appBar: appBar(context),
       drawer: getDrawer(context),
       body: getBody(context),
@@ -268,7 +270,7 @@ class DashboardState extends State<Dashboard> {
         if (route == 'logout') {
           Navigator.of(context).pop();
           FirebaseAuth.instance.signOut();
-          _isLoggedIn();
+          checkIsLoggedIn();
         } else if (route == 'events') {
           Navigator.of(context).pop();
         } else if (route == 'login') {
