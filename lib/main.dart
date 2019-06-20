@@ -30,6 +30,7 @@ class MyApp extends StatelessWidget {
       //home: new Dashboard(),
       //home: new RootPage(),
       home: new SplashScreen(),
+      //home: CreateEvent(),
     );
   }
 }
