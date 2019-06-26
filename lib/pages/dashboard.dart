@@ -111,7 +111,7 @@ class _DashboardState extends State<Dashboard> {
         itemBuilder: (context, ind) {
           return Card(
             shape:
-            RoundedRectangleBorder(borderRadius: BorderRadius.circular(6)),
+                RoundedRectangleBorder(borderRadius: BorderRadius.circular(6)),
             margin: EdgeInsets.all(6.0),
             elevation: 3.0,
             child: ListTile(
@@ -187,7 +187,7 @@ class _DashboardState extends State<Dashboard> {
       height: screenAwareSize(150, context),
       child: Center(
           child: CampusLogo(//size: screenAwareSize(80, context)
-          )),
+              )),
     );
   }
 
@@ -208,34 +208,34 @@ class _DashboardState extends State<Dashboard> {
           }
           return !(snapshot.hasData && snapshot.data.documents.length == 0)
               ? ListTile(
-            title: Text(
-              snapshot.data.documents[0]['displayName'],
-              key: Key("UserName"),
-              style: TextStyle(fontSize: 18),
-              maxLines: 1,
-              overflow: TextOverflow.ellipsis,
-            ),
-            leading: ClipRRect(
-              borderRadius: BorderRadius.circular(40),
-              child: Container(
-                width: screenAwareSize(50, context),
-                height: screenAwareSize(50, context),
-                child: FadeInImage.assetNetwork(
-                  image: snapshot.data.documents[0]['photoUrl'],
-                  fit: BoxFit.cover,
-                  placeholder: 'assets/person.jpg',
-                ),
-              ),
-            ),
-            onTap: () async {
-              Navigator.of(context)
-                  .push(MaterialPageRoute(builder: (context) {
-                return ProfilePage(
-                  firebaseUser: firebaseUser,
-                );
-              }));
-            },
-          )
+                  title: Text(
+                    snapshot.data.documents[0]['displayName'],
+                    key: Key("UserName"),
+                    style: TextStyle(fontSize: 18),
+                    maxLines: 1,
+                    overflow: TextOverflow.ellipsis,
+                  ),
+                  leading: ClipRRect(
+                    borderRadius: BorderRadius.circular(40),
+                    child: Container(
+                      width: screenAwareSize(50, context),
+                      height: screenAwareSize(50, context),
+                      child: FadeInImage.assetNetwork(
+                        image: snapshot.data.documents[0]['photoUrl'],
+                        fit: BoxFit.cover,
+                        placeholder: 'assets/person.jpg',
+                      ),
+                    ),
+                  ),
+                  onTap: () async {
+                    Navigator.of(context)
+                        .push(MaterialPageRoute(builder: (context) {
+                      return ProfilePage(
+                        firebaseUser: firebaseUser,
+                      );
+                    }));
+                  },
+                )
               : Container();
         },
       ),
@@ -252,10 +252,15 @@ class _DashboardState extends State<Dashboard> {
       onTap: () {
         if (route == 'logout') {
           //  Navigator.of(context).pop();
-          Navigator.of(context).push(MaterialPageRoute(builder: (context) {
-            return LoginSignUpPage();
-          }));
+          // auth.signOut();
+          Navigator.of(context).pop();
+//          Navigator.of(context).push(MaterialPageRoute(builder: (context) {
+//            return LoginSignUpPage();
+//          }
+//          ));
           FirebaseAuth.instance.signOut();
+          auth.signOut();
+          Navigator.of(context).pushReplacementNamed('/logout');
           _isLoggedIn();
         } else if (route == 'events') {
           Navigator.of(context).pop();
@@ -263,19 +268,19 @@ class _DashboardState extends State<Dashboard> {
           Navigator.of(context).pop();
           isLoggedIn
               ? Navigator.of(context)
-              .push(new MaterialPageRoute(builder: (BuildContext context) {
-            return CreateEvent(
-              currentUser: firebaseUser,
-            );
-          }))
+                  .push(new MaterialPageRoute(builder: (BuildContext context) {
+                  return CreateEvent(
+                    currentUser: firebaseUser,
+                  );
+                }))
               : Navigator.of(context).pushNamed('/login');
         } else if (route == 'users') {
           Navigator.of(context).pop();
           isLoggedIn
               ? Navigator.of(context)
-              .push(new MaterialPageRoute(builder: (BuildContext context) {
-            return UsersProfile();
-          }))
+                  .push(new MaterialPageRoute(builder: (BuildContext context) {
+                  return UsersProfile();
+                }))
               : Navigator.of(context).pushNamed('/login');
         } else {
           Navigator.of(context).pop();

@@ -115,18 +115,17 @@ class _CreateEventState extends State<CreateEvent> {
         appBar: new AppBar(
           backgroundColor: Colors.red,
           elevation: 0.0,
-          /*
           leading: new IconButton(
             icon: new Icon(
               Icons.arrow_back_ios,
             ),
             color: Colors.white,
             onPressed: () {
-              uploadingStatus == true ? null :  Navigator.of(context).pushReplacementNamed('/home');
+              uploadingStatus == true
+                  ? null
+                  : Navigator.of(context).pushReplacementNamed('/home');
             },
           ),
-          */
-
           title: new Text('Create Event'),
         ),
         body: SingleChildScrollView(

@@ -38,7 +38,7 @@ void main() {
 
       //state test
       final UsersProfileDetailsPageState state =
-      tester.state(find.byType(UsersProfileDetails));
+          tester.state(find.byType(UsersProfileDetails));
       expect(state, isNotNull);
       expect(state.widget, equals(userDetails));
 
