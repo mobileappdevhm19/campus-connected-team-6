@@ -5,6 +5,7 @@ import 'package:flutter_campus_connected/helper/authentication.dart';
 import 'package:flutter_campus_connected/logos/campus_logo.dart';
 import 'package:flutter_campus_connected/models/event_model.dart';
 import 'package:flutter_campus_connected/pages/create_event.dart';
+import 'package:flutter_campus_connected/pages/faq_page.dart';
 import 'package:flutter_campus_connected/pages/profile.dart';
 import 'package:flutter_campus_connected/pages/users_profile.dart';
 import 'package:flutter_campus_connected/pages/view_event.dart';
@@ -80,6 +81,7 @@ class _DashboardState extends State<Dashboard> {
                   : Container(),
               drawerItem(context, 'Events', Icons.event_available, 'events'),
               drawerItem(context, 'Create Events', Icons.event, 'login'),
+              drawerItem(context, 'FAQ', Icons.question_answer, 'faq'),
               isLoggedIn
                   ? drawerItem(context, 'Log Out', Icons.exit_to_app, 'logout')
                   : Container(),
@@ -111,7 +113,7 @@ class _DashboardState extends State<Dashboard> {
         itemBuilder: (context, ind) {
           return Card(
             shape:
-            RoundedRectangleBorder(borderRadius: BorderRadius.circular(6)),
+                RoundedRectangleBorder(borderRadius: BorderRadius.circular(6)),
             margin: EdgeInsets.all(6.0),
             elevation: 3.0,
             child: ListTile(
@@ -187,7 +189,7 @@ class _DashboardState extends State<Dashboard> {
       height: screenAwareSize(150, context),
       child: Center(
           child: CampusLogo(//size: screenAwareSize(80, context)
-          )),
+              )),
     );
   }
 
@@ -208,34 +210,34 @@ class _DashboardState extends State<Dashboard> {
           }
           return !(snapshot.hasData && snapshot.data.documents.length == 0)
               ? ListTile(
-            title: Text(
-              snapshot.data.documents[0]['displayName'],
-              key: Key("UserName"),
-              style: TextStyle(fontSize: 18),
-              maxLines: 1,
-              overflow: TextOverflow.ellipsis,
-            ),
-            leading: ClipRRect(
-              borderRadius: BorderRadius.circular(40),
-              child: Container(
-                width: screenAwareSize(50, context),
-                height: screenAwareSize(50, context),
-                child: FadeInImage.assetNetwork(
-                  image: snapshot.data.documents[0]['photoUrl'],
-                  fit: BoxFit.cover,
-                  placeholder: 'assets/person.jpg',
-                ),
-              ),
-            ),
-            onTap: () async {
-              Navigator.of(context)
-                  .push(MaterialPageRoute(builder: (context) {
-                return ProfilePage(
-                  firebaseUser: firebaseUser,
-                );
-              }));
-            },
-          )
+                  title: Text(
+                    snapshot.data.documents[0]['displayName'],
+                    key: Key("UserName"),
+                    style: TextStyle(fontSize: 18),
+                    maxLines: 1,
+                    overflow: TextOverflow.ellipsis,
+                  ),
+                  leading: ClipRRect(
+                    borderRadius: BorderRadius.circular(40),
+                    child: Container(
+                      width: screenAwareSize(50, context),
+                      height: screenAwareSize(50, context),
+                      child: FadeInImage.assetNetwork(
+                        image: snapshot.data.documents[0]['photoUrl'],
+                        fit: BoxFit.cover,
+                        placeholder: 'assets/person.jpg',
+                      ),
+                    ),
+                  ),
+                  onTap: () async {
+                    Navigator.of(context)
+                        .push(MaterialPageRoute(builder: (context) {
+                      return ProfilePage(
+                        firebaseUser: firebaseUser,
+                      );
+                    }));
+                  },
+                )
               : Container();
         },
       ),
@@ -263,20 +265,25 @@ class _DashboardState extends State<Dashboard> {
           Navigator.of(context).pop();
           isLoggedIn
               ? Navigator.of(context)
-              .push(new MaterialPageRoute(builder: (BuildContext context) {
-            return CreateEvent(
-              currentUser: firebaseUser,
-            );
-          }))
+                  .push(new MaterialPageRoute(builder: (BuildContext context) {
+                  return CreateEvent(
+                    currentUser: firebaseUser,
+                  );
+                }))
               : Navigator.of(context).pushNamed('/login');
         } else if (route == 'users') {
           Navigator.of(context).pop();
           isLoggedIn
               ? Navigator.of(context)
-              .push(new MaterialPageRoute(builder: (BuildContext context) {
-            return UsersProfile();
-          }))
+                  .push(new MaterialPageRoute(builder: (BuildContext context) {
+                  return UsersProfile();
+                }))
               : Navigator.of(context).pushNamed('/login');
+        } else if (route == 'faq') {
+          Navigator.of(context)
+              .push(new MaterialPageRoute(builder: (BuildContext context) {
+            return FAQPage();
+          }));
         } else {
           Navigator.of(context).pop();
         }

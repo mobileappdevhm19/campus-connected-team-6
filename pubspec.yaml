@@ -13,6 +13,7 @@ dependencies:
     sdk: flutter
   test: any
   image_test_utils: ^1.0.0
+  cached_network_image: ^0.8.0
 
   firebase_auth: ^0.11.1+6
   cloud_firestore: ^0.12.5
