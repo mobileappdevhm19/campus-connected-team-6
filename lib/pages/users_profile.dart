@@ -9,7 +9,7 @@ import 'package:flutter_campus_connected/utils/screen_aware_size.dart';
 class UsersProfile extends StatefulWidget {
   final firebaseUser;
 
-  UsersProfile(this.firebaseUser);
+  UsersProfile([this.firebaseUser]);
 
   @override
   UsersProfileState createState() => UsersProfileState();
