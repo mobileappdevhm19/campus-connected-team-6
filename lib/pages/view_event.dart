@@ -300,7 +300,6 @@ class _EventViewState extends State<EventView> {
         if (snapshot.connectionState == ConnectionState.waiting) {
           return Container();
         }
-        totalParticipantCount = snapshot.data.documents.length;
         !(snapshot.hasData && snapshot.data.documents.length == 0)
             ? currentEventUser = snapshot.data.documents[0].documentID
             : currentEventUser = "";
