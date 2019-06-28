@@ -45,8 +45,7 @@ class FAQPageState extends State<FAQPage> {
                     height: MediaQuery.of(context).size.height / 10,
                     width: MediaQuery.of(context).size.width,
                     padding: EdgeInsets.only(
-                      top: MediaQuery.of(context).size.height / 80
-                    ),
+                        top: MediaQuery.of(context).size.height / 80),
                     child: new Text(
                       faq.answer,
                       style: new TextStyle(

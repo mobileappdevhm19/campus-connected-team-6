@@ -1,10 +1,5 @@
-import 'package:cloud_firestore/cloud_firestore.dart';
-import 'package:flutter/material.dart';
 import 'package:flutter_campus_connected/models/event_model.dart';
-import 'package:flutter_campus_connected/pages/view_event.dart';
 import 'package:flutter_test/flutter_test.dart';
-
-import 'test_helper.dart';
 
 String eventId = "-LgEuJxy66R6jvCcaPvG";
 
