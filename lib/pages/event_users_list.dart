@@ -1,10 +1,11 @@
 import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:flutter/material.dart';
+import 'package:flutter_campus_connected/models/user_entity.dart';
+import 'package:flutter_campus_connected/pages/usersProfileDetails.dart';
 import 'package:flutter_campus_connected/utils/screen_aware_size.dart';
 
 class EventUsersList extends StatelessWidget {
   final eventId;
-  String user = "test";
 
   EventUsersList({this.eventId});
 
@@ -25,10 +26,11 @@ class EventUsersList extends StatelessWidget {
             child: ListView.builder(
                 itemCount: snapshot.data.documents.length,
                 itemBuilder: (context, ind) {
+                  String userId = snapshot.data.documents[ind]['userId'];
                   return Card(
                     margin: EdgeInsets.all(2.0),
                     elevation: 1.0,
-                    child: listItem(snapshot, ind, context),
+                    child: listItem(userId, ind, context),
                   );
                 }),
           );
@@ -38,35 +40,59 @@ class EventUsersList extends StatelessWidget {
   }
 
   //participant list
-  ListTile listItem(AsyncSnapshot snapshot, int ind, BuildContext context) {
-    Firestore.instance
-        .collection('users')
-        .where('uid', isEqualTo: snapshot.data.documents[ind]['userId'])
-        .getDocuments()
-        .then((data) => user = data.documents[ind]['displayName']);
-    return ListTile(
-      title: Text(
-        user,
-        style: TextStyle(fontSize: screenAwareSize(20, context)),
-        maxLines: 1,
-        overflow: TextOverflow.ellipsis,
-      ),
-      leading: CircleAvatar(
-        child: Text(
-          snapshot.data.documents[ind]['userId']
-              .toString()
-              .toUpperCase()
-              .substring(0, 1)
-              .toUpperCase(),
-          style: TextStyle(fontSize: screenAwareSize(20, context)),
-        ),
-      ),
-      /* onTap: () {
-        //_showAlertDialouge(snapshot.data.documents[ind]['name'],
-        //  snapshot.data.documents[ind]['email'], context);
+  StreamBuilder<QuerySnapshot> listItem(
+      String userId, int ind, BuildContext context) {
+    return StreamBuilder(
+      stream: Firestore.instance
+          .collection('users')
+          .where('uid', isEqualTo: userId)
+          .snapshots(),
+      builder: (context, snapshot) {
+        if (snapshot.connectionState == ConnectionState.waiting) {
+          return Container();
+        }
+        final entity = UserEntity(
+            snapshot.data.documents[0]['displayName'],
+            snapshot.data.documents[0]['photoUrl'],
+            snapshot.data.documents[0]['email'],
+            snapshot.data.documents[0]);
+        return !(snapshot.hasData && snapshot.data.documents.length == 0)
+            ? ListTile(
+                title: Text(
+                  entity.displayName,
+                  style: TextStyle(fontSize: screenAwareSize(20, context)),
+                  maxLines: 1,
+                  overflow: TextOverflow.ellipsis,
+                ),
+                leading: CircleAvatar(
+                  child: ClipRRect(
+                    borderRadius: BorderRadius.circular(40),
+                    child: Container(
+                      width: screenAwareSize(50, context),
+                      height: screenAwareSize(50, context),
+                      child: FadeInImage.assetNetwork(
+                        image: entity.photoUrl,
+                        fit: BoxFit.cover,
+                        placeholder: 'assets/person.jpg',
+                      ),
+                    ),
+                  ),
+                ),
+                onTap: () async {
+                  tapOnItem(context, entity);
+                },
+              )
+            : Container();
       },
-      */
     );
+  }
+
+  void tapOnItem(BuildContext context, UserEntity entity) {
+    Navigator.of(context).push(MaterialPageRoute(builder: (context) {
+      return UsersProfileDetails(
+        details: entity.data,
+      );
+    }));
   }
 
   //app bar
