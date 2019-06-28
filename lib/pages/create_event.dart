@@ -265,6 +265,7 @@ class _CreateEventState extends State<CreateEvent> {
       //Navigator.of(context).pop();
       Navigator.of(context).pushNamed('/home');
       _formState.currentState.reset();
+      _showPopUpMessage();
     }
   }
 
@@ -599,5 +600,59 @@ class _CreateEventState extends State<CreateEvent> {
         }
       },
     );
+  }
+
+  //this function should briefly show a message that you have created an event
+  void _showPopUpMessage() {
+    showDialog(
+        context: context,
+        builder: (BuildContext context) {
+          return AlertDialog(
+            shape: RoundedRectangleBorder(
+                borderRadius: BorderRadius.all(Radius.circular(12.0))),
+            content: Column(
+              mainAxisSize: MainAxisSize.min,
+              mainAxisAlignment: MainAxisAlignment.center,
+              children: <Widget>[
+                SizedBox(height: screenAwareSize(10, context)),
+                Text(
+                  'Congratulations🎉',
+                  style: TextStyle(
+                      color: Colors.black87,
+                      fontSize: screenAwareSize(26, context)),
+                ),
+                SizedBox(height: screenAwareSize(10, context)),
+                Padding(
+                  padding: EdgeInsets.all(screenAwareSize(8.0, context)),
+                  child: Text(
+                    'Yeah, you have successfully created an event. ',
+                    style: TextStyle(
+                        color: Colors.black87,
+                        fontSize: screenAwareSize(16, context)),
+                    textAlign: TextAlign.center,
+                  ),
+                ),
+                Align(
+                  alignment: Alignment.center,
+                  child: RaisedButton(
+                    onPressed: () {
+                      Navigator.of(context).pop();
+                    },
+                    child: Text(
+                      'OK',
+                      style: TextStyle(color: Colors.white),
+                    ),
+                    color: Colors.red,
+                    shape: RoundedRectangleBorder(
+                        borderRadius: BorderRadius.circular(10)),
+                    elevation: 6.0,
+                  ),
+                )
+              ],
+            ),
+            contentPadding: EdgeInsets.all(10),
+            titlePadding: EdgeInsets.all(20),
+          );
+        });
   }
 }
