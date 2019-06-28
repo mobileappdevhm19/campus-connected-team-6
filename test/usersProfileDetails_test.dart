@@ -38,7 +38,7 @@ void main() {
 
       //state test
       final UsersProfileDetailsPageState state =
-      tester.state(find.byType(UsersProfileDetails));
+          tester.state(find.byType(UsersProfileDetails));
       expect(state, isNotNull);
       expect(state.widget, equals(userDetails));
 
@@ -59,7 +59,7 @@ void main() {
 
       expect(item is Card, true);
 
-      final clip = state.getClipRRect('test.png');
+      final clip = state.getClipRRect('test.png', false);
       expect(clip, isNotNull);
       expect(clip is ClipRRect, true);
 

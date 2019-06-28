@@ -87,20 +87,15 @@ class _SearchEventState extends State<SearchEvent> {
               },
             ),
           ),
-          /*
-        leading: new IconButton(
-          icon: new Icon(
-            Icons.arrow_back_ios,
+          leading: new IconButton(
+            icon: new Icon(
+              Icons.arrow_back_ios,
+            ),
+            color: Colors.white,
+            onPressed: () {
+              Navigator.of(context).pushReplacementNamed('/home');
+            },
           ),
-          color: Colors.white,
-          onPressed: () {
-            Navigator.of(context)
-                .push(MaterialPageRoute(builder: (context) {
-              return MyHomePage();
-            }));
-          },
-        ),
-        */
         ),
         body: Container(
           child: listItem(tempSearchStore),

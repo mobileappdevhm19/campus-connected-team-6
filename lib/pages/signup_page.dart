@@ -117,7 +117,7 @@ class _SignUpPageState extends State<SignUpPage>
           var userUpdateInfo = new UserUpdateInfo();
           userUpdateInfo.displayName = _name;
           userUpdateInfo.photoUrl =
-          'https://fertilitynetworkuk.org/wp-content/uploads/2017/01/Facebook-no-profile-picture-icon-620x389.jpg';
+              'https://fertilitynetworkuk.org/wp-content/uploads/2017/01/Facebook-no-profile-picture-icon-620x389.jpg';
           await user.updateProfile(userUpdateInfo);
           auth.getCurrentUser().then((currentUser) async {
             if (currentUser != null) {
@@ -174,31 +174,31 @@ class _SignUpPageState extends State<SignUpPage>
   Widget _showBody() {
     return Container(
         child: new Form(
-          key: _formKey,
-          child: Card(
-            elevation: 10,
-            shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(10)),
-            child: Column(
-              mainAxisSize: MainAxisSize.min,
-              children: <Widget>[
-                Padding(
-                  child: Text(
-                    'SIGN UP',
-                    style: TextStyle(fontSize: screenAwareSize(30, context)),
-                  ),
-                  padding: EdgeInsets.all(20),
-                ),
-                _showNameInput(),
-                _showEmailInput(),
-                _showPasswordInput(),
-                SizedBox(height: screenAwareSize(20, context)),
-                _showPrimaryButton(context),
-                SizedBox(height: screenAwareSize(20, context)),
-                _showSecondaryButton(),
-              ],
+      key: _formKey,
+      child: Card(
+        elevation: 10,
+        shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(10)),
+        child: Column(
+          mainAxisSize: MainAxisSize.min,
+          children: <Widget>[
+            Padding(
+              child: Text(
+                'SIGN UP',
+                style: TextStyle(fontSize: screenAwareSize(30, context)),
+              ),
+              padding: EdgeInsets.all(20),
             ),
-          ),
-        ));
+            _showNameInput(),
+            _showEmailInput(),
+            _showPasswordInput(),
+            SizedBox(height: screenAwareSize(20, context)),
+            _showPrimaryButton(context),
+            SizedBox(height: screenAwareSize(20, context)),
+            _showSecondaryButton(),
+          ],
+        ),
+      ),
+    ));
   }
 
   //user email

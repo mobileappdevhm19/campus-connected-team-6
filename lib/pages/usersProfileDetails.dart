@@ -192,8 +192,8 @@ class UsersProfileDetailsPageState extends State<UsersProfileDetails> {
       children: <Widget>[
         Stack(
           children: <Widget>[
-            getClipRRect('assets/person.jpg'),
-            getClipRRect(entity.photoUrl)
+            getClipRRect('assets/person.jpg', false),
+            getClipRRect(entity.photoUrl, true)
           ],
         ),
         Padding(
@@ -223,17 +223,21 @@ class UsersProfileDetailsPageState extends State<UsersProfileDetails> {
     );
   }
 
-  ClipRRect getClipRRect(String image) {
+  ClipRRect getClipRRect(String image, isNetwork) {
     return ClipRRect(
       borderRadius: BorderRadius.circular(100),
       child: Container(
-        width: 120,
-        height: 120,
-        child: Image.asset(
-          image,
-          fit: BoxFit.cover,
-        ),
-      ),
+          width: 120,
+          height: 120,
+          child: isNetwork
+              ? Image(
+                  image: NetworkImage(image),
+                  fit: BoxFit.cover,
+                )
+              : Image.asset(
+                  image,
+                  fit: BoxFit.cover,
+                )),
     );
   }
 
