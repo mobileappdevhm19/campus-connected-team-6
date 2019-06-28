@@ -1,3 +1,5 @@
+import 'dart:io';
+
 import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/material.dart';
@@ -60,9 +62,7 @@ class _DashboardState extends State<Dashboard> {
   @override
   Widget build(BuildContext context) {
     return WillPopScope(
-      onWillPop: () {
-        Navigator.pop(context);
-      },
+      onWillPop: () => _exitApp(context),
       child: Scaffold(
         appBar: appBar(context),
         drawer: Drawer(
@@ -102,6 +102,27 @@ class _DashboardState extends State<Dashboard> {
         ),
       ),
     );
+  }
+
+  Future<bool> _exitApp(BuildContext context) {
+    return showDialog(
+          context: context,
+          child: new AlertDialog(
+            title: new Text('Do you want to exit this application?'),
+            content: new Text('We hate to see you leave...'),
+            actions: <Widget>[
+              new FlatButton(
+                onPressed: () => exit(0), //Navigator.of(context).pop(true),
+                child: new Text('Yes'),
+              ),
+              new FlatButton(
+                onPressed: () => Navigator.of(context).pop(false),
+                child: new Text('No'),
+              ),
+            ],
+          ),
+        ) ??
+        false;
   }
 
   //events List
