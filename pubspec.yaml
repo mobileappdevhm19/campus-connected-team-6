@@ -47,6 +47,7 @@ flutter:
   - assets/gallery.png
   - assets/person.jpg
   - assets/loadingfailed.png
+  - assets/faq.jpg
 
 
 flutter_icons:
