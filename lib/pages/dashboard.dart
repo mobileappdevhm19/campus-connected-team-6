@@ -6,6 +6,7 @@ import 'package:flutter_campus_connected/helper/authentication.dart';
 import 'package:flutter_campus_connected/logos/campus_logo.dart';
 import 'package:flutter_campus_connected/models/event_model.dart';
 import 'package:flutter_campus_connected/pages/create_event.dart';
+import 'package:flutter_campus_connected/pages/faq_page.dart';
 import 'package:flutter_campus_connected/pages/profile.dart';
 import 'package:flutter_campus_connected/pages/users_profile.dart';
 import 'package:flutter_campus_connected/pages/view_event.dart';
@@ -76,6 +77,7 @@ class _DashboardState extends State<Dashboard> {
                   : Container(),
               drawerItem(context, 'Events', Icons.event_available, 'events'),
               drawerItem(context, 'Create Events', Icons.event, 'login'),
+              drawerItem(context, 'FAQ', Icons.question_answer, 'faq'),
               isLoggedIn
                   ? drawerItem(context, 'Log Out', Icons.exit_to_app, 'logout')
                   : Container(),
@@ -300,6 +302,11 @@ class _DashboardState extends State<Dashboard> {
                   return UsersProfile();
                 }))
               : Navigator.of(context).pushNamed('/login');
+        } else if (route == 'faq') {
+          Navigator.of(context)
+              .push(new MaterialPageRoute(builder: (BuildContext context) {
+            return FAQPage();
+          }));
         } else {
           Navigator.of(context).pop();
         }
