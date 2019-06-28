@@ -15,51 +15,54 @@ void main() {
   eventModel.eventTime = "10:00AM";
   eventModel.eventLocation = "campus lothstrasse";
   eventModel.eventPhotoUrl = photoUrl;
-  eventModel.eventCategory = "Outdoor";
+  eventModel.eventCategory = "Sport & Fitness";
   eventModel.maximumLimit = 2;
 
-//  testWidgets("Create Event wird getestet", (WidgetTester tester) async {
-//    await tester
-//        .pumpWidget(TestHelper.buildPage(CreateEvent(currentUser: null)));
-//
-//    final joinButtonText = find.text("Event Name");
-//    expect(joinButtonText, findsOneWidget);
-//
-//    final totalParticipants = find.text("Event Description");
-//    expect(totalParticipants, findsOneWidget);
-//
-//    final vieAll = find.text("Event Location");
-//    expect(vieAll, findsOneWidget);
-//
-//    final findEventIcon = find.byIcon(Icons.event);
-//    expect(findEventIcon, findsOneWidget);
-//
-//    final findEventDescriptionIcon = find.byIcon(Icons.description);
-//    expect(findEventDescriptionIcon, findsOneWidget);
-//
-//    final findEventLocation = find.byIcon(Icons.location_city);
-//    expect(findEventLocation, findsOneWidget);
-//
-//    final findEventCategory = find.byIcon(Icons.category);
-//    expect(findEventCategory, findsOneWidget);
-//
-//    final findEventEventDate = find.byIcon(Icons.date_range);
-//    expect(findEventEventDate, findsOneWidget);
-//
-//    final findEventTime = find.byIcon(Icons.access_time);
-//    expect(findEventTime, findsOneWidget);
-//
-//    final findAddCircle = find.byIcon(Icons.add_circle);
-//    expect(findAddCircle, findsOneWidget);
-//
-//    final createButton = find.byType(RaisedButton);
-//    expect(createButton, findsOneWidget);
-////    final dropdown = find.byWidget(DropdownMenuItem<String>(
-////      child: Text('Indoor'),
-////      value: 'Indoor',
-////    ));
-////    expect(dropdown, findsOneWidget);
-//  });
+
+
+
+  testWidgets("Create Event wird getestet", (WidgetTester tester) async {
+    await tester
+        .pumpWidget(TestHelper.buildPage(CreateEvent(currentUser: null)));
+
+    final joinButtonText = find.text("Event Name");
+    expect(joinButtonText, findsOneWidget);
+
+    final totalParticipants = find.text("Event Description");
+    expect(totalParticipants, findsOneWidget);
+
+    final vieAll = find.text("Event Location");
+    expect(vieAll, findsOneWidget);
+
+    final findEventIcon = find.byIcon(Icons.event);
+    expect(findEventIcon, findsOneWidget);
+
+    final findEventDescriptionIcon = find.byIcon(Icons.description);
+    expect(findEventDescriptionIcon, findsOneWidget);
+
+    final findEventLocation = find.byIcon(Icons.location_city);
+    expect(findEventLocation, findsOneWidget);
+
+    final findEventCategory = find.byIcon(Icons.category);
+    expect(findEventCategory, findsOneWidget);
+
+    final findEventEventDate = find.byIcon(Icons.date_range);
+    expect(findEventEventDate, findsOneWidget);
+
+    final findEventTime = find.byIcon(Icons.access_time);
+    expect(findEventTime, findsOneWidget);
+
+    final findAddCircle = find.byIcon(Icons.add_circle);
+    expect(findAddCircle, findsOneWidget);
+
+    final createButton = find.byType(RaisedButton);
+    expect(createButton, findsOneWidget);
+//    final dropdown = find.byWidget(DropdownMenuItem<String>(
+//      child: Text('Indoor'),
+//      value: 'Indoor',
+//    ));
+//    expect(dropdown, findsOneWidget);
+  });
 
   testWidgets("Pop up Message wird getestet", (WidgetTester tester) async {
 
