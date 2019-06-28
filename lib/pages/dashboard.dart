@@ -1,8 +1,7 @@
-import 'dart:io';
-
 import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/material.dart';
+import 'package:flutter/services.dart';
 import 'package:flutter_campus_connected/helper/authentication.dart';
 import 'package:flutter_campus_connected/logos/campus_logo.dart';
 import 'package:flutter_campus_connected/models/event_model.dart';
@@ -11,9 +10,6 @@ import 'package:flutter_campus_connected/pages/profile.dart';
 import 'package:flutter_campus_connected/pages/users_profile.dart';
 import 'package:flutter_campus_connected/pages/view_event.dart';
 import 'package:flutter_campus_connected/utils/screen_aware_size.dart';
-
-import 'login_signup_page.dart';
-//import 'package:flutter_campus_connected/pages/create_event.dart';
 
 class Dashboard extends StatefulWidget {
   @override
@@ -112,7 +108,8 @@ class _DashboardState extends State<Dashboard> {
             content: new Text('We hate to see you leave...'),
             actions: <Widget>[
               new FlatButton(
-                onPressed: () => exit(0), //Navigator.of(context).pop(true),
+                onPressed: () =>
+                    SystemNavigator.pop(), //Navigator.of(context).pop(true),
                 child: new Text('Yes'),
               ),
               new FlatButton(
