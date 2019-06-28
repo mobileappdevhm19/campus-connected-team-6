@@ -29,9 +29,7 @@ class MyApp extends StatelessWidget {
         '/logout': (BuildContext context) => new LoginSignUpPage(),
       },
       theme: new ThemeData(primarySwatch: Colors.red),
-      //home: new Dashboard(),
       home: new RootPage(),
-      // home: new SplashScreen(),
     );
   }
 }

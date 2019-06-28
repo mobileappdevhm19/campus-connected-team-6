@@ -25,6 +25,7 @@ class EventView extends StatefulWidget {
 class _EventViewState extends State<EventView> {
   String _joinStatusInterested = "I´m Interested";
   String _joinStatusNotInterested = "I´m Not Interested";
+  String _deleteButtonText = "Delete Event";
 
   var totalParticipantCount = 0;
   String currentEventUser = "";
@@ -108,7 +109,7 @@ class _EventViewState extends State<EventView> {
                       eventItem(context, widget.event['eventCategory'],
                           Icons.category),
                       SizedBox(height: screenAwareSize(10, context)),
-                      interestedButton(context),
+                      interestedButton(context, widget.event['createdBy']),
                       eventParticipant(),
                       Divider(
                         color: Colors.grey,
@@ -214,6 +215,7 @@ class _EventViewState extends State<EventView> {
                                 .push(MaterialPageRoute(builder: (context) {
                               return EventUsersList(
                                 eventId: widget.event.documentID,
+                                firebaseUser: widget.firebaseUser,
                               );
                             }));
                           },
@@ -271,6 +273,8 @@ class _EventViewState extends State<EventView> {
                                                 return UsersProfileDetails(
                                                   details: snapshot
                                                       .data.documents[0],
+                                                  firebaseUser:
+                                                      widget.firebaseUser,
                                                 );
                                               }));
                                             },
@@ -289,7 +293,8 @@ class _EventViewState extends State<EventView> {
   }
 
   //event interested Button
-  StreamBuilder<QuerySnapshot> interestedButton(BuildContext context) {
+  StreamBuilder<QuerySnapshot> interestedButton(
+      BuildContext context, String organizer) {
     return StreamBuilder(
       stream: Firestore.instance
           .collection('eventUsers')
@@ -303,81 +308,147 @@ class _EventViewState extends State<EventView> {
         !(snapshot.hasData && snapshot.data.documents.length == 0)
             ? currentEventUser = snapshot.data.documents[0].documentID
             : currentEventUser = "";
-        return !(snapshot.hasData && snapshot.data.documents.length == 0)
-            ? Align(
-                alignment: Alignment.center,
-                child: RaisedButton(
-                  color: Colors.red,
-                  padding: EdgeInsets.only(
-                      left: screenAwareSize(20, context),
-                      right: screenAwareSize(20, context)),
-                  child: Row(
-                    mainAxisSize: MainAxisSize.min,
-                    children: <Widget>[
-                      Icon(
-                        Icons.favorite_border,
-                        color: Colors.white,
-                        size: screenAwareSize(16, context),
-                      ),
-                      SizedBox(
-                        width: 5,
-                      ),
-                      Text(
-                        _joinStatusNotInterested,
-                        style: TextStyle(
-                            color: Colors.white,
-                            fontSize: screenAwareSize(16, context)),
-                      )
-                    ],
-                  ),
-                  shape: RoundedRectangleBorder(
-                      borderRadius: BorderRadius.circular(20)),
-                  elevation: 8.0,
-                  onPressed: _deleteEventUser,
-                  //},
+        if (widget.firebaseUser.uid == organizer) {
+          return Align(
+            alignment: Alignment.center,
+            child: RaisedButton(
+                color: Colors.redAccent,
+                padding: EdgeInsets.only(
+                    left: screenAwareSize(20, context),
+                    right: screenAwareSize(20, context)),
+                child: Row(
+                  mainAxisSize: MainAxisSize.min,
+                  children: <Widget>[
+                    Icon(
+                      Icons.delete,
+                      color: Colors.white,
+                      size: screenAwareSize(16, context),
+                    ),
+                    SizedBox(
+                      width: 5,
+                    ),
+                    Text(
+                      _deleteButtonText,
+                      style: TextStyle(
+                          color: Colors.white,
+                          fontSize: screenAwareSize(16, context)),
+                    )
+                  ],
                 ),
-              )
-            : Align(
-                alignment: Alignment.center,
-                child: RaisedButton(
-                  color: Colors.red,
-                  padding: EdgeInsets.only(
-                      left: screenAwareSize(20, context),
-                      right: screenAwareSize(20, context)),
-                  child: Row(
-                    mainAxisSize: MainAxisSize.min,
-                    children: <Widget>[
-                      Icon(
-                        Icons.favorite_border,
-                        color: Colors.white,
-                        size: screenAwareSize(16, context),
-                      ),
-                      SizedBox(
-                        width: 5,
-                      ),
-                      Text(
-                        _joinStatusInterested,
-                        style: TextStyle(
-                            color: Colors.white,
-                            fontSize: screenAwareSize(16, context)),
-                      )
-                    ],
-                  ),
-                  shape: RoundedRectangleBorder(
-                      borderRadius: BorderRadius.circular(20)),
-                  elevation: 8.0,
-                  onPressed: () {
-                    if (totalParticipantCount < widget.event['maximumLimit']) {
-                      _createEventUser();
-                    } else {
-                      _showAlertDialogue();
-                    }
-                  },
-                  //},
+                shape: RoundedRectangleBorder(
+                    borderRadius: BorderRadius.circular(20)),
+                elevation: 8.0,
+                onPressed: () {
+                  _deleteEvent(context);
+                }
+                //},
                 ),
-              );
+          );
+        } else {
+          return !(snapshot.hasData && snapshot.data.documents.length == 0)
+              ? Align(
+                  alignment: Alignment.center,
+                  child: RaisedButton(
+                    color: Colors.red,
+                    padding: EdgeInsets.only(
+                        left: screenAwareSize(20, context),
+                        right: screenAwareSize(20, context)),
+                    child: Row(
+                      mainAxisSize: MainAxisSize.min,
+                      children: <Widget>[
+                        Icon(
+                          Icons.favorite_border,
+                          color: Colors.white,
+                          size: screenAwareSize(16, context),
+                        ),
+                        SizedBox(
+                          width: 5,
+                        ),
+                        Text(
+                          _joinStatusNotInterested,
+                          style: TextStyle(
+                              color: Colors.white,
+                              fontSize: screenAwareSize(16, context)),
+                        )
+                      ],
+                    ),
+                    shape: RoundedRectangleBorder(
+                        borderRadius: BorderRadius.circular(20)),
+                    elevation: 8.0,
+                    onPressed: _deleteEventUser,
+                    //},
+                  ),
+                )
+              : Align(
+                  alignment: Alignment.center,
+                  child: RaisedButton(
+                    color: Colors.red,
+                    padding: EdgeInsets.only(
+                        left: screenAwareSize(20, context),
+                        right: screenAwareSize(20, context)),
+                    child: Row(
+                      mainAxisSize: MainAxisSize.min,
+                      children: <Widget>[
+                        Icon(
+                          Icons.favorite_border,
+                          color: Colors.white,
+                          size: screenAwareSize(16, context),
+                        ),
+                        SizedBox(
+                          width: 5,
+                        ),
+                        Text(
+                          _joinStatusInterested,
+                          style: TextStyle(
+                              color: Colors.white,
+                              fontSize: screenAwareSize(16, context)),
+                        )
+                      ],
+                    ),
+                    shape: RoundedRectangleBorder(
+                        borderRadius: BorderRadius.circular(20)),
+                    elevation: 8.0,
+                    onPressed: () {
+                      if (totalParticipantCount <
+                          widget.event['maximumLimit']) {
+                        _createEventUser();
+                      } else {
+                        _showAlertDialogue();
+                      }
+                    },
+                    //},
+                  ),
+                );
+        }
       },
     );
+  }
+
+  Future<bool> _deleteEvent(BuildContext context) {
+    return showDialog(
+          context: context,
+          child: new AlertDialog(
+            title: new Text('Do you want to delete this Event?'),
+            content: new Text('Deleted Events can not be restored!'),
+            actions: <Widget>[
+              new FlatButton(
+                onPressed: () {
+                  cloudStoreHelper.deleteEvent(widget.event.documentID);
+                  Navigator.of(context).pop(false);
+                  Navigator.of(context).pop(false);
+                },
+                child: new Text('Yes'),
+              ),
+              new FlatButton(
+                onPressed: () {
+                  Navigator.of(context).pop(false);
+                },
+                child: new Text('No'),
+              ),
+            ],
+          ),
+        ) ??
+        false;
   }
 
   //will save participant data in database
@@ -480,6 +551,7 @@ class _EventViewState extends State<EventView> {
                       .push(MaterialPageRoute(builder: (context) {
                     return UsersProfileDetails(
                       details: snapshot.data.documents[0],
+                      firebaseUser: widget.firebaseUser,
                     );
                   }));
                 },

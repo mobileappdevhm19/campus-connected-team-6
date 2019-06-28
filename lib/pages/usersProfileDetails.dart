@@ -8,8 +8,9 @@ import 'package:flutter_campus_connected/utils/screen_aware_size.dart';
 
 class UsersProfileDetails extends StatefulWidget {
   final details;
+  final firebaseUser;
 
-  UsersProfileDetails({this.details});
+  UsersProfileDetails({this.details, this.firebaseUser});
 
   @override
   UsersProfileDetailsPageState createState() => UsersProfileDetailsPageState();
@@ -142,6 +143,7 @@ class UsersProfileDetailsPageState extends State<UsersProfileDetails> {
                       .push(new MaterialPageRoute(builder: (context) {
                     return EventView(
                       data,
+                      widget.firebaseUser,
                     );
                   }));
                 }),

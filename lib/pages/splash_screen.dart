@@ -20,9 +20,7 @@ class SplashScreenState extends State<SplashScreen> {
   }
 
   void navigationPage() {
-    Navigator.of(context).push(new MaterialPageRoute(
-        //builder: (BuildContext context) => new Dashboard()));
-        builder: (BuildContext context) => new LoginSignUpPage()));
+    Navigator.of(context).pushReplacementNamed('/login');
   }
 
   @override

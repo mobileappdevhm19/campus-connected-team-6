@@ -1,4 +1,5 @@
 import 'package:cloud_firestore/cloud_firestore.dart';
+import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_campus_connected/models/user_entity.dart';
 import 'package:flutter_campus_connected/pages/usersProfileDetails.dart';
@@ -6,8 +7,9 @@ import 'package:flutter_campus_connected/utils/screen_aware_size.dart';
 
 class EventUsersList extends StatelessWidget {
   final eventId;
+  final FirebaseUser firebaseUser;
 
-  EventUsersList({this.eventId});
+  EventUsersList({this.eventId, this.firebaseUser});
 
   @override
   Widget build(BuildContext context) {
@@ -91,6 +93,7 @@ class EventUsersList extends StatelessWidget {
     Navigator.of(context).push(MaterialPageRoute(builder: (context) {
       return UsersProfileDetails(
         details: entity.data,
+        firebaseUser: firebaseUser,
       );
     }));
   }
