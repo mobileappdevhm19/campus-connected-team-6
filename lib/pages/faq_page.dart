@@ -20,8 +20,8 @@ class FAQPageState extends State<FAQPage> {
           children: <Widget>[
             new Container(
                 margin: new EdgeInsets.all(10.0),
-                child: new CachedNetworkImage(
-                  imageUrl: faq.imageURL,
+                child: new Image(
+                  image: AssetImage(faq.imageURL),
                   width: 90.0,
                   height: 90.0,
                   fit: BoxFit.cover,
