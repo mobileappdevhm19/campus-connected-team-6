@@ -36,9 +36,15 @@ class _CreateEventState extends State<CreateEvent> {
 
   // Event Dropdown Catogories list
   static var _categories = [
-    'Indoor',
-    'Outdoor',
-    'Sports',
+//    'Indoor',
+////    'Outdoor',
+////    'Sports',
+    "🎭 Stage & Theatre",
+    "🎵 Music & Concerts",
+    "🎤 Lectures & Readings",
+    "🏋️ Sport & Fitness",
+    "🎉 Party & Club",
+    "👪 Children & Familiy",
   ]; //TODO add more categories
 
   //selected dropdown value will be save here
