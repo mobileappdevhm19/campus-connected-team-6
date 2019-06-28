@@ -1,6 +1,7 @@
 import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/material.dart';
+import 'package:flutter/services.dart';
 import 'package:flutter_campus_connected/helper/authentication.dart';
 import 'package:flutter_campus_connected/logos/campus_logo.dart';
 import 'package:flutter_campus_connected/models/event_model.dart';
@@ -10,9 +11,6 @@ import 'package:flutter_campus_connected/pages/profile.dart';
 import 'package:flutter_campus_connected/pages/users_profile.dart';
 import 'package:flutter_campus_connected/pages/view_event.dart';
 import 'package:flutter_campus_connected/utils/screen_aware_size.dart';
-
-import 'login_signup_page.dart';
-//import 'package:flutter_campus_connected/pages/create_event.dart';
 
 class Dashboard extends StatefulWidget {
   @override
@@ -61,9 +59,7 @@ class _DashboardState extends State<Dashboard> {
   @override
   Widget build(BuildContext context) {
     return WillPopScope(
-      onWillPop: () {
-        Navigator.pop(context);
-      },
+      onWillPop: () => _exitApp(context),
       child: Scaffold(
         appBar: appBar(context),
         drawer: Drawer(
@@ -104,6 +100,28 @@ class _DashboardState extends State<Dashboard> {
         ),
       ),
     );
+  }
+
+  Future<bool> _exitApp(BuildContext context) {
+    return showDialog(
+          context: context,
+          child: new AlertDialog(
+            title: new Text('Do you want to exit this application?'),
+            content: new Text('We hate to see you leave...'),
+            actions: <Widget>[
+              new FlatButton(
+                onPressed: () =>
+                    SystemNavigator.pop(), //Navigator.of(context).pop(true),
+                child: new Text('Yes'),
+              ),
+              new FlatButton(
+                onPressed: () => Navigator.of(context).pop(false),
+                child: new Text('No'),
+              ),
+            ],
+          ),
+        ) ??
+        false;
   }
 
   //events List
@@ -254,10 +272,15 @@ class _DashboardState extends State<Dashboard> {
       onTap: () {
         if (route == 'logout') {
           //  Navigator.of(context).pop();
-          Navigator.of(context).push(MaterialPageRoute(builder: (context) {
-            return LoginSignUpPage();
-          }));
+          // auth.signOut();
+          Navigator.of(context).pop();
+//          Navigator.of(context).push(MaterialPageRoute(builder: (context) {
+//            return LoginSignUpPage();
+//          }
+//          ));
           FirebaseAuth.instance.signOut();
+          auth.signOut();
+          Navigator.of(context).pushReplacementNamed('/logout');
           _isLoggedIn();
         } else if (route == 'events') {
           Navigator.of(context).pop();

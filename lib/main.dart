@@ -26,13 +26,12 @@ class MyApp extends StatelessWidget {
         '/createevent': (BuildContext context) => new CreateEvent(),
         '/signup': (BuildContext context) => new SignUpPage(),
         '/home': (BuildContext context) => new MyHomePage(),
-        '/faq': (BuildContext context) => new FAQPage(),
+        '/logout': (BuildContext context) => new LoginSignUpPage(),
       },
       theme: new ThemeData(primarySwatch: Colors.red),
       //home: new Dashboard(),
-      //home: new RootPage(),
-      home: new SplashScreen(),
-       //home: FAQPage(),
+      home: new RootPage(),
+      // home: new SplashScreen(),
     );
   }
 }
