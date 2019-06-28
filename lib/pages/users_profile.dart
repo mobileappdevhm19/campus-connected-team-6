@@ -16,7 +16,7 @@ class UsersProfileState extends State<UsersProfile> {
   var queryResultSet = [];
   var tempSearchStore = [];
   final CollectionReference collectionReference =
-  Firestore.instance.collection("users");
+      Firestore.instance.collection("users");
 
   var _profileController = new StreamController();
 
@@ -31,8 +31,8 @@ class UsersProfileState extends State<UsersProfile> {
     tempSearchStore = [];
     queryResultSet.forEach((element) {
       if (element.data['displayName']
-          .toLowerCase()
-          .contains(value.toLowerCase()) ||
+              .toLowerCase()
+              .contains(value.toLowerCase()) ||
           element.data['email'].toLowerCase().contains(value.toLowerCase())) {
         counter++;
         tempSearchStore.add(element);
