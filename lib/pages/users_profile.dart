@@ -92,7 +92,6 @@ class UsersProfileState extends State<UsersProfile> {
     if (snapshot.connectionState == ConnectionState.waiting) {
       return getWaiting();
     }
-    print(snapshot.hasData);
     return ListView.builder(
         itemCount: snapshot.data.length,
         itemBuilder: (context, ind) {

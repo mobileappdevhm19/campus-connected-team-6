@@ -34,11 +34,8 @@ class _CreateEventState extends State<CreateEvent> {
   EventModel eventModel = new EventModel();
   FireCloudStoreHelper cloudStoreHelper = new FireCloudStoreHelper();
 
-  // Event Dropdown Catogories list
+  // Event Dropdown Categories list
   static var _categories = [
-//    'Indoor',
-////    'Outdoor',
-////    'Sports',
     "🎭 Stage & Theatre",
     "🎵 Music & Concerts",
     "🎤 Lectures & Readings",
