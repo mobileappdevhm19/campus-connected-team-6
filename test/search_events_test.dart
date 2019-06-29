@@ -1,8 +1,8 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_campus_connected/models/event_model.dart';
-import 'package:flutter_campus_connected/pages/create_event.dart';
 import 'package:flutter_campus_connected/pages/search_events.dart';
 import 'package:flutter_test/flutter_test.dart';
+
 import 'test_helper.dart';
 
 void main() {

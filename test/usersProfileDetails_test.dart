@@ -3,6 +3,7 @@ import 'package:flutter_campus_connected/models/event_entity.dart';
 import 'package:flutter_campus_connected/models/user_entity.dart';
 import 'package:flutter_campus_connected/pages/usersProfileDetails.dart';
 import 'package:flutter_test/flutter_test.dart';
+
 import 'test_helper.dart';
 
 void main() {

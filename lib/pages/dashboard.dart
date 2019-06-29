@@ -8,7 +8,6 @@ import 'package:flutter_campus_connected/models/dashboard_item.dart';
 import 'package:flutter_campus_connected/models/event_model.dart';
 import 'package:flutter_campus_connected/pages/create_event.dart';
 import 'package:flutter_campus_connected/pages/profile.dart';
-import 'package:flutter_campus_connected/pages/search_events.dart';
 import 'package:flutter_campus_connected/pages/users_profile.dart';
 import 'package:flutter_campus_connected/pages/view_event.dart';
 import 'package:flutter_campus_connected/utils/screen_aware_size.dart';
@@ -234,7 +233,7 @@ class DashboardState extends State<Dashboard> {
           if (snapshot.connectionState == ConnectionState.waiting) {
             return Container();
           }
-          final item = DashbaoardItem(
+          final item = DashboardItem(
             snapshot.data.documents[0]['displayName'],
             snapshot.data.documents[0]['photoUrl'],
           );
@@ -255,7 +254,7 @@ class DashboardState extends State<Dashboard> {
   }
 
   StatelessWidget getListItem(
-      bool val, DashbaoardItem item, BuildContext context) {
+      bool val, DashboardItem item, BuildContext context) {
     return !(val)
         ? ListTile(
             title: Text(

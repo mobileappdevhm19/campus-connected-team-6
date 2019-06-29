@@ -1,7 +1,5 @@
 import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/material.dart';
-import 'package:flutter_campus_connected/pages/faq_page.dart';
-import 'package:flutter_campus_connected/pages/splash_screen.dart';
 
 import 'helper/authentication.dart';
 import 'pages/create_event.dart';

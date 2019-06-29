@@ -8,18 +8,24 @@ import 'package:firebase_storage/firebase_storage.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_campus_connected/helper/authentication.dart';
 import 'package:flutter_campus_connected/helper/cloud_firestore_helper.dart';
+import 'package:flutter_campus_connected/models/user_entity_add.dart';
 import 'package:flutter_campus_connected/utils/screen_aware_size.dart';
 import 'package:image_picker/image_picker.dart';
 import 'package:intl/intl.dart';
 
 class EditProfile extends StatefulWidget {
   final userInfo;
-  final photoUrl;
-  final displayName;
+  final UserEntityAdd userEntity;
+
+  //final photoUrl;
+  //final displayName;
   final FireCloudStoreHelper cloudStoreHelper;
 
-  EditProfile(
-      {this.userInfo, this.photoUrl, this.displayName, this.cloudStoreHelper});
+  EditProfile({
+    this.userInfo,
+    this.userEntity,
+    this.cloudStoreHelper,
+  });
 
   @override
   EditProfileState createState() => EditProfileState(cloudStoreHelper);
@@ -29,8 +35,7 @@ class EditProfileState extends State<EditProfile> {
   var _formState = new GlobalKey<FormState>();
   Auth auth = new Auth();
   File sampleImage;
-  String name;
-  String imageUrl;
+  UserEntityAdd entity;
 
   bool uploadingStatus = false;
   bool imageRequired = false;
@@ -72,7 +77,7 @@ class EditProfileState extends State<EditProfile> {
     task.onComplete.then((value) async {
       var getDownloadURL = await value.ref.getDownloadURL();
       setState(() {
-        imageUrl = getDownloadURL;
+        entity.photoUrl = getDownloadURL;
         uploadingStatus = false;
       });
     });
@@ -90,7 +95,7 @@ class EditProfileState extends State<EditProfile> {
       _showInternetAlertDialouge();
       return;
     }
-    if (imageUrl == null) {
+    if (entity.photoUrl == null) {
       setState(() {
         imageRequired = true;
       });
@@ -101,7 +106,7 @@ class EditProfileState extends State<EditProfile> {
       });
     }
 
-    if (_formState.currentState.validate() && imageUrl != null) {
+    if (_formState.currentState.validate() && entity.photoUrl != null) {
       await saveForm();
     }
   }
@@ -112,10 +117,10 @@ class EditProfileState extends State<EditProfile> {
     });
     _formState.currentState.save();
     UserUpdateInfo userUpdateInfo = new UserUpdateInfo();
-    userUpdateInfo.displayName = name;
-    userUpdateInfo.photoUrl = imageUrl;
+    userUpdateInfo.displayName = entity.displayName;
+    userUpdateInfo.photoUrl = entity.photoUrl;
     await widget.userInfo.updateProfile(userUpdateInfo);
-    await cloudStoreHelper.updateUser(widget.userInfo, name, imageUrl);
+    await cloudStoreHelper.updateUser(widget.userInfo, entity);
 
     setState(() {
       uploadingStatus = false;
@@ -144,8 +149,7 @@ class EditProfileState extends State<EditProfile> {
   void initState() {
     // TODO: implement initState
     super.initState();
-    name = widget.displayName;
-    imageUrl = widget.photoUrl;
+    entity = widget.userEntity;
   }
 
   void _showInternetAlertDialouge() {
@@ -275,6 +279,18 @@ class EditProfileState extends State<EditProfile> {
                   SizedBox(
                     height: screenAwareSize(15, context),
                   ),
+                  ageTextForm(context),
+                  SizedBox(
+                    height: screenAwareSize(15, context),
+                  ),
+                  facultyTextForm(context),
+                  SizedBox(
+                    height: screenAwareSize(15, context),
+                  ),
+                  hobbyTextForm(context),
+                  SizedBox(
+                    height: screenAwareSize(15, context),
+                  ),
                   submitButton(context)
                 ],
               ),
@@ -352,7 +368,7 @@ class EditProfileState extends State<EditProfile> {
                   width: 120,
                   height: 120,
                   child: Image(
-                    image: NetworkImage(imageUrl),
+                    image: NetworkImage(entity.photoUrl),
                     fit: BoxFit.cover,
                   )),
             )
@@ -373,7 +389,7 @@ class EditProfileState extends State<EditProfile> {
   //user name
   TextFormField nameTextForm(BuildContext context) {
     return TextFormField(
-      initialValue: name,
+      initialValue: entity.displayName,
       decoration: new InputDecoration(
         border: new OutlineInputBorder(
           borderRadius: BorderRadius.circular(screenAwareSize(10, context)),
@@ -385,12 +401,87 @@ class EditProfileState extends State<EditProfile> {
         ),
       ),
       onSaved: (value) {
-        name = value;
+        entity.displayName = value;
       },
       validator: (value) {
         if (value.isEmpty) {
           return 'Name can\'t be empty';
         }
+      },
+    );
+  }
+
+  TextFormField ageTextForm(BuildContext context) {
+    return TextFormField(
+      keyboardType: TextInputType.number,
+      initialValue: entity.age,
+      decoration: new InputDecoration(
+        border: new OutlineInputBorder(
+          borderRadius: BorderRadius.circular(screenAwareSize(10, context)),
+        ),
+        contentPadding: EdgeInsets.all(0.0),
+        labelText: 'Age',
+        prefixIcon: const Icon(
+          Icons.confirmation_number,
+        ),
+      ),
+      onSaved: (value) {
+        entity.age = value;
+      },
+      validator: (value) {
+        /*if (value.isEmpty) {
+          return 'Age can\'t be empty';
+        }*/
+      },
+    );
+  }
+
+  TextFormField facultyTextForm(BuildContext context) {
+    return TextFormField(
+      keyboardType: TextInputType.number,
+      initialValue: entity.faculty,
+      decoration: new InputDecoration(
+        border: new OutlineInputBorder(
+          borderRadius: BorderRadius.circular(screenAwareSize(10, context)),
+        ),
+        contentPadding: EdgeInsets.all(0.0),
+        labelText: 'Faculty',
+        prefixIcon: const Icon(
+          Icons.people,
+        ),
+      ),
+      onSaved: (value) {
+        entity.faculty = value;
+      },
+      validator: (value) {
+        /*if (value.isEmpty) {
+          return 'Faculty can\'t be empty';
+        }*/
+      },
+    );
+  }
+
+  TextFormField hobbyTextForm(BuildContext context) {
+    return TextFormField(
+      keyboardType: TextInputType.number,
+      initialValue: entity.hobby,
+      decoration: new InputDecoration(
+        border: new OutlineInputBorder(
+          borderRadius: BorderRadius.circular(screenAwareSize(10, context)),
+        ),
+        contentPadding: EdgeInsets.all(0.0),
+        labelText: 'Hobby',
+        prefixIcon: const Icon(
+          Icons.library_books,
+        ),
+      ),
+      onSaved: (value) {
+        entity.hobby = value;
+      },
+      validator: (value) {
+        /*if (value.isEmpty) {
+          return 'Hobby can\'t be empty';
+        }*/
       },
     );
   }

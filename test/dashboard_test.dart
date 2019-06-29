@@ -2,6 +2,7 @@ import 'package:flutter/material.dart';
 import 'package:flutter_campus_connected/models/dashboard_item.dart';
 import 'package:flutter_campus_connected/pages/dashboard.dart';
 import 'package:flutter_test/flutter_test.dart';
+
 import 'test_helper.dart';
 
 void main() {
@@ -13,7 +14,7 @@ void main() {
 
   group('Dashboard test', () {
     test('Dashboard_item test', () {
-      final entity = DashbaoardItem('test', 'test.png');
+      final entity = DashboardItem('test', 'test.png');
       expect(entity, isNotNull);
       expect(entity.photoUrl, isNotEmpty);
       expect(entity.displayName, isNotEmpty);
@@ -48,7 +49,7 @@ void main() {
       //final profile = state.profileNameAndImage(context);
       //TestHelper.checkWidget<Padding>(profile);
 
-      final entity = DashbaoardItem('test', 'test.png');
+      final entity = DashboardItem('test', 'test.png');
       expect(entity, isNotNull);
       final item = state.getListItem(false, entity, context);
       TestHelper.checkWidget<ListTile>(item);

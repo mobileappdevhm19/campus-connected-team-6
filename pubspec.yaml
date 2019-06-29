@@ -45,11 +45,11 @@ flutter:
 
 
   assets:
-  - assets/flutter-icon.png
-  - assets/gallery.png
-  - assets/person.jpg
-  - assets/loadingfailed.png
-  - assets/faq.jpg
+    - assets/flutter-icon.png
+    - assets/gallery.png
+    - assets/person.jpg
+    - assets/loadingfailed.png
+    - assets/faq.jpg
 
 
 flutter_icons:
