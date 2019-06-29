@@ -128,12 +128,15 @@ class _LoginSignUpPageState extends State<LoginSignUpPage>
       String userId = "";
       try {
         userId = await auth.signIn(_email, _password);
-        if (userId != null) {
+        bool isUserVerified = await auth.isEmailVerified();
+        if (userId != null && isUserVerified) {
           Navigator.of(context).push(MaterialPageRoute(builder: (context) {
             return WelcomePage(
               firebaseUser: userId,
             );
           }));
+        } else if (!isUserVerified) {
+          _showSnackBar('Please verify your email adress');
         }
         setState(() {
           _isLoading = false;
@@ -146,11 +149,9 @@ class _LoginSignUpPageState extends State<LoginSignUpPage>
           setState(() {
             _isLoading = false;
             if (e.toString().contains('ERROR_USER_NOT_FOUND')) {
-              _showSnackBar(
-                  'There is no user record corresponding to this identifier. The user may have been deleted');
+              _showSnackBar('Email adress or password is invalid');
             } else if (e.toString().contains('ERROR_WRONG_PASSWORD')) {
-              _showSnackBar(
-                  'The password is invalid or the user does not have a password');
+              _showSnackBar('Email adress or password is invalid');
             } else {
               _showSnackBar(e.toString());
             }
@@ -203,8 +204,6 @@ class _LoginSignUpPageState extends State<LoginSignUpPage>
     return Padding(
       padding: const EdgeInsets.only(left: 14.0, right: 14.0, bottom: 10),
       child: TextFormField(
-        initialValue: "another@hm.edu",
-        //TODO: remove later
         key: Key("Email"),
         maxLines: 1,
         keyboardType: TextInputType.emailAddress,
@@ -237,8 +236,6 @@ class _LoginSignUpPageState extends State<LoginSignUpPage>
     return Padding(
       padding: const EdgeInsets.only(left: 14.0, right: 14),
       child: TextFormField(
-        initialValue: "123456",
-        //TODO: remove later
         key: Key("Password"),
         maxLines: 1,
         obscureText: true,
