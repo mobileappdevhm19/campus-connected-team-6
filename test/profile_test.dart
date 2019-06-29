@@ -6,12 +6,10 @@ import 'package:flutter_campus_connected/pages/profile.dart';
 import 'package:flutter_test/flutter_test.dart';
 import 'test_helper.dart';
 
-
 void main() {
   group('profile test', () {
-
     test('profileItem test', () {
-      final entity =  ProfileItem('test', 'test', 'test.png' );
+      final entity = ProfileItem('test', 'test', 'test.png');
       expect(entity, isNotNull);
       expect(entity.eventDescription, isNotEmpty);
       expect(entity.eventName, isNotEmpty);
@@ -20,12 +18,11 @@ void main() {
       expect(entity.eventName, equals('test'));
       expect(entity.eventPhotoUrl, equals('test.png'));
       expect(entity.eventDescription, 'test');
-
     });
 
     testWidgets('profile widget test', (WidgetTester tester) async {
       var profilePage = ProfilePage(firebaseUser: null);
-      var curr = TestHelper.buildPage(profilePage) ;
+      var curr = TestHelper.buildPage(profilePage);
       await tester.pumpWidget(curr);
 
       final editText = find.text('Edit');
@@ -44,10 +41,10 @@ void main() {
       expect(state, isNotNull);
       expect(state.widget, equals(profilePage));
 
-      final btEdit =state.getBtEdit(context);
+      final btEdit = state.getBtEdit(context);
       TestHelper.checkWidget<FlatButton>(btEdit);
 
-      final body =state.getBody(context);
+      final body = state.getBody(context);
       TestHelper.checkWidget<Column>(body);
 
       final appBar = state.appBar(context);
@@ -56,15 +53,14 @@ void main() {
       final userJ = state.userEvents();
       TestHelper.checkWidget<Expanded>(userJ);
 
-      final entity =  ProfileItem('test', 'test', 'test.png' );
+      final entity = ProfileItem('test', 'test', 'test.png');
       var item = state.getItem(entity, 1, context, '1', null);
 
       TestHelper.checkWidget<Card>(item);
 
-      final userEntity =  UserEntity('test', 'test.png', 'test@test.com', null);
-      var userItem = state.getProfileItem(userEntity,  context);
+      final userEntity = UserEntity('test', 'test.png', 'test@test.com', null);
+      var userItem = state.getProfileItem(userEntity, context);
       TestHelper.checkWidget<Column>(userItem);
-
     });
   });
 }

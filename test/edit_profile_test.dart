@@ -10,13 +10,11 @@ import 'test_helper.dart';
 
 void main() {
   group('edit_profile tests', () {
-
-    test('test mocks', (){
+    test('test mocks', () {
       final storeMock = FireCloudStoreHelperMock();
       expect(storeMock, isNotNull);
       expect(storeMock is FireCloudStoreHelper, true);
     });
-
 
     testWidgets('edit_profile widget test', (WidgetTester tester) async {
       //url рисунков не работают в тестах
@@ -25,15 +23,14 @@ void main() {
       provideMockedNetworkImages(() async {
         final storeMock = FireCloudStoreHelperMock();
         when(storeMock.updateUser(null, 'test', 'test.png'))
-            .thenAnswer((_) async => Future.value(
-            true
-        ));
+            .thenAnswer((_) async => Future.value(true));
         final String displayName = 'test';
-        var editPage = EditProfile(photoUrl: 'https://www.google.com/images/branding/googlelogo/1x/googlelogo_color_272x92dp.png',
+        var editPage = EditProfile(
+            photoUrl:
+                'https://www.google.com/images/branding/googlelogo/1x/googlelogo_color_272x92dp.png',
             displayName: displayName,
-            cloudStoreHelper: storeMock
-        );
-        var curr = TestHelper.buildPage(editPage) ;
+            cloudStoreHelper: storeMock);
+        var curr = TestHelper.buildPage(editPage);
         await tester.pumpWidget(curr);
 
         final test = find.text(displayName);
@@ -43,8 +40,7 @@ void main() {
         expect(submit, findsOneWidget);
         final BuildContext context = tester.element(submit);
 
-
-        final btFinder = find.byKey(Key('submitBt')) ;
+        final btFinder = find.byKey(Key('submitBt'));
         expect(btFinder, findsOneWidget);
 
         //state
@@ -56,7 +52,7 @@ void main() {
         TestHelper.checkWidget<Form>(form);
         expect(form.child is Card, true);
 
-        final checkNet = await state.checkInternetConnection() ;
+        final checkNet = await state.checkInternetConnection();
         expect(checkNet, true);
 
         await state.getImage();
@@ -110,18 +106,17 @@ void main() {
         final notCantEmpty = find.text('Name can\'t be empty');
         expect(notCantEmpty, findsNothing);
 
-
         final alertDialog = state.getAlertDialog(context);
         TestHelper.checkWidget<AlertDialog>(alertDialog);
         expect(alertDialog.content is Column, true);
 
         final Column column = alertDialog.content as Column;
-        expect(column.children.length>0, true);
+        expect(column.children.length > 0, true);
 
-        final textChild = column.children[1] as   Text;
+        final textChild = column.children[1] as Text;
         expect(textChild, isNotNull);
 
-        expect(textChild.data =='No Internet 😞', true);
+        expect(textChild.data == 'No Internet 😞', true);
 
         expect(state.imageUrl == state.widget.photoUrl, true);
         expect(state.name == state.widget.displayName, true);

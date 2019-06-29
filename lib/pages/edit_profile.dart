@@ -18,7 +18,8 @@ class EditProfile extends StatefulWidget {
   final displayName;
   final FireCloudStoreHelper cloudStoreHelper;
 
-  EditProfile({this.userInfo, this.photoUrl, this.displayName, this.cloudStoreHelper});
+  EditProfile(
+      {this.userInfo, this.photoUrl, this.displayName, this.cloudStoreHelper});
 
   @override
   EditProfileState createState() => EditProfileState(cloudStoreHelper);
@@ -33,7 +34,6 @@ class EditProfileState extends State<EditProfile> {
 
   bool uploadingStatus = false;
   bool imageRequired = false;
-
 
   final FireCloudStoreHelper cloudStoreHelper;
 
@@ -168,8 +168,7 @@ class EditProfileState extends State<EditProfile> {
           Text(
             'No Internet ðŸ˜ž',
             style: TextStyle(
-                color: Colors.black87,
-                fontSize: screenAwareSize(26, context)),
+                color: Colors.black87, fontSize: screenAwareSize(26, context)),
           ),
           SizedBox(height: screenAwareSize(10, context)),
           Padding(
@@ -248,8 +247,8 @@ class EditProfileState extends State<EditProfile> {
     return Form(
         key: _formState,
         child: Card(
-            shape: RoundedRectangleBorder(
-                borderRadius: BorderRadius.circular(7)),
+            shape:
+                RoundedRectangleBorder(borderRadius: BorderRadius.circular(7)),
             elevation: 10,
             child: Container(
               padding: EdgeInsets.all(20),
@@ -262,13 +261,12 @@ class EditProfileState extends State<EditProfile> {
                   imageField(),
                   imageRequired == true
                       ? Padding(
-                    padding:
-                    const EdgeInsets.only(top: 12.0),
-                    child: Text(
-                      'Please Upload  Image',
-                      style: TextStyle(color: Colors.red),
-                    ),
-                  )
+                          padding: const EdgeInsets.only(top: 12.0),
+                          child: Text(
+                            'Please Upload  Image',
+                            style: TextStyle(color: Colors.red),
+                          ),
+                        )
                       : SizedBox(),
                   SizedBox(
                     height: screenAwareSize(30, context),

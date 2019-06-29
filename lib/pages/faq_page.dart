@@ -1,6 +1,5 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_campus_connected/FAQ/data.dart';
-import 'package:cached_network_image/cached_network_image.dart';
 import 'package:flutter_campus_connected/utils/screen_aware_size.dart';
 
 class FAQPage extends StatefulWidget {

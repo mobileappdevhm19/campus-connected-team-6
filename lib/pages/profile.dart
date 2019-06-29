@@ -110,21 +110,19 @@ class ProfilePageState extends State<ProfilePage> {
       ),
       color: Colors.red,
       onPressed: () {
-        Navigator.of(context)
-            .push(MaterialPageRoute(builder: (context) {
+        Navigator.of(context).push(MaterialPageRoute(builder: (context) {
           return EditProfile(
               userInfo: widget.firebaseUser,
               photoUrl: photoUrl,
               displayName: displayName,
-              cloudStoreHelper:new FireCloudStoreHelper());
+              cloudStoreHelper: new FireCloudStoreHelper());
         }));
       },
     );
   }
 
-  String _getUid()
-  {
-    return (widget.firebaseUser!=null)? widget.firebaseUser.uid:'123';
+  String _getUid() {
+    return (widget.firebaseUser != null) ? widget.firebaseUser.uid : '123';
   }
 
   // events that hosted by the user
@@ -133,7 +131,7 @@ class ProfilePageState extends State<ProfilePage> {
       child: StreamBuilder(
         stream: Firestore.instance
             .collection('events')
-            .where('createdBy', isEqualTo:  _getUid())
+            .where('createdBy', isEqualTo: _getUid())
             .snapshots(),
         builder: (context, snapshot) {
           if (snapshot.connectionState == ConnectionState.waiting) {
@@ -145,11 +143,15 @@ class ProfilePageState extends State<ProfilePage> {
           return ListView.builder(
               itemCount: snapshot.data.documents.length,
               itemBuilder: (context, ind) {
-                final item = ProfileItem(snapshot.data.documents[ind]['eventName'],
+                final item = ProfileItem(
+                    snapshot.data.documents[ind]['eventName'],
                     snapshot.data.documents[ind]['eventDescription'],
-                    snapshot.data.documents[ind]
-                    ['eventPhotoUrl']);
-                return getItem(item, ind, context, snapshot.data.documents[ind].documentID,
+                    snapshot.data.documents[ind]['eventPhotoUrl']);
+                return getItem(
+                    item,
+                    ind,
+                    context,
+                    snapshot.data.documents[ind].documentID,
                     snapshot.data.documents[ind]);
               });
         },
@@ -157,7 +159,8 @@ class ProfilePageState extends State<ProfilePage> {
     );
   }
 
-  Card getItem(ProfileItem item, int ind, BuildContext context, String docId, dynamic data) {
+  Card getItem(ProfileItem item, int ind, BuildContext context, String docId,
+      dynamic data) {
     return Card(
       margin: EdgeInsets.all(6.0),
       elevation: 3.0,
@@ -170,8 +173,7 @@ class ProfilePageState extends State<ProfilePage> {
         ),
         subtitle: Padding(
           padding: const EdgeInsets.only(top: 6.0),
-          child: Text(
-              item.eventDescription,
+          child: Text(item.eventDescription,
               maxLines: 1,
               overflow: TextOverflow.ellipsis,
               style: TextStyle(fontSize: 16)),
@@ -202,13 +204,13 @@ class ProfilePageState extends State<ProfilePage> {
                   color: Colors.red,
                 ),
                 onPressed: () {
-                  Navigator.of(context).push(
-                      new MaterialPageRoute(builder: (context) {
-                        return EventView(
-                          data,
-                          widget.firebaseUser,
-                        );
-                      }));
+                  Navigator.of(context)
+                      .push(new MaterialPageRoute(builder: (context) {
+                    return EventView(
+                      data,
+                      widget.firebaseUser,
+                    );
+                  }));
                 }),
             IconButton(
                 icon: Icon(
@@ -216,8 +218,7 @@ class ProfilePageState extends State<ProfilePage> {
                   color: Colors.deepPurple,
                 ),
                 onPressed: () {
-                  cloudStoreHelper.deleteEvent(
-                      docId);
+                  cloudStoreHelper.deleteEvent(docId);
                 })
           ],
         ),
@@ -339,8 +340,11 @@ class ProfilePageState extends State<ProfilePage> {
         } else {
           return Container();
         }
-        UserEntity entity =UserEntity(snapshot.data.documents[0]['displayName'],
-            snapshot.data.documents[0]['photoUrl'], snapshot.data.documents[0]['email'], null);
+        UserEntity entity = UserEntity(
+            snapshot.data.documents[0]['displayName'],
+            snapshot.data.documents[0]['photoUrl'],
+            snapshot.data.documents[0]['email'],
+            null);
         return getProfileItem(entity, context);
       },
     );
@@ -369,8 +373,7 @@ class ProfilePageState extends State<ProfilePage> {
                   width: 120,
                   height: 120,
                   child: Image(
-                    image: NetworkImage(
-                        entity.photoUrl),
+                    image: NetworkImage(entity.photoUrl),
                     fit: BoxFit.cover,
                   )),
             )
@@ -395,8 +398,7 @@ class ProfilePageState extends State<ProfilePage> {
               maxLines: 1,
               overflow: TextOverflow.ellipsis,
               style: TextStyle(
-                  color: Colors.white,
-                  fontSize: screenAwareSize(18, context)),
+                  color: Colors.white, fontSize: screenAwareSize(18, context)),
             ))
       ],
     );

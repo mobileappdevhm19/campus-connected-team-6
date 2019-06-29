@@ -17,10 +17,5 @@ void main() {
 
     final box = find.byType(Container);
     expect(box, findsWidgets);
-
-
-
-
-
   });
 }

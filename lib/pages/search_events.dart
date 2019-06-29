@@ -6,6 +6,7 @@ import 'package:flutter_campus_connected/utils/screen_aware_size.dart';
 
 class SearchEvent extends StatefulWidget {
   final FirebaseUser currentUser;
+
   SearchEvent({this.currentUser});
 
   @override

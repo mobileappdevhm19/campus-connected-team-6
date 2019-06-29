@@ -5,16 +5,15 @@ import 'package:flutter_test/flutter_test.dart';
 import 'test_helper.dart';
 
 void main() {
-
-  checkListTitle(ListTile item, String title)   {
+  checkListTitle(ListTile item, String title) {
     expect(item.title is Text, true);
     final Text text = item.title as Text;
     expect(text.data == title, true);
   }
-  group('Dashboard test', () {
 
+  group('Dashboard test', () {
     test('Dashboard_item test', () {
-      final entity =  DashbaoardItem('test', 'test.png');
+      final entity = DashbaoardItem('test', 'test.png');
       expect(entity, isNotNull);
       expect(entity.photoUrl, isNotEmpty);
       expect(entity.displayName, isNotEmpty);
@@ -24,9 +23,8 @@ void main() {
     });
 
     testWidgets('Dashboard widget test', (WidgetTester tester) async {
-
       final StatefulWidget dashboard = Dashboard();
-      final curr = TestHelper.buildPage(dashboard) ;
+      final curr = TestHelper.buildPage(dashboard);
       await tester.pumpWidget(curr);
       //state
       final DashboardState state = tester.state(find.byType(Dashboard));
@@ -44,13 +42,13 @@ void main() {
       final appBar = state.appBar(context);
       TestHelper.checkWidget<AppBar>(appBar);
 
-      final logo =state.appLogo(context);
+      final logo = state.appLogo(context);
       TestHelper.checkWidget<Container>(logo);
 
       //final profile = state.profileNameAndImage(context);
       //TestHelper.checkWidget<Padding>(profile);
 
-      final entity =  DashbaoardItem('test', 'test.png');
+      final entity = DashbaoardItem('test', 'test.png');
       expect(entity, isNotNull);
       final item = state.getListItem(false, entity, context);
       TestHelper.checkWidget<ListTile>(item);
@@ -58,7 +56,8 @@ void main() {
       final item1 = state.getListItem(true, entity, context);
       TestHelper.checkWidget<Container>(item1);
 
-      final login = state.drawerItem(context, 'Login', Icons.account_circle, 'login');
+      final login =
+          state.drawerItem(context, 'Login', Icons.account_circle, 'login');
       TestHelper.checkWidget<ListTile>(login);
       checkListTitle(login, 'Login');
 
@@ -66,15 +65,18 @@ void main() {
       TestHelper.checkWidget<ListTile>(users);
       checkListTitle(users, 'Users');
 
-      final events = state.drawerItem(context, 'Events', Icons.event_available, 'events');
+      final events =
+          state.drawerItem(context, 'Events', Icons.event_available, 'events');
       TestHelper.checkWidget<ListTile>(events);
       checkListTitle(events, 'Events');
 
-      final crEvents = state.drawerItem(context, 'Create Events', Icons.event, 'login');
+      final crEvents =
+          state.drawerItem(context, 'Create Events', Icons.event, 'login');
       TestHelper.checkWidget<ListTile>(crEvents);
       checkListTitle(crEvents, 'Create Events');
 
-      final logout = state.drawerItem(context, 'Log Out', Icons.exit_to_app, 'logout');
+      final logout =
+          state.drawerItem(context, 'Log Out', Icons.exit_to_app, 'logout');
       TestHelper.checkWidget<ListTile>(logout);
       checkListTitle(logout, 'Log Out');
 
@@ -85,20 +87,20 @@ void main() {
       TestHelper.checkWidget<Drawer>(rootDrawer);
 
       final root = state.build(context);
-      TestHelper.checkWidget<Scaffold>(root);
+      TestHelper.checkWidget<WillPopScope>(root);
 
       state.scaffoldKey.currentState.openDrawer();
       await tester.pump();
 
-      final lItem= find.byType(ListTile).at(0);
+      final lItem = find.byType(ListTile).at(0);
       expect(lItem, isNotNull);
       await tester.tap(lItem);
 
-      final lItem1= find.byType(ListTile).at(1);
+      final lItem1 = find.byType(ListTile).at(1);
       expect(lItem1, isNotNull);
       await tester.tap(lItem1);
 
-      final lItem2= find.byType(ListTile).at(1);
+      final lItem2 = find.byType(ListTile).at(1);
       expect(lItem2, isNotNull);
       await tester.tap(lItem2);
 
@@ -106,12 +108,9 @@ void main() {
       expect(tEvents, findsWidgets);
 
       //widget
-      final  drawer = find.byTooltip('Open navigation menu');
+      final drawer = find.byTooltip('Open navigation menu');
       expect(drawer, findsWidgets);
       //tester.tap(drawer) ;
-
     });
   });
-
-
 }
