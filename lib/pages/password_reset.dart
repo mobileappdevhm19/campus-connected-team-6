@@ -4,13 +4,12 @@ import 'package:flutter_campus_connected/logos/login_logo.dart';
 import 'package:flutter_campus_connected/pages/welcome_page.dart';
 import 'package:flutter_campus_connected/utils/screen_aware_size.dart';
 
-class LoginSignUpPage extends StatefulWidget {
+class PasswordResetPage extends StatefulWidget {
   @override
-  State<StatefulWidget> createState() => new _LoginSignUpPageState();
+  State<StatefulWidget> createState() => new _PasswordResetPageState();
 }
 
-class _LoginSignUpPageState extends State<LoginSignUpPage>
-    with SingleTickerProviderStateMixin {
+class _PasswordResetPageState extends State<PasswordResetPage> {
   Auth auth = new Auth();
 
   final _formKey = new GlobalKey<FormState>();
@@ -21,26 +20,16 @@ class _LoginSignUpPageState extends State<LoginSignUpPage>
   static final RegExp _emailRegExp = RegExp(
     r'^[a-zA-Z0-9.!#$%&’*+/=?^_`{|}~-]+@hm.edu$',
   );
-  AnimationController _animationController;
-  Animation _animation;
   bool _isLoading;
 
   @override
   void initState() {
     super.initState();
     _isLoading = false;
-    _animationController = new AnimationController(
-        vsync: this, duration: Duration(microseconds: 500));
-    _animation = Tween(
-      begin: 0.0,
-      end: 1.0,
-    ).animate(_animationController);
-    _animationController.forward();
   }
 
   @override
   void dispose() {
-    _animationController.dispose();
     super.dispose();
   }
 
@@ -121,25 +110,65 @@ class _LoginSignUpPageState extends State<LoginSignUpPage>
 
   // Perform login
   void _validateAndSubmit() async {
-    FocusScope.of(context).requestFocus(new FocusNode()); //keyboard close
     if (_validateAndSave()) {
       setState(() {
         _isLoading = true;
       });
       String userId = "";
       try {
-        userId = await auth.signIn(_email, _password);
-        bool isUserVerified = await auth.isEmailVerified();
-        if (userId != null && isUserVerified) {
-          Navigator.of(context).push(MaterialPageRoute(builder: (context) {
-            return WelcomePage(
-              firebaseUser: userId,
-            );
-          }));
-        } else if (userId != null && !isUserVerified) {
-          auth.sendEmailVerification();
-          _showSnackBar(
-              'Please verify your email adress. A verification link has been sent to given email Adress');
+        if (_email.isNotEmpty) {
+          await auth.sendPasswordResetEmail(_email);
+          showDialog(
+              context: context,
+              builder: (BuildContext context) {
+                return AlertDialog(
+                  shape: RoundedRectangleBorder(
+                      borderRadius: BorderRadius.all(Radius.circular(12.0))),
+                  content: Column(
+                    mainAxisSize: MainAxisSize.min,
+                    mainAxisAlignment: MainAxisAlignment.center,
+                    children: <Widget>[
+                      SizedBox(height: screenAwareSize(10, context)),
+                      Text(
+                        'Password Reset',
+                        style: TextStyle(
+                            color: Colors.black87,
+                            fontSize: screenAwareSize(26, context)),
+                      ),
+                      SizedBox(height: screenAwareSize(10, context)),
+                      Padding(
+                        padding: EdgeInsets.all(screenAwareSize(8.0, context)),
+                        child: Text(
+                          'A Link has been sent to your email adress with further instructions',
+                          style: TextStyle(
+                              color: Colors.black87,
+                              fontSize: screenAwareSize(16, context)),
+                          textAlign: TextAlign.center,
+                        ),
+                      ),
+                      Align(
+                        alignment: Alignment.center,
+                        child: RaisedButton(
+                          onPressed: () {
+                            Navigator.of(context)
+                                .popUntil(ModalRoute.withName('/login'));
+                          },
+                          child: Text(
+                            'OK',
+                            style: TextStyle(color: Colors.white),
+                          ),
+                          color: Colors.red,
+                          shape: RoundedRectangleBorder(
+                              borderRadius: BorderRadius.circular(10)),
+                          elevation: 6.0,
+                        ),
+                      )
+                    ],
+                  ),
+                  contentPadding: EdgeInsets.all(10),
+                  titlePadding: EdgeInsets.all(20),
+                );
+              });
         }
         setState(() {
           _isLoading = false;
@@ -152,8 +181,6 @@ class _LoginSignUpPageState extends State<LoginSignUpPage>
           setState(() {
             _isLoading = false;
             if (e.toString().contains('ERROR_USER_NOT_FOUND')) {
-              _showSnackBar('Email adress or password is invalid');
-            } else if (e.toString().contains('ERROR_WRONG_PASSWORD')) {
               _showSnackBar('Email adress or password is invalid');
             } else {
               _showSnackBar(e.toString());
@@ -177,13 +204,9 @@ class _LoginSignUpPageState extends State<LoginSignUpPage>
           children: <Widget>[
             SizedBox(height: screenAwareSize(20, context)),
             _showEmailInput(),
-            _showPasswordInput(),
             SizedBox(height: screenAwareSize(20, context)),
             _showPrimaryButton(context),
             SizedBox(height: screenAwareSize(10, context)),
-            _showSecondaryButton(),
-            SizedBox(height: screenAwareSize(10, context)),
-            _showThirdButton(),
           ],
         ),
       ),
@@ -193,15 +216,11 @@ class _LoginSignUpPageState extends State<LoginSignUpPage>
   //app Logo
   Widget _showLogo() {
     return new Hero(
-        tag: 'hero',
-        child: AnimatedBuilder(
-          animation: _animation,
-          builder: (BuildContext context, Widget widger) {
-            return LoginLogo(
-              size: _animation.value * screenAwareSize(100, context),
-            );
-          },
-        ));
+      tag: 'hero',
+      child: LoginLogo(
+        size: screenAwareSize(100, context),
+      ),
+    );
   }
 
 //user email
@@ -236,82 +255,18 @@ class _LoginSignUpPageState extends State<LoginSignUpPage>
     );
   }
 
-//user Password
-  Widget _showPasswordInput() {
-    return Padding(
-      padding: const EdgeInsets.only(left: 14.0, right: 14),
-      child: TextFormField(
-        key: Key("Password"),
-        maxLines: 1,
-        obscureText: true,
-        autofocus: false,
-        decoration: new InputDecoration(
-            border: OutlineInputBorder(borderRadius: BorderRadius.circular(5)),
-            filled: true,
-            labelText: 'Password',
-            contentPadding: EdgeInsets.all(0.0),
-            fillColor: Colors.white,
-            prefixIcon: new Icon(
-              Icons.lock,
-            )),
-        validator: (value) {
-          if (value.isEmpty) {
-            return 'Password can\'t be empty';
-          } else if (value.length < 6) {
-            return 'Password can\'t be less than 6 character';
-          }
-        },
-        onSaved: (value) => _password = value,
-      ),
-    );
-  }
-
-//to navigate to the sign up page
-  Widget _showSecondaryButton() {
-    return Align(
-      child: FlatButton(
-        child: new Text('Create an account',
-            style: new TextStyle(
-                fontSize: screenAwareSize(18, context),
-                fontWeight: FontWeight.w600,
-                color: Colors.black)),
-        onPressed: () {
-          Navigator.of(context).pushNamed('/signup');
-        },
-      ),
-      alignment: Alignment.bottomCenter,
-    );
-  }
-
-  //to navigate to the sign up page
-  Widget _showThirdButton() {
-    return Align(
-      child: FlatButton(
-        child: new Text('Forgot password? Click here for Reset',
-            style: new TextStyle(
-                fontSize: screenAwareSize(12, context),
-                fontWeight: FontWeight.w600,
-                color: Colors.black)),
-        onPressed: () {
-          Navigator.of(context).pushNamed('/passwordreset');
-        },
-      ),
-      alignment: Alignment.bottomCenter,
-    );
-  }
-
 //login button
   Widget _showPrimaryButton(context) {
     return SizedBox(
       width: screenAwareSize(200, context),
       height: screenAwareSize(40, context),
       child: RaisedButton(
-        key: Key("Login"),
+        key: Key("reset_password"),
         elevation: 8.0,
         shape: new RoundedRectangleBorder(
             borderRadius: new BorderRadius.circular(10.0)),
         color: _isLoading == false ? Colors.red : Colors.redAccent,
-        child: new Text('Login',
+        child: new Text('Reset Password',
             style: new TextStyle(
                 fontSize: screenAwareSize(18, context), color: Colors.white)),
         onPressed: _isLoading == false ? _validateAndSubmit : null,
