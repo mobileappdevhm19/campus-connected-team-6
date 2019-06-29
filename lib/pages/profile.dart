@@ -79,7 +79,21 @@ class ProfilePageState extends State<ProfilePage> {
             ),
           ),
         ),
-        userEvents()
+        userEvents(),
+        Align(
+          alignment: Alignment.centerLeft,
+          child: Padding(
+            padding: EdgeInsets.all(7),
+            child: Text(
+              'My Joined Events',
+              style: TextStyle(
+                  color: Colors.black87,
+                  fontWeight: FontWeight.w700,
+                  fontSize: screenAwareSize(16, context)),
+            ),
+          ),
+        ),
+        userJoinedEvents(),
       ],
     );
   }
@@ -214,7 +228,97 @@ class ProfilePageState extends State<ProfilePage> {
 
   //TODO events joined by the user
   Expanded userJoinedEvents() {
-    return Expanded();
+    return Expanded(
+      child: StreamBuilder(
+          stream: Firestore.instance
+              .collection('eventUsers')
+              .where('userId', isEqualTo: _getUid())
+              .snapshots(),
+          builder: (context, snapshot) {
+            if (snapshot.connectionState == ConnectionState.waiting) {
+              return Center(
+                child: CircularProgressIndicator(),
+              );
+            }
+            return ListView.builder(
+              itemCount: snapshot.data.documents.length,
+              itemBuilder: (context, ind) {
+                String userEventId = snapshot.data.documents[ind]['eventId'];
+                return StreamBuilder(
+                  stream: Firestore.instance
+                      .collection('events')
+                      //.where('documentId', isEqualTo: userEventId)
+                      .snapshots(),
+                  builder: (context, snapshot) {
+                    if (snapshot.connectionState == ConnectionState.waiting) {
+                      return Center(
+                        child: CircularProgressIndicator(),
+                      );
+                    }
+                    return Card(
+//                      margin: EdgeInsets.all(6.0),
+//                      elevation: 3.0,
+//                      child: ListTile(
+//                        title: Text(
+//                          snapshot.data.documents[ind]['eventName'],
+//                          maxLines: 1,
+//                          overflow: TextOverflow.ellipsis,
+//                          style: TextStyle(fontSize: 20),
+//                        ),
+//                        subtitle: Padding(
+//                          padding: const EdgeInsets.only(top: 6.0),
+//                          child: Text(
+//                              snapshot.data.documents[ind]['eventDescription'],
+//                              maxLines: 1,
+//                              overflow: TextOverflow.ellipsis,
+//                              style: TextStyle(fontSize: 16)),
+//                        ),
+//                        leading: Padding(
+//                          padding: const EdgeInsets.all(2.0),
+//                          child: Hero(
+//                              tag: snapshot.data.documents[ind].documentID,
+//                              child: ClipRRect(
+//                                borderRadius: BorderRadius.circular(6),
+//                                child: SizedBox(
+//                                  width: screenAwareSize(80, context),
+//                                  height: screenAwareSize(60, context),
+//                                  child: FadeInImage.assetNetwork(
+//                                    placeholder: 'assets/loadingfailed.png',
+//                                    image: snapshot.data.documents[ind]
+//                                        ['eventPhotoUrl'],
+//                                    fit: BoxFit.cover,
+//                                  ),
+//                                ),
+//                              )),
+//                        ),
+//                        trailing: Row(
+//                          mainAxisSize: MainAxisSize.min,
+//                          children: <Widget>[
+//                            IconButton(
+//                                icon: Icon(
+//                                  Icons.visibility,
+//                                  color: Colors.red,
+//                                ),
+//                                onPressed: () {
+//                                  Navigator.of(context).push(
+//                                      new MaterialPageRoute(builder: (context) {
+//                                    return EventView(
+//                                      snapshot.data.documents[ind],
+//                                      widget.firebaseUser,
+//                                    );
+//                                  }));
+//                                }),
+//                          ],
+//                        ),
+//                        onTap: () {},
+//                      ),
+                        );
+                  },
+                );
+              },
+            );
+          }),
+    );
   }
 
   // user profile pic , name ,email
