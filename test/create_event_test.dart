@@ -18,9 +18,6 @@ void main() {
   eventModel.eventCategory = "Sport & Fitness";
   eventModel.maximumLimit = 2;
 
-
-
-
   testWidgets("Create Event wird getestet", (WidgetTester tester) async {
     await tester
         .pumpWidget(TestHelper.buildPage(CreateEvent(currentUser: null)));
@@ -65,7 +62,6 @@ void main() {
   });
 
   testWidgets("Pop up Message wird getestet", (WidgetTester tester) async {
-
     final Finder rawButtonMaterial = find.descendant(
       of: find.byType(RaisedButton),
       matching: find.byType(Material),
@@ -90,6 +86,5 @@ void main() {
     expect(material.shape,
         RoundedRectangleBorder(borderRadius: BorderRadius.circular(2)));
     expect(material.elevation, 2.0);
-
   });
 }

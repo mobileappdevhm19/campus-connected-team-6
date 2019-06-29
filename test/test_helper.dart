@@ -8,9 +8,8 @@ class TestHelper {
     );
   }
 
-  static checkWidget<T>(T param){
+  static checkWidget<T>(T param) {
     expect(param, isNotNull);
     expect(param is T, true);
   }
-
 }
