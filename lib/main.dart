@@ -62,7 +62,7 @@ class _MyHomePageState extends State<MyHomePage> {
       setState(() {
         firebaseUser = user;
         dashboard = Dashboard();
-        searchEvent = SearchEvent();
+        searchEvent = SearchEvent(currentUser: firebaseUser);
         createEvent = CreateEvent(currentUser: firebaseUser);
         // profilePage= ProfilePage(firebaseUser: firebaseUser);
         pages = [dashboard, searchEvent, createEvent];

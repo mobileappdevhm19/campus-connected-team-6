@@ -1,9 +1,13 @@
 import 'package:cloud_firestore/cloud_firestore.dart';
+import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_campus_connected/pages/view_event.dart';
 import 'package:flutter_campus_connected/utils/screen_aware_size.dart';
 
 class SearchEvent extends StatefulWidget {
+  final FirebaseUser currentUser;
+  SearchEvent({this.currentUser});
+
   @override
   _SearchEventState createState() => _SearchEventState();
 }
@@ -149,7 +153,7 @@ class _SearchEventState extends State<SearchEvent> {
               onTap: () {
                 Navigator.of(context)
                     .push(new MaterialPageRoute(builder: (context) {
-                  return EventView(snapshot[index]);
+                  return EventView(snapshot[index], widget.currentUser);
                 }));
               },
             ),
