@@ -8,7 +8,6 @@ import 'package:flutter_campus_connected/models/dashboard_item.dart';
 import 'package:flutter_campus_connected/models/event_model.dart';
 import 'package:flutter_campus_connected/pages/create_event.dart';
 import 'package:flutter_campus_connected/pages/profile.dart';
-import 'package:flutter_campus_connected/pages/search_events.dart';
 import 'package:flutter_campus_connected/pages/users_profile.dart';
 import 'package:flutter_campus_connected/pages/view_event.dart';
 import 'package:flutter_campus_connected/utils/screen_aware_size.dart';
@@ -321,7 +320,7 @@ class DashboardState extends State<Dashboard> {
           isLoggedIn
               ? Navigator.of(context)
                   .push(new MaterialPageRoute(builder: (BuildContext context) {
-                  return UsersProfile();
+                  return UsersProfile(firebaseUser);
                 }))
               : Navigator.of(context).pushNamed('/login');
         } else if (route == 'faq') {
