@@ -1,7 +1,9 @@
 import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/material.dart';
+import 'package:flutter/services.dart';
 import 'package:flutter_campus_connected/helper/authentication.dart';
+import 'package:flutter_campus_connected/logos/campus_logo.dart';
 import 'package:flutter_campus_connected/models/dashboard_item.dart';
 import 'package:flutter_campus_connected/models/event_model.dart';
 import 'package:flutter_campus_connected/pages/create_event.dart';
@@ -10,7 +12,6 @@ import 'package:flutter_campus_connected/pages/search_events.dart';
 import 'package:flutter_campus_connected/pages/users_profile.dart';
 import 'package:flutter_campus_connected/pages/view_event.dart';
 import 'package:flutter_campus_connected/utils/screen_aware_size.dart';
-//import 'package:flutter_campus_connected/pages/create_event.dart';
 
 class Dashboard extends StatefulWidget {
   @override
@@ -43,7 +44,6 @@ class DashboardState extends State<Dashboard> {
   @override
   void initState() {
     super.initState();
-    super.initState();
     checkIsLoggedIn();
     auth.getCurrentUser().then((user) {
       setState(() {
@@ -60,12 +60,36 @@ class DashboardState extends State<Dashboard> {
   final scaffoldKey = GlobalKey<ScaffoldState>();
   @override
   Widget build(BuildContext context) {
-    return Scaffold(
-      key: scaffoldKey,
-      appBar: appBar(context),
-      drawer: getDrawer(context),
-      body: getBody(context),
+    return WillPopScope(
+      onWillPop: () => _exitApp(context),
+      child: Scaffold(
+        key: scaffoldKey,
+        appBar: appBar(context),
+        drawer: getDrawer(context),
+        body: getBody(context),
+      ),
     );
+  }
+
+  Future<bool> _exitApp(BuildContext context) {
+    return showDialog(
+          context: context,
+          child: new AlertDialog(
+            title: new Text('Do you want to exit this application?'),
+            content: new Text('We hate to see you leave...'),
+            actions: <Widget>[
+              new FlatButton(
+                onPressed: () => SystemNavigator.pop(),
+                child: new Text('Yes'),
+              ),
+              new FlatButton(
+                onPressed: () => Navigator.of(context).pop(false),
+                child: new Text('No'),
+              ),
+            ],
+          ),
+        ) ??
+        false;
   }
 
   Drawer getDrawer(BuildContext context) {
@@ -74,7 +98,9 @@ class DashboardState extends State<Dashboard> {
       child: ListView(
         children: <Widget>[
           appLogo(context),
-          isLoggedIn ? profileNameAndImage(context, _getUserData()) : Container(),
+          isLoggedIn
+              ? profileNameAndImage(context, _getUserData())
+              : Container(),
           isLoggedIn ? Divider() : Container(),
           isLoggedIn
               ? Container()
@@ -84,6 +110,7 @@ class DashboardState extends State<Dashboard> {
               : Container(),
           drawerItem(context, 'Events', Icons.event_available, 'events'),
           drawerItem(context, 'Create Events', Icons.event, 'login'),
+          drawerItem(context, 'FAQ', Icons.question_answer, 'faq'),
           isLoggedIn
               ? drawerItem(context, 'Log Out', Icons.exit_to_app, 'logout')
               : Container(),
@@ -116,7 +143,7 @@ class DashboardState extends State<Dashboard> {
         itemBuilder: (context, ind) {
           return Card(
             shape:
-            RoundedRectangleBorder(borderRadius: BorderRadius.circular(6)),
+                RoundedRectangleBorder(borderRadius: BorderRadius.circular(6)),
             margin: EdgeInsets.all(6.0),
             elevation: 3.0,
             child: ListTile(
@@ -189,15 +216,15 @@ class DashboardState extends State<Dashboard> {
       color: Colors.redAccent,
       height: screenAwareSize(150, context),
       child: Center(
-        child: FlutterLogo(
-          size: screenAwareSize(80, context),
-        ),
+        child: CampusLogo(//size: screenAwareSize(80, context)),
+            ),
       ),
     );
   }
 
   //drawer Item profile name and Image
-  Padding profileNameAndImage(BuildContext context,  Stream<QuerySnapshot> data) {
+  Padding profileNameAndImage(
+      BuildContext context, Stream<QuerySnapshot> data) {
     return Padding(
       padding: EdgeInsets.only(
           top: screenAwareSize(12.0, context),
@@ -208,9 +235,14 @@ class DashboardState extends State<Dashboard> {
           if (snapshot.connectionState == ConnectionState.waiting) {
             return Container();
           }
-          final item = DashbaoardItem(snapshot.data.documents[0]['displayName'],
-            snapshot.data.documents[0]['photoUrl'],);
-          return getListItem((snapshot.hasData && snapshot.data.documents.length == 0), item, context);
+          final item = DashbaoardItem(
+            snapshot.data.documents[0]['displayName'],
+            snapshot.data.documents[0]['photoUrl'],
+          );
+          return getListItem(
+              (snapshot.hasData && snapshot.data.documents.length == 0),
+              item,
+              context);
         },
       ),
     );
@@ -223,39 +255,39 @@ class DashboardState extends State<Dashboard> {
         .snapshots();
   }
 
-  StatelessWidget getListItem(bool val,DashbaoardItem item, BuildContext context) {
+  StatelessWidget getListItem(
+      bool val, DashbaoardItem item, BuildContext context) {
     return !(val)
         ? ListTile(
-      title: Text(
-        item.displayName,
-        //snapshot.data.documents[0]['displayName'],
-        style: TextStyle(fontSize: 18),
-        maxLines: 1,
-        key: Key('UserName'),
-        overflow: TextOverflow.ellipsis,
-      ),
-      leading: ClipRRect(
-        borderRadius: BorderRadius.circular(40),
-        child: Container(
-          width: screenAwareSize(50, context),
-          height: screenAwareSize(50, context),
-          child: FadeInImage.assetNetwork(
-            image: item.photoUrl,
-            //snapshot.data.documents[0]['photoUrl'],
-            fit: BoxFit.cover,
-            placeholder: 'assets/person.jpg',
-          ),
-        ),
-      ),
-      onTap: () async {
-        Navigator.of(context)
-            .push(MaterialPageRoute(builder: (context) {
-          return ProfilePage(
-            firebaseUser: firebaseUser,
-          );
-        }));
-      },
-    )
+            title: Text(
+              item.displayName,
+              //snapshot.data.documents[0]['displayName'],
+              style: TextStyle(fontSize: 18),
+              maxLines: 1,
+              key: Key('UserName'),
+              overflow: TextOverflow.ellipsis,
+            ),
+            leading: ClipRRect(
+              borderRadius: BorderRadius.circular(40),
+              child: Container(
+                width: screenAwareSize(50, context),
+                height: screenAwareSize(50, context),
+                child: FadeInImage.assetNetwork(
+                  image: item.photoUrl,
+                  //snapshot.data.documents[0]['photoUrl'],
+                  fit: BoxFit.cover,
+                  placeholder: 'assets/person.jpg',
+                ),
+              ),
+            ),
+            onTap: () async {
+              Navigator.of(context).push(MaterialPageRoute(builder: (context) {
+                return ProfilePage(
+                  firebaseUser: firebaseUser,
+                );
+              }));
+            },
+          )
         : Container();
   }
 
@@ -270,6 +302,8 @@ class DashboardState extends State<Dashboard> {
         if (route == 'logout') {
           Navigator.of(context).pop();
           FirebaseAuth.instance.signOut();
+          auth.signOut();
+          Navigator.of(context).pushReplacementNamed('/logout');
           checkIsLoggedIn();
         } else if (route == 'events') {
           Navigator.of(context).pop();
@@ -277,20 +311,25 @@ class DashboardState extends State<Dashboard> {
           Navigator.of(context).pop();
           isLoggedIn
               ? Navigator.of(context)
-              .push(new MaterialPageRoute(builder: (BuildContext context) {
-            return CreateEvent(
-              currentUser: firebaseUser,
-            );
-          }))
+                  .push(new MaterialPageRoute(builder: (BuildContext context) {
+                  return CreateEvent(
+                    currentUser: firebaseUser,
+                  );
+                }))
               : Navigator.of(context).pushNamed('/login');
         } else if (route == 'users') {
           Navigator.of(context).pop();
           isLoggedIn
               ? Navigator.of(context)
-              .push(new MaterialPageRoute(builder: (BuildContext context) {
-            return UsersProfile();
-          }))
+                  .push(new MaterialPageRoute(builder: (BuildContext context) {
+                  return UsersProfile();
+                }))
               : Navigator.of(context).pushNamed('/login');
+        } else if (route == 'faq') {
+          Navigator.of(context)
+              .push(new MaterialPageRoute(builder: (BuildContext context) {
+            return FAQPage();
+          }));
         } else {
           Navigator.of(context).pop();
         }

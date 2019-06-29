@@ -7,6 +7,7 @@ import 'package:flutter_campus_connected/helper/authentication.dart';
 import 'package:flutter_campus_connected/helper/cloud_firestore_helper.dart';
 import 'package:flutter_campus_connected/models/event_model.dart';
 import 'package:flutter_campus_connected/models/event_user_model.dart';
+import 'package:flutter_campus_connected/pages/usersProfileDetails.dart';
 import 'package:flutter_campus_connected/utils/screen_aware_size.dart';
 
 import 'event_users_list.dart';
@@ -22,14 +23,18 @@ class EventView extends StatefulWidget {
 }
 
 class _EventViewState extends State<EventView> {
+  String _joinStatusInterested = "I´m Interested";
+  String _joinStatusNotInterested = "I´m Not Interested";
+  String _deleteButtonText = "Delete Event";
+
   var totalParticipantCount = 0;
-  var isUserInterested = "Interested";
   String currentEventUser = "";
   Auth auth = new Auth();
   EventModel eventModel;
   EventUserModel _eventUserModel = new EventUserModel();
   FireCloudStoreHelper cloudStoreHelper = new FireCloudStoreHelper();
-  bool isLoggedIn = false;
+
+  //bool isLoggedIn = false;
   bool isJoinedIn = false;
 
   // For Checking Internet Connection
@@ -42,52 +47,23 @@ class _EventViewState extends State<EventView> {
   }
 
   //to check if a user logged in or not , it will call from initState
-  _isLoggedIn() async {
-    auth.getCurrentUser().then((user) {
-      if (user != null) {
-        setState(() {
-          isLoggedIn = true;
-        });
-      } else {
-        setState(() {
-          isLoggedIn = false;
-        });
-      }
-    });
-  }
-
-  //to check if a user has already joined the event ot not , it will call from initState
-  _isJoinedIn() async {
-    auth.getCurrentUser().then((user) {
-      if (user != null) {
-        Firestore.instance
-            .collection('eventUsers')
-            .where('userId', isEqualTo: widget.firebaseUser.uid)
-            .where('eventId', isEqualTo: widget.event.documentID)
-            .getDocuments()
-            .then((data) {
-          if (data.documents.length == 0) {
-            setState(() {
-              isJoinedIn = false;
-            });
-            currentEventUser = "";
-          } else {
-            setState(() {
-              isJoinedIn = true;
-            });
-            isUserInterested = 'Not Interested';
-            currentEventUser = data.documents[0].documentID;
-          }
-        });
-      }
-    });
-  }
+//  _isLoggedIn() async {
+//    auth.getCurrentUser().then((user) {
+//      if (user != null) {
+//        setState(() {
+//          isLoggedIn = true;
+//        });
+//      } else {
+//        setState(() {
+//          isLoggedIn = false;
+//        });
+//      }
+//    });
+//  }
 
   @override
   void initState() {
     super.initState();
-    _isLoggedIn();
-    _isJoinedIn();
   }
 
   @override
@@ -133,7 +109,7 @@ class _EventViewState extends State<EventView> {
                       eventItem(context, widget.event['eventCategory'],
                           Icons.category),
                       SizedBox(height: screenAwareSize(10, context)),
-                      interestedButton(context),
+                      interestedButton(context, widget.event['createdBy']),
                       eventParticipant(),
                       Divider(
                         color: Colors.grey,
@@ -153,24 +129,25 @@ class _EventViewState extends State<EventView> {
   //event Image
   FlexibleSpaceBar eventImage(BuildContext context) {
     return FlexibleSpaceBar(
-        title: Text(
-          widget.event['eventName'],
-          maxLines: 1,
-          overflow: TextOverflow.ellipsis,
-          style: TextStyle(
-              color: Colors.white,
-              fontSize: screenAwareSize(18, context),
-              fontWeight: FontWeight.bold),
+      title: Text(
+        widget.event['eventName'],
+        maxLines: 1,
+        overflow: TextOverflow.ellipsis,
+        style: TextStyle(
+            color: Colors.white,
+            fontSize: screenAwareSize(18, context),
+            fontWeight: FontWeight.bold),
+      ),
+      background: Hero(
+        tag: widget.event.documentID,
+        child: Image(
+          image: NetworkImage(widget.event['eventPhotoUrl']),
+          filterQuality: FilterQuality.high,
+          colorBlendMode: BlendMode.softLight,
+          fit: BoxFit.fill,
         ),
-        background: Hero(
-          tag: widget.event.documentID,
-          child: Image(
-            image: NetworkImage(widget.event['eventPhotoUrl']),
-            filterQuality: FilterQuality.high,
-            colorBlendMode: BlendMode.softLight,
-            fit: BoxFit.fill,
-          ),
-        ));
+      ),
+    );
   }
 
   //Event Details
@@ -238,6 +215,7 @@ class _EventViewState extends State<EventView> {
                                 .push(MaterialPageRoute(builder: (context) {
                               return EventUsersList(
                                 eventId: widget.event.documentID,
+                                firebaseUser: widget.firebaseUser,
                               );
                             }));
                           },
@@ -256,15 +234,53 @@ class _EventViewState extends State<EventView> {
                           return Padding(
                             padding: EdgeInsets.all(5.0),
                             child: CircleAvatar(
-                              child: Text(
-                                snapshot.data.documents[ind]['name']
-                                    .toString()
-                                    .toUpperCase()
-                                    .substring(0, 1)
-                                    .toUpperCase(),
-                                style: TextStyle(
-                                    fontSize: screenAwareSize(20, context)),
-                              ),
+                              child: StreamBuilder(
+                                  stream: Firestore.instance
+                                      .collection('users')
+                                      .where('uid',
+                                          isEqualTo: snapshot
+                                              .data.documents[ind]['userId'])
+                                      .snapshots(),
+                                  builder: (context, snapshot) {
+                                    if (snapshot.connectionState ==
+                                        ConnectionState.waiting) {
+                                      return Container();
+                                    }
+                                    return !(snapshot.hasData &&
+                                            snapshot.data.documents.length == 0)
+                                        ? InkWell(
+                                            child: ClipRRect(
+                                              borderRadius:
+                                                  BorderRadius.circular(40),
+                                              child: Container(
+                                                width: screenAwareSize(
+                                                    37, context),
+                                                height: screenAwareSize(
+                                                    37, context),
+                                                child: FadeInImage.assetNetwork(
+                                                  image: snapshot.data
+                                                      .documents[0]['photoUrl'],
+                                                  fit: BoxFit.cover,
+                                                  placeholder:
+                                                      'assets/person.jpg',
+                                                ),
+                                              ),
+                                            ),
+                                            onTap: () {
+                                              Navigator.of(context).push(
+                                                  MaterialPageRoute(
+                                                      builder: (context) {
+                                                return UsersProfileDetails(
+                                                  details: snapshot
+                                                      .data.documents[0],
+                                                  firebaseUser:
+                                                      widget.firebaseUser,
+                                                );
+                                              }));
+                                            },
+                                          )
+                                        : Container();
+                                  }),
                             ),
                           );
                         }),
@@ -277,62 +293,162 @@ class _EventViewState extends State<EventView> {
   }
 
   //event interested Button
-  Align interestedButton(BuildContext context) {
-    return Align(
-      alignment: Alignment.center,
-      child: RaisedButton(
-        color: Colors.red,
-        padding: EdgeInsets.only(
-            left: screenAwareSize(20, context),
-            right: screenAwareSize(20, context)),
-        child: Row(
-          mainAxisSize: MainAxisSize.min,
-          children: <Widget>[
-            Icon(
-              Icons.favorite_border,
-              color: Colors.white,
-              size: screenAwareSize(16, context),
-            ),
-            SizedBox(
-              width: 5,
-            ),
-            Text(
-              'I\'m $isUserInterested',
-              style: TextStyle(
-                  color: Colors.white, fontSize: screenAwareSize(16, context)),
-            )
-          ],
-        ),
-        shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(20)),
-        elevation: 8.0,
-        onPressed: handleButton,
-        //},
-      ),
+  StreamBuilder<QuerySnapshot> interestedButton(
+      BuildContext context, String organizer) {
+    return StreamBuilder(
+      stream: Firestore.instance
+          .collection('eventUsers')
+          .where('userId', isEqualTo: widget.firebaseUser.uid)
+          .where('eventId', isEqualTo: widget.event.documentID)
+          .snapshots(),
+      builder: (context, snapshot) {
+        if (snapshot.connectionState == ConnectionState.waiting) {
+          return Container();
+        }
+        !(snapshot.hasData && snapshot.data.documents.length == 0)
+            ? currentEventUser = snapshot.data.documents[0].documentID
+            : currentEventUser = "";
+        if (widget.firebaseUser.uid == organizer) {
+          return Align(
+            alignment: Alignment.center,
+            child: RaisedButton(
+                color: Colors.redAccent,
+                padding: EdgeInsets.only(
+                    left: screenAwareSize(20, context),
+                    right: screenAwareSize(20, context)),
+                child: Row(
+                  mainAxisSize: MainAxisSize.min,
+                  children: <Widget>[
+                    Icon(
+                      Icons.delete,
+                      color: Colors.white,
+                      size: screenAwareSize(16, context),
+                    ),
+                    SizedBox(
+                      width: 5,
+                    ),
+                    Text(
+                      _deleteButtonText,
+                      style: TextStyle(
+                          color: Colors.white,
+                          fontSize: screenAwareSize(16, context)),
+                    )
+                  ],
+                ),
+                shape: RoundedRectangleBorder(
+                    borderRadius: BorderRadius.circular(20)),
+                elevation: 8.0,
+                onPressed: () {
+                  _deleteEvent(context);
+                }
+                //},
+                ),
+          );
+        } else {
+          return !(snapshot.hasData && snapshot.data.documents.length == 0)
+              ? Align(
+                  alignment: Alignment.center,
+                  child: RaisedButton(
+                    color: Colors.red,
+                    padding: EdgeInsets.only(
+                        left: screenAwareSize(20, context),
+                        right: screenAwareSize(20, context)),
+                    child: Row(
+                      mainAxisSize: MainAxisSize.min,
+                      children: <Widget>[
+                        Icon(
+                          Icons.favorite_border,
+                          color: Colors.white,
+                          size: screenAwareSize(16, context),
+                        ),
+                        SizedBox(
+                          width: 5,
+                        ),
+                        Text(
+                          _joinStatusNotInterested,
+                          style: TextStyle(
+                              color: Colors.white,
+                              fontSize: screenAwareSize(16, context)),
+                        )
+                      ],
+                    ),
+                    shape: RoundedRectangleBorder(
+                        borderRadius: BorderRadius.circular(20)),
+                    elevation: 8.0,
+                    onPressed: _deleteEventUser,
+                    //},
+                  ),
+                )
+              : Align(
+                  alignment: Alignment.center,
+                  child: RaisedButton(
+                    color: Colors.red,
+                    padding: EdgeInsets.only(
+                        left: screenAwareSize(20, context),
+                        right: screenAwareSize(20, context)),
+                    child: Row(
+                      mainAxisSize: MainAxisSize.min,
+                      children: <Widget>[
+                        Icon(
+                          Icons.favorite_border,
+                          color: Colors.white,
+                          size: screenAwareSize(16, context),
+                        ),
+                        SizedBox(
+                          width: 5,
+                        ),
+                        Text(
+                          _joinStatusInterested,
+                          style: TextStyle(
+                              color: Colors.white,
+                              fontSize: screenAwareSize(16, context)),
+                        )
+                      ],
+                    ),
+                    shape: RoundedRectangleBorder(
+                        borderRadius: BorderRadius.circular(20)),
+                    elevation: 8.0,
+                    onPressed: () {
+                      if (totalParticipantCount <
+                          widget.event['maximumLimit']) {
+                        _createEventUser();
+                      } else {
+                        _showAlertDialogue();
+                      }
+                    },
+                    //},
+                  ),
+                );
+        }
+      },
     );
   }
 
-  handleButton() {
-    if (totalParticipantCount < widget.event['maximumLimit']) {
-      if (isLoggedIn) {
-        if (!isJoinedIn) {
-          _createEventUser();
-          setState(() {
-            isJoinedIn = true;
-            isUserInterested = "Not Interested";
-          });
-        } else {
-          setState(() {
-            isJoinedIn = false;
-            isUserInterested = "Interested";
-          });
-          _deleteEventUser();
-        }
-      } else {
-        Navigator.of(context).pushNamed('/login');
-      }
-    } else {
-      _showAlertDialogue();
-    }
+  Future<bool> _deleteEvent(BuildContext context) {
+    return showDialog(
+          context: context,
+          child: new AlertDialog(
+            title: new Text('Do you want to delete this Event?'),
+            content: new Text('Deleted Events can not be restored!'),
+            actions: <Widget>[
+              new FlatButton(
+                onPressed: () {
+                  cloudStoreHelper.deleteEvent(widget.event.documentID);
+                  Navigator.of(context).pop(false);
+                  Navigator.of(context).pop(false);
+                },
+                child: new Text('Yes'),
+              ),
+              new FlatButton(
+                onPressed: () {
+                  Navigator.of(context).pop(false);
+                },
+                child: new Text('No'),
+              ),
+            ],
+          ),
+        ) ??
+        false;
   }
 
   //will save participant data in database
@@ -346,15 +462,7 @@ class _EventViewState extends State<EventView> {
     _eventUserModel.eventId = widget.event.documentID; //changed
     _eventUserModel.userId = widget.firebaseUser.uid;
     await cloudStoreHelper.addEventUser(_eventUserModel);
-    Firestore.instance
-        .collection('eventUsers')
-        .where('userId', isEqualTo: widget.firebaseUser.uid)
-        .where('eventId', isEqualTo: widget.event.documentID)
-        .getDocuments()
-        .then((data) => setState(() {
-              currentEventUser = data.documents[0].documentID;
-            }));
-//    Navigator.of(context).pop();
+    //Navigator.of(context).pop();
   }
 
   //will delete participant data in database
@@ -438,7 +546,16 @@ class _EventViewState extends State<EventView> {
                     ),
                   ],
                 ),
-                onTap: null)
+                onTap: () {
+                  Navigator.of(context)
+                      .push(MaterialPageRoute(builder: (context) {
+                    return UsersProfileDetails(
+                      details: snapshot.data.documents[0],
+                      firebaseUser: widget.firebaseUser,
+                    );
+                  }));
+                },
+              )
             : Container();
       },
     );

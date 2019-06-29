@@ -6,6 +6,7 @@ import 'package:flutter_campus_connected/logos/campus_logo.dart';
 import 'package:flutter_campus_connected/root_page.dart';
 
 import 'dashboard.dart';
+import 'login_signup_page.dart';
 
 class SplashScreen extends StatefulWidget {
   @override
@@ -19,9 +20,7 @@ class SplashScreenState extends State<SplashScreen> {
   }
 
   void navigationPage() {
-    Navigator.of(context).push(new MaterialPageRoute(
-        //builder: (BuildContext context) => new Dashboard()));
-        builder: (BuildContext context) => new RootPage()));
+    Navigator.of(context).pushReplacementNamed('/login');
   }
 
   @override

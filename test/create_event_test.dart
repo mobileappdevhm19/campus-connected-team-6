@@ -15,8 +15,11 @@ void main() {
   eventModel.eventTime = "10:00AM";
   eventModel.eventLocation = "campus lothstrasse";
   eventModel.eventPhotoUrl = photoUrl;
-  eventModel.eventCategory = "Outdoor";
+  eventModel.eventCategory = "Sport & Fitness";
   eventModel.maximumLimit = 2;
+
+
+
 
   testWidgets("Create Event wird getestet", (WidgetTester tester) async {
     await tester
@@ -59,5 +62,34 @@ void main() {
 //      value: 'Indoor',
 //    ));
 //    expect(dropdown, findsOneWidget);
+  });
+
+  testWidgets("Pop up Message wird getestet", (WidgetTester tester) async {
+
+    final Finder rawButtonMaterial = find.descendant(
+      of: find.byType(RaisedButton),
+      matching: find.byType(Material),
+    );
+
+    await tester.pumpWidget(
+      Directionality(
+        textDirection: TextDirection.ltr,
+        child: RaisedButton(
+          onPressed: () {},
+          child: new Text(
+            'OK!',
+          ),
+        ),
+      ),
+    );
+
+    Material material = tester.widget<Material>(rawButtonMaterial);
+    expect(material.color, Color(0xffe0e0e0));
+    expect(material.textStyle.color, Color(0xdd000000));
+    //expect(material.textStyle.color, Color(0xFFF44336));
+    expect(material.shape,
+        RoundedRectangleBorder(borderRadius: BorderRadius.circular(2)));
+    expect(material.elevation, 2.0);
+
   });
 }

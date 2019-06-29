@@ -1,5 +1,6 @@
 import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/material.dart';
+import 'package:flutter_campus_connected/pages/faq_page.dart';
 import 'package:flutter_campus_connected/pages/splash_screen.dart';
 
 import 'helper/authentication.dart';
@@ -25,11 +26,10 @@ class MyApp extends StatelessWidget {
         '/createevent': (BuildContext context) => new CreateEvent(),
         '/signup': (BuildContext context) => new SignUpPage(),
         '/home': (BuildContext context) => new MyHomePage(),
+        '/logout': (BuildContext context) => new LoginSignUpPage(),
       },
       theme: new ThemeData(primarySwatch: Colors.red),
-      //home: new Dashboard(),
-      //home: new RootPage(),
-      home: new SplashScreen(),
+      home: new RootPage(),
     );
   }
 }

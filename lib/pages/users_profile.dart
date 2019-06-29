@@ -1,13 +1,16 @@
 import 'dart:async';
 
 import 'package:cloud_firestore/cloud_firestore.dart';
-import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_campus_connected/models/user_entity.dart';
 import 'package:flutter_campus_connected/pages/usersProfileDetails.dart';
 import 'package:flutter_campus_connected/utils/screen_aware_size.dart';
 
 class UsersProfile extends StatefulWidget {
+  final firebaseUser;
+
+  UsersProfile([this.firebaseUser]);
+
   @override
   UsersProfileState createState() => UsersProfileState();
 }
@@ -16,7 +19,7 @@ class UsersProfileState extends State<UsersProfile> {
   var queryResultSet = [];
   var tempSearchStore = [];
   final CollectionReference collectionReference =
-  Firestore.instance.collection("users");
+      Firestore.instance.collection("users");
 
   var _profileController = new StreamController();
 
@@ -31,8 +34,8 @@ class UsersProfileState extends State<UsersProfile> {
     tempSearchStore = [];
     queryResultSet.forEach((element) {
       if (element.data['displayName']
-          .toLowerCase()
-          .contains(value.toLowerCase()) ||
+              .toLowerCase()
+              .contains(value.toLowerCase()) ||
           element.data['email'].toLowerCase().contains(value.toLowerCase())) {
         counter++;
         tempSearchStore.add(element);
@@ -62,8 +65,8 @@ class UsersProfileState extends State<UsersProfile> {
 
   @override
   void dispose() {
-    _profileController?.close();
     super.dispose();
+    _profileController?.close();
   }
 
   @override
@@ -153,6 +156,7 @@ class UsersProfileState extends State<UsersProfile> {
     Navigator.of(context).push(MaterialPageRoute(builder: (context) {
       return UsersProfileDetails(
         details: entity.data,
+        firebaseUser: widget.firebaseUser,
       );
     }));
   }
