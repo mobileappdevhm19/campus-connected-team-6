@@ -206,7 +206,8 @@ class _PasswordResetPageState extends State<PasswordResetPage> {
             _showEmailInput(),
             SizedBox(height: screenAwareSize(20, context)),
             _showPrimaryButton(context),
-            SizedBox(height: screenAwareSize(10, context)),
+            SizedBox(height: screenAwareSize(20, context)),
+            _showSecondaryButton(),
           ],
         ),
       ),
@@ -271,6 +272,23 @@ class _PasswordResetPageState extends State<PasswordResetPage> {
                 fontSize: screenAwareSize(18, context), color: Colors.white)),
         onPressed: _isLoading == false ? _validateAndSubmit : null,
       ),
+    );
+  }
+
+  //for navigate to login page
+  Widget _showSecondaryButton() {
+    return Align(
+      child: FlatButton(
+        child: new Text('Already have an account? Sign in',
+            style: new TextStyle(
+                fontSize: screenAwareSize(16, context),
+                fontWeight: FontWeight.w500,
+                color: Colors.black)),
+        onPressed: () {
+          Navigator.of(context).pushNamed('/login');
+        },
+      ),
+      alignment: Alignment.bottomCenter,
     );
   }
 }
