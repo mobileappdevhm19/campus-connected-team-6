@@ -3,7 +3,7 @@ import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_campus_connected/helper/cloud_firestore_helper.dart';
 import 'package:flutter_campus_connected/models/profile_item.dart';
-import 'package:flutter_campus_connected/models/user_entity.dart';
+import 'package:flutter_campus_connected/models/user_entity_add.dart';
 import 'package:flutter_campus_connected/pages/view_event.dart';
 import 'package:flutter_campus_connected/utils/screen_aware_size.dart';
 
@@ -21,6 +21,7 @@ class ProfilePage extends StatefulWidget {
 class ProfilePageState extends State<ProfilePage> {
   String photoUrl;
   String displayName;
+  UserEntityAdd _userEntity;
   FireCloudStoreHelper cloudStoreHelper = new FireCloudStoreHelper();
 
   @override
@@ -61,7 +62,7 @@ class ProfilePageState extends State<ProfilePage> {
       children: <Widget>[
         Container(
           color: Colors.red,
-          height: MediaQuery.of(context).size.height / 3,
+          height: MediaQuery.of(context).size.height / 2.3,
           child: Center(
             child: userProfileTopPart(),
           ),
@@ -111,10 +112,11 @@ class ProfilePageState extends State<ProfilePage> {
       color: Colors.red,
       onPressed: () {
         Navigator.of(context).push(MaterialPageRoute(builder: (context) {
+          _userEntity.displayName = displayName;
+          _userEntity.photoUrl = photoUrl;
           return EditProfile(
               userInfo: widget.firebaseUser,
-              photoUrl: photoUrl,
-              displayName: displayName,
+              userEntity: _userEntity,
               cloudStoreHelper: new FireCloudStoreHelper());
         }));
       },
@@ -340,17 +342,19 @@ class ProfilePageState extends State<ProfilePage> {
         } else {
           return Container();
         }
-        UserEntity entity = UserEntity(
+        _userEntity = UserEntityAdd(
             snapshot.data.documents[0]['displayName'],
             snapshot.data.documents[0]['photoUrl'],
             snapshot.data.documents[0]['email'],
-            null);
-        return getProfileItem(entity, context);
+            snapshot.data.documents[0]['age'],
+            snapshot.data.documents[0]['faculty'],
+            snapshot.data.documents[0]['hobby']);
+        return getProfileItem(_userEntity, context);
       },
     );
   }
 
-  Column getProfileItem(UserEntity entity, BuildContext context) {
+  Column getProfileItem(UserEntityAdd entity, BuildContext context) {
     return Column(
       mainAxisAlignment: MainAxisAlignment.center,
       children: <Widget>[
@@ -395,6 +399,33 @@ class ProfilePageState extends State<ProfilePage> {
             padding: const EdgeInsets.all(2.0),
             child: Text(
               entity.email,
+              maxLines: 1,
+              overflow: TextOverflow.ellipsis,
+              style: TextStyle(
+                  color: Colors.white, fontSize: screenAwareSize(18, context)),
+            )),
+        Padding(
+            padding: const EdgeInsets.all(2.0),
+            child: Text(
+              'Age: ${entity.age}',
+              maxLines: 1,
+              overflow: TextOverflow.ellipsis,
+              style: TextStyle(
+                  color: Colors.white, fontSize: screenAwareSize(18, context)),
+            )),
+        Padding(
+            padding: const EdgeInsets.all(2.0),
+            child: Text(
+              'Faculty: ${entity.faculty}',
+              maxLines: 1,
+              overflow: TextOverflow.ellipsis,
+              style: TextStyle(
+                  color: Colors.white, fontSize: screenAwareSize(18, context)),
+            )),
+        Padding(
+            padding: const EdgeInsets.all(2.0),
+            child: Text(
+              'Hobby: ${entity.hobby}',
               maxLines: 1,
               overflow: TextOverflow.ellipsis,
               style: TextStyle(

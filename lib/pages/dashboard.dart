@@ -233,7 +233,7 @@ class DashboardState extends State<Dashboard> {
           if (snapshot.connectionState == ConnectionState.waiting) {
             return Container();
           }
-          final item = DashbaoardItem(
+          final item = DashboardItem(
             snapshot.data.documents[0]['displayName'],
             snapshot.data.documents[0]['photoUrl'],
           );
@@ -254,7 +254,7 @@ class DashboardState extends State<Dashboard> {
   }
 
   StatelessWidget getListItem(
-      bool val, DashbaoardItem item, BuildContext context) {
+      bool val, DashboardItem item, BuildContext context) {
     return !(val)
         ? ListTile(
             title: Text(

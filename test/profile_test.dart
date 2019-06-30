@@ -1,9 +1,9 @@
-import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_campus_connected/models/profile_item.dart';
-import 'package:flutter_campus_connected/models/user_entity.dart';
+import 'package:flutter_campus_connected/models/user_entity_add.dart';
 import 'package:flutter_campus_connected/pages/profile.dart';
 import 'package:flutter_test/flutter_test.dart';
+
 import 'test_helper.dart';
 
 void main() {
@@ -58,8 +58,9 @@ void main() {
 
       TestHelper.checkWidget<Card>(item);
 
-      final userEntity = UserEntity('test', 'test.png', 'test@test.com', null);
-      var userItem = state.getProfileItem(userEntity, context);
+      UserEntityAdd entityAdd = UserEntityAdd(
+          'test', 'test.png', 'test@test.com', '19', 'IT', 'sport');
+      var userItem = state.getProfileItem(entityAdd, context);
       TestHelper.checkWidget<Column>(userItem);
     });
   });

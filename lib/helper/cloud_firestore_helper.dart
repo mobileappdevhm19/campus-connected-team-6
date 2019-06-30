@@ -1,6 +1,7 @@
 import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:flutter_campus_connected/models/event_model.dart';
 import 'package:flutter_campus_connected/models/event_user_model.dart';
+import 'package:flutter_campus_connected/models/user_entity_add.dart';
 
 class FireCloudStoreHelper {
   CollectionReference userReference = Firestore.instance.collection('/users');
@@ -24,7 +25,7 @@ class FireCloudStoreHelper {
   }
 
   // update organizer profile
-  Future<void> updateUser(user, _name, _photoUrl) async {
+  Future<void> updateUser(user, UserEntityAdd entity) async {
     var documentID;
     await userReference
         .where('uid', isEqualTo: user.uid)
@@ -34,8 +35,11 @@ class FireCloudStoreHelper {
     });
 
     var res = userReference.document(documentID).updateData({
-      'displayName': _name,
-      'photoUrl': _photoUrl,
+      'displayName': entity.displayName,
+      'photoUrl': entity.photoUrl,
+      'age': entity.age,
+      'hobby': entity.hobby,
+      'faculty': entity.faculty
     });
 
     return res;

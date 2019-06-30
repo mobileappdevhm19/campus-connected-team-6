@@ -6,8 +6,6 @@
 
 import 'package:flutter/material.dart';
 import 'package:flutter_campus_connected/pages/signup_page.dart';
-import 'package:flutter_campus_connected/utils/screen_aware_size.dart';
-
 import 'package:flutter_test/flutter_test.dart';
 
 import 'test_helper.dart';

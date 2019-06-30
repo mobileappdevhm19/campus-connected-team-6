@@ -1,11 +1,12 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_campus_connected/helper/cloud_firestore_helper.dart';
 import 'package:flutter_campus_connected/mock/cloud_firestore_helper_mock.dart';
-import 'package:flutter_campus_connected/mock/firebase_user_mock.dart';
+import 'package:flutter_campus_connected/models/user_entity_add.dart';
 import 'package:flutter_campus_connected/pages/edit_profile.dart';
 import 'package:flutter_test/flutter_test.dart';
 import 'package:image_test_utils/image_test_utils.dart';
 import 'package:mockito/mockito.dart';
+
 import 'test_helper.dart';
 
 void main() {
@@ -22,14 +23,14 @@ void main() {
       //используем  пакет "заглушку"
       provideMockedNetworkImages(() async {
         final storeMock = FireCloudStoreHelperMock();
-        when(storeMock.updateUser(null, 'test', 'test.png'))
+        UserEntityAdd entity = UserEntityAdd(
+            'test', 'test.png', 'test@test.com', '19', 'IT', 'sport');
+        expect(entity, isNotNull);
+        when(storeMock.updateUser(null, entity))
             .thenAnswer((_) async => Future.value(true));
         final String displayName = 'test';
-        var editPage = EditProfile(
-            photoUrl:
-                'https://www.google.com/images/branding/googlelogo/1x/googlelogo_color_272x92dp.png',
-            displayName: displayName,
-            cloudStoreHelper: storeMock);
+        var editPage =
+            EditProfile(userEntity: entity, cloudStoreHelper: storeMock);
         var curr = TestHelper.buildPage(editPage);
         await tester.pumpWidget(curr);
 
@@ -92,6 +93,16 @@ void main() {
         final nameTextForm = state.nameTextForm(context);
         TestHelper.checkWidget<TextFormField>(nameTextForm);
         final nameText = find.byType(TextFormField);
+
+        final ageTextForm = state.ageTextForm(context);
+        TestHelper.checkWidget<TextFormField>(ageTextForm);
+
+        final facultyForm = state.ageTextForm(context);
+        TestHelper.checkWidget<TextFormField>(facultyForm);
+
+        final hobbyForm = state.ageTextForm(context);
+        TestHelper.checkWidget<TextFormField>(hobbyForm);
+
         //input empty
         await tester.enterText(nameText, ' ');
         tester.tap(submit);
@@ -118,8 +129,9 @@ void main() {
 
         expect(textChild.data == 'No Internet 😞', true);
 
-        expect(state.imageUrl == state.widget.photoUrl, true);
-        expect(state.name == state.widget.displayName, true);
+        expect(state.entity.photoUrl == state.widget.userEntity.photoUrl, true);
+        expect(state.entity.displayName == state.widget.userEntity.displayName,
+            true);
       });
     });
   });
