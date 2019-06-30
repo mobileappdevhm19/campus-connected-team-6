@@ -29,7 +29,9 @@ class MyApp extends StatelessWidget {
         '/home': (BuildContext context) => new MyHomePage(),
         '/passwordreset': (BuildContext context) => new PasswordResetPage(),
       },
-      theme: new ThemeData(primarySwatch: Colors.red,),
+      theme: new ThemeData(
+        primarySwatch: Colors.red,
+      ),
       home: new RootPage(),
     );
   }
@@ -65,7 +67,7 @@ class _MyHomePageState extends State<MyHomePage> {
         dashboard = Dashboard();
         searchEvent = SearchEvent(currentUser: firebaseUser);
         createEvent = CreateEvent(currentUser: firebaseUser);
-        profilePage= ProfilePage(firebaseUser: firebaseUser);
+        profilePage = ProfilePage(firebaseUser: firebaseUser);
         pages = [dashboard, searchEvent, createEvent, profilePage];
       });
     });

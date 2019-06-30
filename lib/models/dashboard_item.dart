@@ -1,4 +1,4 @@
-class DashbaoardItem{
+class DashbaoardItem {
   final String displayName;
   final String photoUrl;
 
