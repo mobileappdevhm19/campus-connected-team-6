@@ -320,7 +320,7 @@ class DashboardState extends State<Dashboard> {
           isLoggedIn
               ? Navigator.of(context)
                   .push(new MaterialPageRoute(builder: (BuildContext context) {
-                  return UsersProfile();
+                  return UsersProfile(firebaseUser);
                 }))
               : Navigator.of(context).pushNamed('/login');
         } else if (route == 'faq') {

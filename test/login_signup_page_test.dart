@@ -20,10 +20,14 @@ void main() {
     expect(widget, findsOneWidget);
 
     final flatButton = find.byType(FlatButton);
-    expect(flatButton, findsOneWidget);
+    expect(flatButton, findsNWidgets(2));
 
-    final textFlatButton = find.text('Create an account');
-    expect(textFlatButton, findsOneWidget);
+    final textFlatButtonCreateAccount = find.text('Create an account');
+    expect(textFlatButtonCreateAccount, findsOneWidget);
+
+    final textFlatButtonResetPassword =
+        find.text('Forgot password? Click here for Reset');
+    expect(textFlatButtonResetPassword, findsOneWidget);
 
     final raisedButton = find.byType(RaisedButton);
     expect(raisedButton, findsOneWidget);

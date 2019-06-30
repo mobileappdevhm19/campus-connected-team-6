@@ -112,7 +112,6 @@ class _SignUpPageState extends State<SignUpPage>
       try {
         user = await auth.signUp(_email, _password);
         auth.sendEmailVerification();
-        // TODO: email verification first before login
         if (user != null) {
           var userUpdateInfo = new UserUpdateInfo();
           userUpdateInfo.displayName = _name;
@@ -122,10 +121,60 @@ class _SignUpPageState extends State<SignUpPage>
           auth.getCurrentUser().then((currentUser) async {
             if (currentUser != null) {
               var result = await cloudhelper.storeNewUser(currentUser);
-              print(result);
               if (result) {
-                //Navigator.of(context).pushReplacementNamed('/dashboard');
-                Navigator.of(context).pushReplacementNamed('/home');
+                showDialog(
+                    context: context,
+                    builder: (BuildContext context) {
+                      return AlertDialog(
+                        shape: RoundedRectangleBorder(
+                            borderRadius:
+                                BorderRadius.all(Radius.circular(12.0))),
+                        content: Column(
+                          mainAxisSize: MainAxisSize.min,
+                          mainAxisAlignment: MainAxisAlignment.center,
+                          children: <Widget>[
+                            SizedBox(height: screenAwareSize(10, context)),
+                            Text(
+                              'Congratulations🎉',
+                              style: TextStyle(
+                                  color: Colors.black87,
+                                  fontSize: screenAwareSize(26, context)),
+                            ),
+                            SizedBox(height: screenAwareSize(10, context)),
+                            Padding(
+                              padding:
+                                  EdgeInsets.all(screenAwareSize(8.0, context)),
+                              child: Text(
+                                'Yeah, you have successfully created an account. ',
+                                style: TextStyle(
+                                    color: Colors.black87,
+                                    fontSize: screenAwareSize(16, context)),
+                                textAlign: TextAlign.center,
+                              ),
+                            ),
+                            Align(
+                              alignment: Alignment.center,
+                              child: RaisedButton(
+                                onPressed: () {
+                                  Navigator.of(context)
+                                      .pushReplacementNamed('/login');
+                                },
+                                child: Text(
+                                  'OK',
+                                  style: TextStyle(color: Colors.white),
+                                ),
+                                color: Colors.red,
+                                shape: RoundedRectangleBorder(
+                                    borderRadius: BorderRadius.circular(10)),
+                                elevation: 6.0,
+                              ),
+                            )
+                          ],
+                        ),
+                        contentPadding: EdgeInsets.all(10),
+                        titlePadding: EdgeInsets.all(20),
+                      );
+                    });
               }
             }
           });

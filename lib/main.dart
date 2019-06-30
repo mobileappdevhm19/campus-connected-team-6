@@ -1,5 +1,6 @@
 import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/material.dart';
+import 'package:flutter_campus_connected/pages/password_reset.dart';
 
 import 'helper/authentication.dart';
 import 'pages/create_event.dart';
@@ -25,8 +26,12 @@ class MyApp extends StatelessWidget {
         '/signup': (BuildContext context) => new SignUpPage(),
         '/home': (BuildContext context) => new MyHomePage(),
         '/logout': (BuildContext context) => new LoginSignUpPage(),
+        '/home': (BuildContext context) => new MyHomePage(),
+        '/passwordreset': (BuildContext context) => new PasswordResetPage(),
       },
-      theme: new ThemeData(primarySwatch: Colors.red),
+      theme: new ThemeData(
+        primarySwatch: Colors.red,
+      ),
       home: new RootPage(),
     );
   }
@@ -62,11 +67,11 @@ class _MyHomePageState extends State<MyHomePage> {
         dashboard = Dashboard();
         searchEvent = SearchEvent(currentUser: firebaseUser);
         createEvent = CreateEvent(currentUser: firebaseUser);
-        // profilePage= ProfilePage(firebaseUser: firebaseUser);
-        pages = [dashboard, searchEvent, createEvent];
+        profilePage = ProfilePage(firebaseUser: firebaseUser);
+        pages = [dashboard, searchEvent, createEvent, profilePage];
       });
     });
-    pages = [dashboard, searchEvent, createEvent];
+    pages = [dashboard, searchEvent, createEvent, profilePage];
     currentPage = dashboard;
   }
 
@@ -75,6 +80,7 @@ class _MyHomePageState extends State<MyHomePage> {
     return Scaffold(
       body: pages[currentTab],
       bottomNavigationBar: BottomNavigationBar(
+        type: BottomNavigationBarType.fixed,
         currentIndex: currentTab,
         onTap: (int index) {
           setState(() {
@@ -93,6 +99,10 @@ class _MyHomePageState extends State<MyHomePage> {
           ),
           BottomNavigationBarItem(
             icon: Icon(Icons.event),
+            title: Text(''),
+          ),
+          BottomNavigationBarItem(
+            icon: Icon(Icons.account_circle),
             title: Text(''),
           ),
         ],

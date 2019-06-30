@@ -28,7 +28,7 @@ class ProfilePageState extends State<ProfilePage> {
   Widget build(BuildContext context) {
     return WillPopScope(
       onWillPop: () {
-        Navigator.pop(context, true);
+        Navigator.of(context).pushReplacementNamed('/home');
       },
       child: Scaffold(
         appBar: appBar(context),
@@ -47,7 +47,7 @@ class ProfilePageState extends State<ProfilePage> {
         ),
         color: Colors.white,
         onPressed: () {
-          Navigator.of(context).pop();
+          Navigator.of(context).pushReplacementNamed('/home');
         },
       ),
       actions: <Widget>[
