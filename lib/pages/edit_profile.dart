@@ -109,6 +109,7 @@ class EditProfileState extends State<EditProfile> {
     if (_formState.currentState.validate() && entity.photoUrl != null) {
       await saveForm();
     }
+    Navigator.pop(context);
   }
 
   Future saveForm() async {
