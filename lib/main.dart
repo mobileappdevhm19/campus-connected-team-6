@@ -29,7 +29,9 @@ class MyApp extends StatelessWidget {
         '/home': (BuildContext context) => new MyHomePage(),
         '/passwordreset': (BuildContext context) => new PasswordResetPage(),
       },
-      theme: new ThemeData(primarySwatch: Colors.red),
+      theme: new ThemeData(
+        primarySwatch: Colors.red,
+      ),
       home: new RootPage(),
     );
   }
@@ -65,11 +67,11 @@ class _MyHomePageState extends State<MyHomePage> {
         dashboard = Dashboard();
         searchEvent = SearchEvent(currentUser: firebaseUser);
         createEvent = CreateEvent(currentUser: firebaseUser);
-        // profilePage= ProfilePage(firebaseUser: firebaseUser);
-        pages = [dashboard, searchEvent, createEvent];
+        profilePage = ProfilePage(firebaseUser: firebaseUser);
+        pages = [dashboard, searchEvent, createEvent, profilePage];
       });
     });
-    pages = [dashboard, searchEvent, createEvent];
+    pages = [dashboard, searchEvent, createEvent, profilePage];
     currentPage = dashboard;
   }
 
@@ -78,6 +80,7 @@ class _MyHomePageState extends State<MyHomePage> {
     return Scaffold(
       body: pages[currentTab],
       bottomNavigationBar: BottomNavigationBar(
+        type: BottomNavigationBarType.fixed,
         currentIndex: currentTab,
         onTap: (int index) {
           setState(() {
@@ -96,6 +99,10 @@ class _MyHomePageState extends State<MyHomePage> {
           ),
           BottomNavigationBarItem(
             icon: Icon(Icons.event),
+            title: Text(''),
+          ),
+          BottomNavigationBarItem(
+            icon: Icon(Icons.account_circle),
             title: Text(''),
           ),
         ],

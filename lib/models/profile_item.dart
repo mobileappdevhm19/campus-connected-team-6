@@ -1,4 +1,4 @@
-class ProfileItem{
+class ProfileItem {
   final String eventName;
   final String eventDescription;
   final String eventPhotoUrl;
