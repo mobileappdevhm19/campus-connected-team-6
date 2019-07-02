@@ -1,3 +1,4 @@
+import 'package:cached_network_image/cached_network_image.dart';
 import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_campus_connected/helper/cloud_firestore_helper.dart';
@@ -122,10 +123,14 @@ class UsersProfileDetailsPageState extends State<UsersProfileDetails> {
                 child: SizedBox(
                   width: screenAwareSize(80, context),
                   height: screenAwareSize(60, context),
-                  child: FadeInImage.assetNetwork(
-                    placeholder: 'assets/loadingfailed.png',
-                    image: entity.eventPhotoUrl,
+                  child: CachedNetworkImage(
+                    imageUrl: entity.eventPhotoUrl,
                     fit: BoxFit.cover,
+                    placeholder: (context, url) => Image.asset(
+                          'assets/loadingfailed.png',
+                          fit: BoxFit.cover,
+                        ),
+                    errorWidget: (context, url, error) => new Icon(Icons.error),
                   ),
                 ),
               )),
@@ -232,9 +237,14 @@ class UsersProfileDetailsPageState extends State<UsersProfileDetails> {
           width: 120,
           height: 120,
           child: isNetwork
-              ? Image(
-                  image: NetworkImage(image),
+              ? CachedNetworkImage(
+                  imageUrl: image,
                   fit: BoxFit.cover,
+                  placeholder: (context, url) => Image.asset(
+                        'assets/person.jpg',
+                        fit: BoxFit.cover,
+                      ),
+                  errorWidget: (context, url, error) => new Icon(Icons.error),
                 )
               : Image.asset(
                   image,

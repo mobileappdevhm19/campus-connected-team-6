@@ -1,5 +1,6 @@
 import 'dart:async';
 
+import 'package:cached_network_image/cached_network_image.dart';
 import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_campus_connected/models/user_entity.dart';
@@ -135,11 +136,14 @@ class UsersProfileState extends State<UsersProfile> {
           child: Container(
             width: screenAwareSize(50, context),
             height: screenAwareSize(50, context),
-            child: FadeInImage.assetNetwork(
-              //image: snapshot.data[ind]['photoUrl'],
-              image: entity.photoUrl,
+            child: CachedNetworkImage(
+              imageUrl: entity.photoUrl,
               fit: BoxFit.cover,
-              placeholder: 'assets/person.jpg',
+              placeholder: (context, url) => Image.asset(
+                    'assets/person.jpg',
+                    fit: BoxFit.cover,
+                  ),
+              errorWidget: (context, url, error) => new Icon(Icons.error),
             ),
           ),
         ),

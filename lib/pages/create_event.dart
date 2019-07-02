@@ -2,13 +2,14 @@ import 'dart:async';
 import 'dart:io';
 import 'dart:math';
 
+import 'package:cached_network_image/cached_network_image.dart';
 import 'package:connectivity/connectivity.dart';
 import 'package:datetime_picker_formfield/datetime_picker_formfield.dart';
 import 'package:firebase_auth/firebase_auth.dart';
 import 'package:firebase_storage/firebase_storage.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
-import 'package:flutter_campus_connected/helper/authentication.dart';
+import 'package:flutter_campus_connected/services/authentication.dart';
 import 'package:flutter_campus_connected/helper/cloud_firestore_helper.dart';
 import 'package:flutter_campus_connected/models/event_model.dart';
 import 'package:flutter_campus_connected/utils/screen_aware_size.dart';
@@ -102,8 +103,8 @@ class _CreateEventState extends State<CreateEvent> {
   }
 
   final formats = {
-    InputType.date: DateFormat('yyyy-MM-dd'),
-    InputType.time: DateFormat("h:mm a"),
+    InputType.date: DateFormat('dd-MM-yyyy'),
+    InputType.time: DateFormat("H:mm"),
   };
 
   @override
@@ -265,7 +266,6 @@ class _CreateEventState extends State<CreateEvent> {
       _formState.currentState.save();
       eventModel.createdBy = widget.currentUser.uid;
       cloudStoreHelper.addEvents(eventModel);
-      //Navigator.of(context).pop();
       Navigator.of(context).pushNamed('/home');
       _formState.currentState.reset();
       _showPopUpMessage();
@@ -374,14 +374,20 @@ class _CreateEventState extends State<CreateEvent> {
         ClipRRect(
           borderRadius: BorderRadius.circular(100),
           child: Container(
-              width: 120,
-              height: 120,
-              child: imageUrl == null
-                  ? Image.asset('assets/gallery.png')
-                  : Image(
-                      image: NetworkImage(imageUrl),
-                      fit: BoxFit.cover,
-                    )),
+            width: 120,
+            height: 120,
+            child: imageUrl == null
+                ? Image.asset('assets/gallery.png')
+                : CachedNetworkImage(
+                    imageUrl: imageUrl,
+                    fit: BoxFit.cover,
+                    placeholder: (context, url) => Image.asset(
+                          'assets/person.jpg',
+                          fit: BoxFit.cover,
+                        ),
+                    errorWidget: (context, url, error) => new Icon(Icons.error),
+                  ),
+          ),
         ),
         IconButton(
           icon: Icon(
@@ -465,6 +471,8 @@ class _CreateEventState extends State<CreateEvent> {
       onSaved: (value) {
         eventModel.eventName = value;
       },
+      maxLength: 30,
+      maxLengthEnforced: true,
       validator: (value) {
         if (value.isEmpty) {
           return 'Event Name can\'t be empty';
@@ -476,6 +484,7 @@ class _CreateEventState extends State<CreateEvent> {
   //event Description
   TextFormField descriptionTextForm(BuildContext context) {
     return TextFormField(
+      keyboardType: TextInputType.multiline,
       decoration: new InputDecoration(
         border: new OutlineInputBorder(
           borderRadius: BorderRadius.circular(screenAwareSize(10, context)),
@@ -494,6 +503,9 @@ class _CreateEventState extends State<CreateEvent> {
           return 'Event Description can\'t be empty';
         }
       },
+      maxLines: null,
+      maxLength: 300,
+      maxLengthEnforced: true,
     );
   }
 
@@ -518,6 +530,8 @@ class _CreateEventState extends State<CreateEvent> {
           return 'Event location can\'t be empty';
         }
       },
+      maxLength: 30,
+      maxLengthEnforced: true,
     );
   }
 
@@ -544,6 +558,8 @@ class _CreateEventState extends State<CreateEvent> {
       validator: (value) {
         if (value.isEmpty) {
           return 'Maximum Participant Limit can\'t be empty';
+        } else if (int.parse(value) > 20) {
+          return 'Max. Participants can be 20';
         }
       },
     );
@@ -551,6 +567,7 @@ class _CreateEventState extends State<CreateEvent> {
 
   //event date picker
   DateTimePickerFormField eventDatePickerFormField(BuildContext context) {
+    var now = new DateTime.now();
     return DateTimePickerFormField(
       inputType: InputType.date,
       format: formats[InputType.date],
@@ -569,9 +586,14 @@ class _CreateEventState extends State<CreateEvent> {
         var _dates = DateFormat('dd-MM-yyyy').format(value);
         eventModel.eventDate = _dates.toString();
       },
+      //TODO: validator not quite working as wanted
       validator: (value) {
+        DateTime input =
+            DateTime.fromMillisecondsSinceEpoch(value.millisecondsSinceEpoch);
         if (value == null) {
           return 'Event Date can\'t be empty';
+        } else if (input.isBefore(now)) {
+          return 'Date is not valid. Please choose a date in the future';
         }
       },
     );
@@ -594,7 +616,7 @@ class _CreateEventState extends State<CreateEvent> {
         ),
       ),
       onSaved: (value) {
-        var _time = DateFormat('h:mma').format(value);
+        var _time = DateFormat('H:mm').format(value);
         eventModel.eventTime = _time.toString();
       },
       validator: (value) {

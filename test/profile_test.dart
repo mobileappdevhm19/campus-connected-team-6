@@ -41,10 +41,10 @@ void main() {
       expect(state, isNotNull);
       expect(state.widget, equals(profilePage));
 
-      final btEdit = state.getBtEdit(context);
+      final btEdit = state.getButtonEdit(context);
       TestHelper.checkWidget<FlatButton>(btEdit);
 
-      final body = state.getBody(context);
+      final body = state.getBodyEvent(context);
       TestHelper.checkWidget<Column>(body);
 
       final appBar = state.appBar(context);

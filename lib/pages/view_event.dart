@@ -1,14 +1,15 @@
+import 'package:cached_network_image/cached_network_image.dart';
 import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:connectivity/connectivity.dart';
 import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/material.dart';
-import 'package:flutter/services.dart';
-import 'package:flutter_campus_connected/helper/authentication.dart';
+import 'package:flutter_campus_connected/services/authentication.dart';
 import 'package:flutter_campus_connected/helper/cloud_firestore_helper.dart';
 import 'package:flutter_campus_connected/models/event_model.dart';
 import 'package:flutter_campus_connected/models/event_user_model.dart';
 import 'package:flutter_campus_connected/pages/usersProfileDetails.dart';
 import 'package:flutter_campus_connected/utils/screen_aware_size.dart';
+import 'package:flutter_campus_connected/utils/text_aware_size.dart';
 
 import 'event_users_list.dart';
 
@@ -35,7 +36,7 @@ class _EventViewState extends State<EventView> {
   FireCloudStoreHelper cloudStoreHelper = new FireCloudStoreHelper();
 
   //bool isLoggedIn = false;
-  bool isJoinedIn = false;
+  //bool isJoinedIn = false;
 
   // For Checking Internet Connection
   Future<bool> checkInternetConnection() async {
@@ -68,9 +69,6 @@ class _EventViewState extends State<EventView> {
 
   @override
   Widget build(BuildContext context) {
-    SystemChrome.setSystemUIOverlayStyle(SystemUiOverlayStyle(
-      statusBarColor: Colors.red, // status bar color
-    ));
     return Scaffold(
       body: SafeArea(
         top: true,
@@ -135,14 +133,13 @@ class _EventViewState extends State<EventView> {
         overflow: TextOverflow.ellipsis,
         style: TextStyle(
             color: Colors.white,
-            fontSize: screenAwareSize(18, context),
+            fontSize: textAwareSize(18, context),
             fontWeight: FontWeight.bold),
       ),
       background: Hero(
         tag: widget.event.documentID,
-        child: Image(
-          image: NetworkImage(widget.event['eventPhotoUrl']),
-          filterQuality: FilterQuality.high,
+        child: CachedNetworkImage(
+          imageUrl: widget.event['eventPhotoUrl'],
           colorBlendMode: BlendMode.softLight,
           fit: BoxFit.fill,
         ),
@@ -157,7 +154,7 @@ class _EventViewState extends State<EventView> {
         'Details',
         style: TextStyle(
             color: Colors.black87,
-            fontSize: screenAwareSize(18, context),
+            fontSize: textAwareSize(18, context),
             fontWeight: FontWeight.bold),
       ),
       contentPadding: EdgeInsets.all(0.0),
@@ -200,13 +197,13 @@ class _EventViewState extends State<EventView> {
                           'Total Participants $totalParticipantCount / ${widget.event['maximumLimit']}',
                           style: TextStyle(
                               color: Colors.black87,
-                              fontSize: screenAwareSize(15, context)),
+                              fontSize: textAwareSize(15, context)),
                         ),
                         FlatButton(
                           child: Text(
                             'View all',
                             style: TextStyle(
-                                fontSize: screenAwareSize(16, context),
+                                fontSize: textAwareSize(16, context),
                                 fontWeight: FontWeight.bold,
                                 color: Colors.red),
                           ),
@@ -257,12 +254,15 @@ class _EventViewState extends State<EventView> {
                                                     37, context),
                                                 height: screenAwareSize(
                                                     37, context),
-                                                child: FadeInImage.assetNetwork(
-                                                  image: snapshot.data
+                                                child: CachedNetworkImage(
+                                                  imageUrl: snapshot.data
                                                       .documents[0]['photoUrl'],
+                                                  placeholder: (context, url) =>
+                                                      new CircularProgressIndicator(),
+                                                  errorWidget:
+                                                      (context, url, error) =>
+                                                          new Icon(Icons.error),
                                                   fit: BoxFit.cover,
-                                                  placeholder:
-                                                      'assets/person.jpg',
                                                 ),
                                               ),
                                             ),
@@ -368,7 +368,7 @@ class _EventViewState extends State<EventView> {
                           _joinStatusNotInterested,
                           style: TextStyle(
                               color: Colors.white,
-                              fontSize: screenAwareSize(16, context)),
+                              fontSize: textAwareSize(16, context)),
                         )
                       ],
                     ),
@@ -401,7 +401,7 @@ class _EventViewState extends State<EventView> {
                           _joinStatusInterested,
                           style: TextStyle(
                               color: Colors.white,
-                              fontSize: screenAwareSize(16, context)),
+                              fontSize: textAwareSize(16, context)),
                         )
                       ],
                     ),
@@ -497,7 +497,7 @@ class _EventViewState extends State<EventView> {
         Text(
           name,
           style: TextStyle(
-              color: Colors.black87, fontSize: screenAwareSize(16, context)),
+              color: Colors.black87, fontSize: textAwareSize(16, context)),
           maxLines: 1,
           overflow: TextOverflow.ellipsis,
         ),
@@ -525,10 +525,15 @@ class _EventViewState extends State<EventView> {
                       child: Container(
                         width: screenAwareSize(37, context),
                         height: screenAwareSize(37, context),
-                        child: FadeInImage.assetNetwork(
-                          image: snapshot.data.documents[0]['photoUrl'],
+                        child: CachedNetworkImage(
+                          imageUrl: snapshot.data.documents[0]['photoUrl'],
                           fit: BoxFit.cover,
-                          placeholder: 'assets/person.jpg',
+                          placeholder: (context, url) => Image.asset(
+                                'assets/person.jpg',
+                                fit: BoxFit.cover,
+                              ),
+                          errorWidget: (context, url, error) =>
+                              new Icon(Icons.error),
                         ),
                       ),
                     ),
@@ -540,7 +545,7 @@ class _EventViewState extends State<EventView> {
                           snapshot.data.documents[0]['displayName'],
                       style: TextStyle(
                           color: Colors.black87,
-                          fontSize: screenAwareSize(16, context)),
+                          fontSize: textAwareSize(16, context)),
                       maxLines: 1,
                       overflow: TextOverflow.ellipsis,
                     ),
@@ -578,7 +583,7 @@ class _EventViewState extends State<EventView> {
                   'Sorry 😞',
                   style: TextStyle(
                       color: Colors.black87,
-                      fontSize: screenAwareSize(26, context)),
+                      fontSize: textAwareSize(26, context)),
                 ),
                 SizedBox(height: screenAwareSize(10, context)),
                 Padding(
@@ -587,7 +592,7 @@ class _EventViewState extends State<EventView> {
                     'We have reached the maximum number of participants. ',
                     style: TextStyle(
                         color: Colors.black87,
-                        fontSize: screenAwareSize(16, context)),
+                        fontSize: textAwareSize(16, context)),
                     textAlign: TextAlign.center,
                   ),
                 ),
@@ -632,7 +637,7 @@ class _EventViewState extends State<EventView> {
                   'No Internet 😞',
                   style: TextStyle(
                       color: Colors.black87,
-                      fontSize: screenAwareSize(26, context)),
+                      fontSize: textAwareSize(26, context)),
                 ),
                 SizedBox(height: screenAwareSize(10, context)),
                 Padding(
@@ -641,7 +646,7 @@ class _EventViewState extends State<EventView> {
                     'Please Check Internet Connection.',
                     style: TextStyle(
                         color: Colors.black87,
-                        fontSize: screenAwareSize(16, context)),
+                        fontSize: textAwareSize(16, context)),
                     textAlign: TextAlign.center,
                   ),
                 ),

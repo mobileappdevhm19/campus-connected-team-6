@@ -1,6 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
-import 'package:flutter_campus_connected/helper/authentication.dart';
+import 'package:flutter_campus_connected/services/authentication.dart';
 import 'package:flutter_campus_connected/logos/login_logo.dart';
 import 'package:flutter_campus_connected/pages/welcome_page.dart';
 import 'package:flutter_campus_connected/utils/screen_aware_size.dart';

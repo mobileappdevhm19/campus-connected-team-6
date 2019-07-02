@@ -1,6 +1,6 @@
-class DashbaoardItem {
+class DashboardItem {
   final String displayName;
   final String photoUrl;
 
-  DashbaoardItem(this.displayName, this.photoUrl);
+  DashboardItem(this.displayName, this.photoUrl);
 }

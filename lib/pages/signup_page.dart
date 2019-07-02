@@ -1,6 +1,6 @@
 import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/material.dart';
-import 'package:flutter_campus_connected/helper/authentication.dart';
+import 'package:flutter_campus_connected/services/authentication.dart';
 import 'package:flutter_campus_connected/helper/cloud_firestore_helper.dart';
 import 'package:flutter_campus_connected/utils/screen_aware_size.dart';
 

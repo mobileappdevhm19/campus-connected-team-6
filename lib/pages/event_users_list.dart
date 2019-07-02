@@ -1,3 +1,4 @@
+import 'package:cached_network_image/cached_network_image.dart';
 import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/material.dart';
@@ -72,10 +73,15 @@ class EventUsersList extends StatelessWidget {
                     child: Container(
                       width: screenAwareSize(50, context),
                       height: screenAwareSize(50, context),
-                      child: FadeInImage.assetNetwork(
-                        image: entity.photoUrl,
+                      child: CachedNetworkImage(
+                        imageUrl: entity.photoUrl,
                         fit: BoxFit.cover,
-                        placeholder: 'assets/person.jpg',
+                        placeholder: (context, url) => Image.asset(
+                              'assets/person.jpg',
+                              fit: BoxFit.cover,
+                            ),
+                        errorWidget: (context, url, error) =>
+                            new Icon(Icons.error),
                       ),
                     ),
                   ),
@@ -103,7 +109,6 @@ class EventUsersList extends StatelessWidget {
     return AppBar(
       backgroundColor: Colors.red,
       elevation: 0.0,
-      /*
       leading: new IconButton(
         icon: new Icon(
           Icons.arrow_back_ios,
@@ -113,11 +118,11 @@ class EventUsersList extends StatelessWidget {
           Navigator.of(context).pop();
         },
       ),
-      */
       title: new Text('Interested People'),
     );
   }
 
+  //TODO: remove later
   //for showign user information on dialog
   void _showAlertDialouge(name, email, context) {
     showDialog(

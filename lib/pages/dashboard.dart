@@ -1,8 +1,9 @@
+import 'package:cached_network_image/cached_network_image.dart';
 import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
-import 'package:flutter_campus_connected/helper/authentication.dart';
+import 'package:flutter_campus_connected/services/authentication.dart';
 import 'package:flutter_campus_connected/logos/campus_logo.dart';
 import 'package:flutter_campus_connected/models/dashboard_item.dart';
 import 'package:flutter_campus_connected/models/event_model.dart';
@@ -173,10 +174,16 @@ class DashboardState extends State<Dashboard> {
                       child: SizedBox(
                         width: screenAwareSize(80, context),
                         height: screenAwareSize(60, context),
-                        child: FadeInImage.assetNetwork(
-                          placeholder: 'assets/loadingfailed.png',
-                          image: snapshot.data.documents[ind]['eventPhotoUrl'],
+                        child: CachedNetworkImage(
+                          imageUrl: snapshot.data.documents[ind]
+                              ['eventPhotoUrl'],
                           fit: BoxFit.cover,
+                          placeholder: (context, url) => Image.asset(
+                                'assets/loadingfailed.png',
+                                fit: BoxFit.cover,
+                              ),
+                          errorWidget: (context, url, error) =>
+                              new Icon(Icons.error),
                         ),
                       ),
                     )),
@@ -270,11 +277,14 @@ class DashboardState extends State<Dashboard> {
               child: Container(
                 width: screenAwareSize(50, context),
                 height: screenAwareSize(50, context),
-                child: FadeInImage.assetNetwork(
-                  image: item.photoUrl,
-                  //snapshot.data.documents[0]['photoUrl'],
+                child: CachedNetworkImage(
+                  imageUrl: item.photoUrl,
                   fit: BoxFit.cover,
-                  placeholder: 'assets/person.jpg',
+                  placeholder: (context, url) => Image.asset(
+                        'assets/person.jpg',
+                        fit: BoxFit.cover,
+                      ),
+                  errorWidget: (context, url, error) => new Icon(Icons.error),
                 ),
               ),
             ),
