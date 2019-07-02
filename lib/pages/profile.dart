@@ -390,39 +390,67 @@ class ProfilePageState extends State<ProfilePage> {
 
   Column getProfileItem(UserEntityAdd entity, BuildContext context) {
     return Column(
-      mainAxisAlignment: MainAxisAlignment.center,
+      mainAxisAlignment: MainAxisAlignment.spaceAround,
       children: <Widget>[
-        Stack(
-          children: <Widget>[
-            ClipRRect(
-              borderRadius: BorderRadius.circular(100),
-              child: Container(
-                width: 120,
-                height: 120,
-                child: Image.asset(
-                  'assets/person.jpg',
-                  fit: BoxFit.cover,
+        Row(
+            mainAxisAlignment: MainAxisAlignment.center,
+            mainAxisSize: MainAxisSize.min,
+            children: <Widget>[
+              Container(
+                child: Column(
+                  mainAxisAlignment: MainAxisAlignment.start,
+                  children: <Widget>[
+                    Text(
+                      'Age: ${entity.age}',
+                      overflow: TextOverflow.ellipsis,
+                      style: TextStyle(
+                          color: Colors.white,
+                          fontWeight: FontWeight.w600,
+                          fontSize: screenAwareSize(18, context)),
+                    ),
+                    Text(
+                      'Faculty: ${entity.faculty}',
+                      style: TextStyle(
+                          color: Colors.white,
+                          fontWeight: FontWeight.w600,
+                          fontSize: screenAwareSize(18, context)),
+                    ),
+                  ],
                 ),
               ),
-            ),
-            ClipRRect(
-              borderRadius: BorderRadius.circular(100),
-              child: Container(
-                width: 120,
-                height: 120,
-                child: CachedNetworkImage(
-                  imageUrl: entity.photoUrl,
-                  fit: BoxFit.cover,
-                  placeholder: (context, url) => Image.asset(
+              Stack(
+                children: <Widget>[
+                  ClipRRect(
+                    borderRadius: BorderRadius.circular(100),
+                    child: Container(
+                      width: 120,
+                      height: 120,
+                      child: Image.asset(
                         'assets/person.jpg',
                         fit: BoxFit.cover,
                       ),
-                  errorWidget: (context, url, error) => new Icon(Icons.error),
-                ),
+                    ),
+                  ),
+                  ClipRRect(
+                    borderRadius: BorderRadius.circular(100),
+                    child: Container(
+                      width: 120,
+                      height: 120,
+                      child: CachedNetworkImage(
+                        imageUrl: entity.photoUrl,
+                        fit: BoxFit.cover,
+                        placeholder: (context, url) => Image.asset(
+                              'assets/person.jpg',
+                              fit: BoxFit.cover,
+                            ),
+                        errorWidget: (context, url, error) =>
+                            new Icon(Icons.error),
+                      ),
+                    ),
+                  )
+                ],
               ),
-            )
-          ],
-        ),
+            ]),
         Padding(
             padding: const EdgeInsets.only(top: 10.0),
             child: Text(
@@ -439,24 +467,6 @@ class ProfilePageState extends State<ProfilePage> {
             padding: const EdgeInsets.all(2.0),
             child: Text(
               entity.email,
-              maxLines: 1,
-              overflow: TextOverflow.ellipsis,
-              style: TextStyle(
-                  color: Colors.white, fontSize: screenAwareSize(18, context)),
-            )),
-        Padding(
-            padding: const EdgeInsets.all(2.0),
-            child: Text(
-              'Age: ${entity.age}',
-              maxLines: 1,
-              overflow: TextOverflow.ellipsis,
-              style: TextStyle(
-                  color: Colors.white, fontSize: screenAwareSize(18, context)),
-            )),
-        Padding(
-            padding: const EdgeInsets.all(2.0),
-            child: Text(
-              'Faculty: ${entity.faculty}',
               maxLines: 1,
               overflow: TextOverflow.ellipsis,
               style: TextStyle(

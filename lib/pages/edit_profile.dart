@@ -130,8 +130,9 @@ class EditProfileState extends State<EditProfile> {
 
     if (_formState.currentState.validate() && entity.photoUrl != null) {
       await saveForm();
+      Navigator.of(context).pop();
     }
-    Navigator.pop(context);
+    //Navigator.pop(context);
   }
 
   Future saveForm() async {
@@ -335,7 +336,7 @@ class EditProfileState extends State<EditProfile> {
           uploadingStatus == true ? null : Navigator.of(context).pop();
         },
       ),
-      title: new Text('Edit Profile'),
+      title: Text('Edit Profile'),
     );
   }
 
@@ -438,10 +439,12 @@ class EditProfileState extends State<EditProfile> {
           return 'Name can\'t be empty';
         }
       },
+      maxLength: 30,
+      maxLengthEnforced: true,
     );
   }
 
-  //TODO: validator is shit. change needed
+  //TODO: change to dropdown? or a picker like date and time?
   TextFormField ageTextForm(BuildContext context) {
     return TextFormField(
       keyboardType: TextInputType.number,
@@ -460,15 +463,20 @@ class EditProfileState extends State<EditProfile> {
         entity.age = value;
       },
       validator: (value) {
-        /*if (value.isEmpty) {
+        if (value.isEmpty) {
           return 'Age can\'t be empty';
-        }*/
+        } else if (int.parse(value) <= 0) {
+          return 'Invalid Age. Please choose a valid Age';
+        }
       },
+      maxLength: 2,
+      maxLengthEnforced: true,
     );
   }
 
   FormField facultyCategoryDropdown() {
     return FormField<String>(
+      initialValue: entity.faculty.isEmpty ? null : entity.faculty,
       validator: (value) {
         if (value == null) {
           return "Select Event Category";
@@ -571,7 +579,7 @@ class EditProfileState extends State<EditProfile> {
 
   TextFormField hobbyTextForm(BuildContext context) {
     return TextFormField(
-      keyboardType: TextInputType.number,
+      keyboardType: TextInputType.multiline,
       initialValue: entity.hobby,
       decoration: new InputDecoration(
         border: new OutlineInputBorder(
@@ -587,10 +595,13 @@ class EditProfileState extends State<EditProfile> {
         entity.hobby = value;
       },
       validator: (value) {
-        /*if (value.isEmpty) {
+        if (value.isEmpty) {
           return 'Hobby can\'t be empty';
-        }*/
+        }
       },
+      maxLengthEnforced: true,
+      maxLength: 100,
+      maxLines: null,
     );
   }
 }
