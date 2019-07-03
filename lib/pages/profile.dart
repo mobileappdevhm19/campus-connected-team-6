@@ -78,9 +78,7 @@ class ProfilePageState extends State<ProfilePage> {
           child: Column(
             mainAxisAlignment: MainAxisAlignment.center,
             children: <Widget>[
-              Center(
-                child: userProfileTopPart(),
-              ),
+              userProfileTopPart(),
               TabBar(
                 tabs: <Widget>[
                   Tab(
@@ -390,15 +388,14 @@ class ProfilePageState extends State<ProfilePage> {
 
   Column getProfileItem(UserEntityAdd entity, BuildContext context) {
     return Column(
-      mainAxisAlignment: MainAxisAlignment.spaceAround,
+      mainAxisAlignment: MainAxisAlignment.start,
       children: <Widget>[
         Row(
-            mainAxisAlignment: MainAxisAlignment.center,
+            mainAxisAlignment: MainAxisAlignment.start,
             mainAxisSize: MainAxisSize.min,
             children: <Widget>[
               Container(
                 child: Column(
-                  mainAxisAlignment: MainAxisAlignment.start,
                   children: <Widget>[
                     Text(
                       'Age: ${entity.age}',

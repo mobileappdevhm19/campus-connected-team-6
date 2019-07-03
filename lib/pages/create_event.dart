@@ -43,6 +43,7 @@ class _CreateEventState extends State<CreateEvent> {
     "🏋️ Sport & Fitness",
     "🎉 Party & Club",
     "👪 Children & Familiy",
+    "🌆 Other",
   ]; //TODO add more categories
 
   //selected dropdown value will be save here
@@ -238,7 +239,7 @@ class _CreateEventState extends State<CreateEvent> {
     );
   }
 
-  //will save value to databse
+  //will save value to database
   void _submitForm() async {
     //check internet connection
     var connectionStatus = await checkInternetConnection();
@@ -258,6 +259,7 @@ class _CreateEventState extends State<CreateEvent> {
         });
       });
     }
+    //imageUrl = 'assets/loadingfailed.png';
 
     if (_formState.currentState.validate() && imageUrl != null) {
       if (eventModel.eventCategory == null) {
@@ -382,7 +384,7 @@ class _CreateEventState extends State<CreateEvent> {
                     imageUrl: imageUrl,
                     fit: BoxFit.cover,
                     placeholder: (context, url) => Image.asset(
-                          'assets/person.jpg',
+                          'assets/loadingfailed.png',
                           fit: BoxFit.cover,
                         ),
                     errorWidget: (context, url, error) => new Icon(Icons.error),
