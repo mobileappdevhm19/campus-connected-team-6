@@ -1,5 +1,5 @@
 import 'package:flutter/material.dart';
-import 'package:flutter_campus_connected/helper/authentication.dart';
+import 'package:flutter_campus_connected/services/authentication.dart';
 import 'package:flutter_campus_connected/logos/login_logo.dart';
 import 'package:flutter_campus_connected/pages/welcome_page.dart';
 import 'package:flutter_campus_connected/utils/screen_aware_size.dart';
@@ -51,17 +51,21 @@ class _PasswordResetPageState extends State<PasswordResetPage> {
     );
   }
 
-  //for showing response we will from the firebase
+  //for showing response we get from firebase auth
   void _showSnackBar(String msg) {
     SnackBar snackBar = new SnackBar(
       content: new Text(
         msg,
         style: TextStyle(color: Colors.white),
       ),
-      duration: new Duration(seconds: 2),
+      duration: new Duration(seconds: 5),
       backgroundColor: Colors.black,
       action: SnackBarAction(
-          label: "Undo", textColor: Colors.white, onPressed: () {}),
+          label: "OK",
+          textColor: Colors.white,
+          onPressed: () {
+            _scaffoldKey.currentState.hideCurrentSnackBar();
+          }),
     );
     _scaffoldKey.currentState.showSnackBar(snackBar);
   }

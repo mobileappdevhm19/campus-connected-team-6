@@ -1,12 +1,13 @@
 import 'dart:io';
 import 'dart:math';
 
+import 'package:cached_network_image/cached_network_image.dart';
 import 'package:connectivity/connectivity.dart';
 import 'package:datetime_picker_formfield/datetime_picker_formfield.dart';
 import 'package:firebase_auth/firebase_auth.dart';
 import 'package:firebase_storage/firebase_storage.dart';
 import 'package:flutter/material.dart';
-import 'package:flutter_campus_connected/helper/authentication.dart';
+import 'package:flutter_campus_connected/services/authentication.dart';
 import 'package:flutter_campus_connected/helper/cloud_firestore_helper.dart';
 import 'package:flutter_campus_connected/models/user_entity_add.dart';
 import 'package:flutter_campus_connected/utils/screen_aware_size.dart';
@@ -39,6 +40,27 @@ class EditProfileState extends State<EditProfile> {
 
   bool uploadingStatus = false;
   bool imageRequired = false;
+
+  // Event Dropdown Categories list
+  static var _categories = [
+    "FK 01",
+    "FK 02",
+    "FK 03",
+    "FK 04",
+    "FK 05",
+    "FK 06",
+    "FK 07",
+    "FK 08",
+    "FK 09",
+    "FK 10",
+    "FK 11",
+    "FK 12",
+    "FK 13",
+    "FK 14",
+  ]; //TODO add more categories
+
+  //selected dropdown value will be save here
+  var dropdownValue;
 
   final FireCloudStoreHelper cloudStoreHelper;
 
@@ -108,8 +130,9 @@ class EditProfileState extends State<EditProfile> {
 
     if (_formState.currentState.validate() && entity.photoUrl != null) {
       await saveForm();
+      Navigator.of(context).pop();
     }
-    Navigator.pop(context);
+    //Navigator.pop(context);
   }
 
   Future saveForm() async {
@@ -284,7 +307,8 @@ class EditProfileState extends State<EditProfile> {
                   SizedBox(
                     height: screenAwareSize(15, context),
                   ),
-                  facultyTextForm(context),
+                  //facultyTextForm(context),
+                  facultyCategoryDropdown(),
                   SizedBox(
                     height: screenAwareSize(15, context),
                   ),
@@ -312,7 +336,7 @@ class EditProfileState extends State<EditProfile> {
           uploadingStatus == true ? null : Navigator.of(context).pop();
         },
       ),
-      title: new Text('Edit Profile'),
+      title: Text('Edit Profile'),
     );
   }
 
@@ -366,12 +390,18 @@ class EditProfileState extends State<EditProfile> {
             ClipRRect(
               borderRadius: BorderRadius.circular(100),
               child: Container(
-                  width: 120,
-                  height: 120,
-                  child: Image(
-                    image: NetworkImage(entity.photoUrl),
-                    fit: BoxFit.cover,
-                  )),
+                width: 120,
+                height: 120,
+                child: CachedNetworkImage(
+                  imageUrl: entity.photoUrl,
+                  fit: BoxFit.cover,
+                  placeholder: (context, url) => Image.asset(
+                        'assets/person.jpg',
+                        fit: BoxFit.cover,
+                      ),
+                  errorWidget: (context, url, error) => new Icon(Icons.error),
+                ),
+              ),
             )
           ],
         ),
@@ -409,9 +439,12 @@ class EditProfileState extends State<EditProfile> {
           return 'Name can\'t be empty';
         }
       },
+      maxLength: 30,
+      maxLengthEnforced: true,
     );
   }
 
+  //TODO: change to dropdown? or a picker like date and time?
   TextFormField ageTextForm(BuildContext context) {
     return TextFormField(
       keyboardType: TextInputType.number,
@@ -430,13 +463,95 @@ class EditProfileState extends State<EditProfile> {
         entity.age = value;
       },
       validator: (value) {
-        /*if (value.isEmpty) {
+        if (value.isEmpty) {
           return 'Age can\'t be empty';
-        }*/
+        } else if (int.parse(value) <= 0) {
+          return 'Invalid Age. Please choose a valid Age';
+        }
+      },
+      maxLength: 2,
+      maxLengthEnforced: true,
+    );
+  }
+
+  FormField facultyCategoryDropdown() {
+    return FormField<String>(
+      initialValue: entity.faculty.isEmpty ? null : entity.faculty,
+      validator: (value) {
+        if (value == null) {
+          return "Select Event Category";
+        }
+      },
+      onSaved: (value) {
+        entity.faculty = value;
+      },
+      builder: (
+        FormFieldState<String> state,
+      ) {
+        return Column(
+          crossAxisAlignment: CrossAxisAlignment.start,
+          children: <Widget>[
+            new Container(
+              width: double.infinity,
+              padding: EdgeInsets.all(10),
+              decoration: new BoxDecoration(
+                  border: new Border.all(color: Colors.grey),
+                  borderRadius:
+                      BorderRadius.circular(screenAwareSize(10, context))),
+              child: Row(
+                mainAxisSize: MainAxisSize.max,
+                children: <Widget>[
+                  Icon(
+                    Icons.school,
+                    color: Colors.grey,
+                  ),
+                  SizedBox(
+                    width: screenAwareSize(8, context),
+                  ),
+                  Expanded(
+                    flex: 9,
+                    child: DropdownButtonHideUnderline(
+                      child: DropdownButton(
+                          iconEnabledColor: Colors.red,
+                          hint: Text(entity.faculty),
+                          isDense: true,
+                          value: dropdownValue,
+                          items: _categories.map((String item) {
+                            return DropdownMenuItem<String>(
+                              child: Text(item),
+                              value: item,
+                            );
+                          }).toList(),
+                          onChanged: (value) {
+                            state.didChange(value);
+                            setState(() {
+                              dropdownValue = value;
+                            });
+                          }),
+                    ),
+                  )
+                ],
+              ),
+            ),
+            state.hasError
+                ? SizedBox(height: 5.0)
+                : Container(
+                    height: 0,
+                  ),
+            state.hasError
+                ? Text(
+                    state.errorText,
+                    style: TextStyle(
+                        color: Colors.redAccent.shade700, fontSize: 12.0),
+                  )
+                : Container(),
+          ],
+        );
       },
     );
   }
 
+  //TODO: not used
   TextFormField facultyTextForm(BuildContext context) {
     return TextFormField(
       keyboardType: TextInputType.number,
@@ -464,7 +579,7 @@ class EditProfileState extends State<EditProfile> {
 
   TextFormField hobbyTextForm(BuildContext context) {
     return TextFormField(
-      keyboardType: TextInputType.number,
+      keyboardType: TextInputType.multiline,
       initialValue: entity.hobby,
       decoration: new InputDecoration(
         border: new OutlineInputBorder(
@@ -480,10 +595,13 @@ class EditProfileState extends State<EditProfile> {
         entity.hobby = value;
       },
       validator: (value) {
-        /*if (value.isEmpty) {
+        if (value.isEmpty) {
           return 'Hobby can\'t be empty';
-        }*/
+        }
       },
+      maxLengthEnforced: true,
+      maxLength: 100,
+      maxLines: null,
     );
   }
 }

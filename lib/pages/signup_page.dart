@@ -1,6 +1,6 @@
 import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/material.dart';
-import 'package:flutter_campus_connected/helper/authentication.dart';
+import 'package:flutter_campus_connected/services/authentication.dart';
 import 'package:flutter_campus_connected/helper/cloud_firestore_helper.dart';
 import 'package:flutter_campus_connected/utils/screen_aware_size.dart';
 
@@ -19,6 +19,7 @@ class _SignUpPageState extends State<SignUpPage>
   String _name;
   String _email;
   String _password;
+  String _confirmPassword; //only for compare purpose
   static final RegExp _emailRegExp = RegExp(
     r'^[a-zA-Z0-9.!#$%&’*+/=?^_`{|}~-]+@hm.edu$',
   );
@@ -53,10 +54,14 @@ class _SignUpPageState extends State<SignUpPage>
         msg,
         style: TextStyle(color: Colors.white),
       ),
-      duration: new Duration(seconds: 2),
+      duration: new Duration(seconds: 5),
       backgroundColor: Colors.black,
       action: SnackBarAction(
-          label: "Undo", textColor: Colors.white, onPressed: () {}),
+          label: "OK",
+          textColor: Colors.white,
+          onPressed: () {
+            _scaffoldKey.currentState.hideCurrentSnackBar();
+          }),
     );
     _scaffoldKey.currentState.showSnackBar(snackBar);
   }
@@ -240,6 +245,7 @@ class _SignUpPageState extends State<SignUpPage>
             _showNameInput(),
             _showEmailInput(),
             _showPasswordInput(),
+            _showConfirmPasswordInput(),
             SizedBox(height: screenAwareSize(20, context)),
             _showPrimaryButton(context),
             SizedBox(height: screenAwareSize(20, context)),
@@ -276,12 +282,14 @@ class _SignUpPageState extends State<SignUpPage>
             return 'Invalid Email. Try "example@hm.edu"';
           }
         },
+        maxLength: 30,
+        maxLengthEnforced: true,
         onSaved: (value) => _email = value,
       ),
     );
   }
 
-// user name
+  // user name
   Widget _showNameInput() {
     return Padding(
       padding: const EdgeInsets.only(left: 14.0, right: 14.0, bottom: 10),
@@ -310,10 +318,10 @@ class _SignUpPageState extends State<SignUpPage>
     );
   }
 
-//  user password
+  // user password
   Widget _showPasswordInput() {
     return Padding(
-      padding: const EdgeInsets.only(left: 14.0, right: 14),
+      padding: const EdgeInsets.only(left: 14.0, right: 14, bottom: 10),
       child: TextFormField(
         maxLines: 1,
         obscureText: true,
@@ -339,20 +347,33 @@ class _SignUpPageState extends State<SignUpPage>
     );
   }
 
-  //for navigate to login page
-  Widget _showSecondaryButton() {
-    return Align(
-      child: FlatButton(
-        child: new Text('Already have an account? Sign in',
-            style: new TextStyle(
-                fontSize: screenAwareSize(16, context),
-                fontWeight: FontWeight.w500,
-                color: Colors.black)),
-        onPressed: () {
-          Navigator.of(context).pushNamed('/login');
+  Widget _showConfirmPasswordInput() {
+    return Padding(
+      padding: const EdgeInsets.only(left: 14.0, right: 14),
+      child: TextFormField(
+        maxLines: 1,
+        obscureText: true,
+        autofocus: false,
+        decoration: new InputDecoration(
+            border: OutlineInputBorder(borderRadius: BorderRadius.circular(5)),
+            filled: true,
+            labelText: 'Confirm Password',
+            contentPadding: EdgeInsets.all(0.0),
+            fillColor: Colors.white,
+            prefixIcon: new Icon(
+              Icons.lock,
+            )),
+        validator: (value) {
+          if (value != _password) {
+            return 'Please enter the same value again';
+          } else if (value.isEmpty) {
+            return 'Password can\'t be empty';
+          } else if (value.length < 6) {
+            return 'Password can\'t be less than 6 character';
+          }
         },
+        onSaved: (value) => _confirmPassword = value,
       ),
-      alignment: Alignment.bottomCenter,
     );
   }
 
@@ -371,6 +392,23 @@ class _SignUpPageState extends State<SignUpPage>
                 fontSize: screenAwareSize(16, context), color: Colors.white)),
         onPressed: _isLoading == false ? _validateAndSubmit : () {},
       ),
+    );
+  }
+
+  //for navigate to login page
+  Widget _showSecondaryButton() {
+    return Align(
+      child: FlatButton(
+        child: new Text('Already have an account? Sign in',
+            style: new TextStyle(
+                fontSize: screenAwareSize(16, context),
+                fontWeight: FontWeight.w500,
+                color: Colors.black)),
+        onPressed: () {
+          Navigator.of(context).pushNamed('/login');
+        },
+      ),
+      alignment: Alignment.bottomCenter,
     );
   }
 }

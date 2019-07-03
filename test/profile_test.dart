@@ -28,8 +28,20 @@ void main() {
       final editText = find.text('Edit');
       expect(editText, findsOneWidget);
 
-      final myEvents = find.text('My Events');
+      final myEvents = find.text('My Profile');
       expect(myEvents, findsOneWidget);
+
+      final createdEvents = find.text('Created Events');
+      expect(createdEvents, findsOneWidget);
+
+      final participations = find.text('Participations');
+      expect(participations, findsOneWidget);
+
+      final findEventIcon = find.byIcon(Icons.event);
+      expect(findEventIcon, findsOneWidget);
+
+      final findParticipationIcon = find.byIcon(Icons.event_available);
+      expect(findParticipationIcon, findsOneWidget);
 
       final testCircle = find.byType(Text);
       expect(testCircle, findsWidgets);
@@ -41,10 +53,10 @@ void main() {
       expect(state, isNotNull);
       expect(state.widget, equals(profilePage));
 
-      final btEdit = state.getBtEdit(context);
+      final btEdit = state.getButtonEdit(context);
       TestHelper.checkWidget<FlatButton>(btEdit);
 
-      final body = state.getBody(context);
+      final body = state.getBodyEvent(context);
       TestHelper.checkWidget<Column>(body);
 
       final appBar = state.appBar(context);

@@ -1,3 +1,4 @@
+import 'package:cached_network_image/cached_network_image.dart';
 import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/material.dart';
@@ -6,6 +7,7 @@ import 'package:flutter_campus_connected/models/profile_item.dart';
 import 'package:flutter_campus_connected/models/user_entity_add.dart';
 import 'package:flutter_campus_connected/pages/view_event.dart';
 import 'package:flutter_campus_connected/utils/screen_aware_size.dart';
+import 'package:flutter_campus_connected/utils/text_aware_size.dart';
 
 import 'edit_profile.dart';
 
@@ -30,15 +32,31 @@ class ProfilePageState extends State<ProfilePage> {
       onWillPop: () {
         Navigator.of(context).pushReplacementNamed('/home');
       },
-      child: Scaffold(
-        appBar: appBar(context),
-        body: getBody(context),
+      child: DefaultTabController(
+        length: 2,
+        child: Scaffold(
+          appBar: appBar(context),
+          body: TabBarView(
+            children: <Widget>[
+              getBodyEvent(context),
+              getBodyParticipation(context),
+            ],
+          ),
+        ),
       ),
     );
   }
 
   AppBar appBar(BuildContext context) {
     return new AppBar(
+      title: Text("My Profile"),
+      centerTitle: true,
+      textTheme: TextTheme(
+        title: TextStyle(
+            color: Colors.white,
+            fontSize: textAwareSize(20, context),
+            fontWeight: FontWeight.bold),
+      ),
       backgroundColor: Colors.red,
       elevation: 0.0,
       leading: new IconButton(
@@ -51,55 +69,58 @@ class ProfilePageState extends State<ProfilePage> {
         },
       ),
       actions: <Widget>[
-        getBtEdit(context),
+        getButtonEdit(context),
+      ],
+      bottom: PreferredSize(
+        child: Container(
+          color: Colors.red,
+          height: MediaQuery.of(context).size.height / 2.3,
+          child: Column(
+            mainAxisAlignment: MainAxisAlignment.center,
+            children: <Widget>[
+              userProfileTopPart(),
+              TabBar(
+                tabs: <Widget>[
+                  Tab(
+                    icon: Icon(Icons.event, color: Colors.white),
+                    text: "Created Events",
+                  ),
+                  Tab(
+                    icon: Icon(Icons.event_available, color: Colors.white),
+                    text: "Participations",
+                  )
+                ],
+              ),
+            ],
+          ),
+        ),
+        preferredSize: Size(MediaQuery.of(context).size.width,
+            MediaQuery.of(context).size.height / 2.3),
+      ),
+    );
+  }
+
+  Column getBodyEvent(BuildContext context) {
+    return Column(
+      mainAxisSize: MainAxisSize.max,
+      children: <Widget>[
+        Container(),
+        userEvents(),
       ],
     );
   }
 
-  Column getBody(BuildContext context) {
+  Column getBodyParticipation(BuildContext context) {
     return Column(
       mainAxisSize: MainAxisSize.max,
       children: <Widget>[
-        Container(
-          color: Colors.red,
-          height: MediaQuery.of(context).size.height / 2.3,
-          child: Center(
-            child: userProfileTopPart(),
-          ),
-        ),
-        Align(
-          alignment: Alignment.centerLeft,
-          child: Padding(
-            padding: EdgeInsets.all(7),
-            child: Text(
-              'My Events',
-              style: TextStyle(
-                  color: Colors.black87,
-                  fontWeight: FontWeight.w700,
-                  fontSize: screenAwareSize(16, context)),
-            ),
-          ),
-        ),
-        userEvents(),
-        Align(
-          alignment: Alignment.centerLeft,
-          child: Padding(
-            padding: EdgeInsets.all(7),
-            child: Text(
-              'My Joined Events',
-              style: TextStyle(
-                  color: Colors.black87,
-                  fontWeight: FontWeight.w700,
-                  fontSize: screenAwareSize(16, context)),
-            ),
-          ),
-        ),
+        Container(),
         userJoinedEvents(),
       ],
     );
   }
 
-  FlatButton getBtEdit(BuildContext context) {
+  FlatButton getButtonEdit(BuildContext context) {
     return new FlatButton(
       child: Text(
         'Edit',
@@ -141,7 +162,6 @@ class ProfilePageState extends State<ProfilePage> {
               child: CircularProgressIndicator(),
             );
           }
-
           return ListView.builder(
               itemCount: snapshot.data.documents.length,
               itemBuilder: (context, ind) {
@@ -189,10 +209,14 @@ class ProfilePageState extends State<ProfilePage> {
                 child: SizedBox(
                   width: screenAwareSize(80, context),
                   height: screenAwareSize(60, context),
-                  child: FadeInImage.assetNetwork(
-                    placeholder: 'assets/loadingfailed.png',
-                    image: item.eventPhotoUrl,
+                  child: CachedNetworkImage(
+                    imageUrl: item.eventPhotoUrl,
                     fit: BoxFit.cover,
+                    placeholder: (context, url) => Image.asset(
+                          'assets/loadingfailed.png',
+                          fit: BoxFit.cover,
+                        ),
+                    errorWidget: (context, url, error) => new Icon(Icons.error),
                   ),
                 ),
               )),
@@ -229,7 +253,6 @@ class ProfilePageState extends State<ProfilePage> {
     );
   }
 
-  //TODO events joined by the user
   Expanded userJoinedEvents() {
     return Expanded(
       child: StreamBuilder(
@@ -258,64 +281,73 @@ class ProfilePageState extends State<ProfilePage> {
                         child: CircularProgressIndicator(),
                       );
                     }
+                    //TODO: not showing the correct participations
+                    //TODO: start
                     return Card(
-//                      margin: EdgeInsets.all(6.0),
-//                      elevation: 3.0,
-//                      child: ListTile(
-//                        title: Text(
-//                          snapshot.data.documents[ind]['eventName'],
-//                          maxLines: 1,
-//                          overflow: TextOverflow.ellipsis,
-//                          style: TextStyle(fontSize: 20),
-//                        ),
-//                        subtitle: Padding(
-//                          padding: const EdgeInsets.only(top: 6.0),
-//                          child: Text(
-//                              snapshot.data.documents[ind]['eventDescription'],
-//                              maxLines: 1,
-//                              overflow: TextOverflow.ellipsis,
-//                              style: TextStyle(fontSize: 16)),
-//                        ),
-//                        leading: Padding(
-//                          padding: const EdgeInsets.all(2.0),
-//                          child: Hero(
-//                              tag: snapshot.data.documents[ind].documentID,
-//                              child: ClipRRect(
-//                                borderRadius: BorderRadius.circular(6),
-//                                child: SizedBox(
-//                                  width: screenAwareSize(80, context),
-//                                  height: screenAwareSize(60, context),
-//                                  child: FadeInImage.assetNetwork(
-//                                    placeholder: 'assets/loadingfailed.png',
-//                                    image: snapshot.data.documents[ind]
-//                                        ['eventPhotoUrl'],
-//                                    fit: BoxFit.cover,
-//                                  ),
-//                                ),
-//                              )),
-//                        ),
-//                        trailing: Row(
-//                          mainAxisSize: MainAxisSize.min,
-//                          children: <Widget>[
-//                            IconButton(
-//                                icon: Icon(
-//                                  Icons.visibility,
-//                                  color: Colors.red,
-//                                ),
-//                                onPressed: () {
-//                                  Navigator.of(context).push(
-//                                      new MaterialPageRoute(builder: (context) {
-//                                    return EventView(
-//                                      snapshot.data.documents[ind],
-//                                      widget.firebaseUser,
-//                                    );
-//                                  }));
-//                                }),
-//                          ],
-//                        ),
-//                        onTap: () {},
-//                      ),
-                        );
+                      margin: EdgeInsets.all(6.0),
+                      elevation: 3.0,
+                      child: ListTile(
+                        title: Text(
+                          snapshot.data.documents[ind]['eventName'],
+                          maxLines: 1,
+                          overflow: TextOverflow.ellipsis,
+                          style: TextStyle(fontSize: 20),
+                        ),
+                        subtitle: Padding(
+                          padding: const EdgeInsets.only(top: 6.0),
+                          child: Text(
+                              snapshot.data.documents[ind]['eventDescription'],
+                              maxLines: 1,
+                              overflow: TextOverflow.ellipsis,
+                              style: TextStyle(fontSize: 16)),
+                        ),
+                        leading: Padding(
+                          padding: const EdgeInsets.all(2.0),
+                          child: Hero(
+                              tag: snapshot.data.documents[ind].documentID,
+                              child: ClipRRect(
+                                borderRadius: BorderRadius.circular(6),
+                                child: SizedBox(
+                                  width: screenAwareSize(80, context),
+                                  height: screenAwareSize(60, context),
+                                  child: CachedNetworkImage(
+                                    imageUrl: snapshot.data.documents[ind]
+                                        ['eventPhotoUrl'],
+                                    fit: BoxFit.cover,
+                                    placeholder: (context, url) => Image.asset(
+                                          'assets/loadingfailed.png',
+                                          fit: BoxFit.cover,
+                                        ),
+                                    errorWidget: (context, url, error) =>
+                                        new Icon(Icons.error),
+                                  ),
+                                ),
+                              )),
+                        ),
+                        trailing: Row(
+                          mainAxisSize: MainAxisSize.min,
+                          children: <Widget>[
+                            IconButton(
+                                icon: Icon(
+                                  Icons.visibility,
+                                  color: Colors.red,
+                                ),
+                                onPressed: () {
+                                  Navigator.of(context).push(
+                                      new MaterialPageRoute(builder: (context) {
+                                    return EventView(
+                                      snapshot.data.documents[ind],
+                                      widget.firebaseUser,
+                                    );
+                                  }));
+                                }),
+                          ],
+                        ),
+                        onTap: () {},
+                      ),
+                    );
+
+                    //TODO: end
                   },
                 );
               },
@@ -356,33 +388,66 @@ class ProfilePageState extends State<ProfilePage> {
 
   Column getProfileItem(UserEntityAdd entity, BuildContext context) {
     return Column(
-      mainAxisAlignment: MainAxisAlignment.center,
+      mainAxisAlignment: MainAxisAlignment.start,
       children: <Widget>[
-        Stack(
-          children: <Widget>[
-            ClipRRect(
-              borderRadius: BorderRadius.circular(100),
-              child: Container(
-                width: 120,
-                height: 120,
-                child: Image.asset(
-                  'assets/person.jpg',
-                  fit: BoxFit.cover,
+        Row(
+            mainAxisAlignment: MainAxisAlignment.start,
+            mainAxisSize: MainAxisSize.min,
+            children: <Widget>[
+              Container(
+                child: Column(
+                  children: <Widget>[
+                    Text(
+                      'Age: ${entity.age}',
+                      overflow: TextOverflow.ellipsis,
+                      style: TextStyle(
+                          color: Colors.white,
+                          fontWeight: FontWeight.w600,
+                          fontSize: screenAwareSize(18, context)),
+                    ),
+                    Text(
+                      'Faculty: ${entity.faculty}',
+                      style: TextStyle(
+                          color: Colors.white,
+                          fontWeight: FontWeight.w600,
+                          fontSize: screenAwareSize(18, context)),
+                    ),
+                  ],
                 ),
               ),
-            ),
-            ClipRRect(
-              borderRadius: BorderRadius.circular(100),
-              child: Container(
-                  width: 120,
-                  height: 120,
-                  child: Image(
-                    image: NetworkImage(entity.photoUrl),
-                    fit: BoxFit.cover,
-                  )),
-            )
-          ],
-        ),
+              Stack(
+                children: <Widget>[
+                  ClipRRect(
+                    borderRadius: BorderRadius.circular(100),
+                    child: Container(
+                      width: 120,
+                      height: 120,
+                      child: Image.asset(
+                        'assets/person.jpg',
+                        fit: BoxFit.cover,
+                      ),
+                    ),
+                  ),
+                  ClipRRect(
+                    borderRadius: BorderRadius.circular(100),
+                    child: Container(
+                      width: 120,
+                      height: 120,
+                      child: CachedNetworkImage(
+                        imageUrl: entity.photoUrl,
+                        fit: BoxFit.cover,
+                        placeholder: (context, url) => Image.asset(
+                              'assets/person.jpg',
+                              fit: BoxFit.cover,
+                            ),
+                        errorWidget: (context, url, error) =>
+                            new Icon(Icons.error),
+                      ),
+                    ),
+                  )
+                ],
+              ),
+            ]),
         Padding(
             padding: const EdgeInsets.only(top: 10.0),
             child: Text(
@@ -399,24 +464,6 @@ class ProfilePageState extends State<ProfilePage> {
             padding: const EdgeInsets.all(2.0),
             child: Text(
               entity.email,
-              maxLines: 1,
-              overflow: TextOverflow.ellipsis,
-              style: TextStyle(
-                  color: Colors.white, fontSize: screenAwareSize(18, context)),
-            )),
-        Padding(
-            padding: const EdgeInsets.all(2.0),
-            child: Text(
-              'Age: ${entity.age}',
-              maxLines: 1,
-              overflow: TextOverflow.ellipsis,
-              style: TextStyle(
-                  color: Colors.white, fontSize: screenAwareSize(18, context)),
-            )),
-        Padding(
-            padding: const EdgeInsets.all(2.0),
-            child: Text(
-              'Faculty: ${entity.faculty}',
               maxLines: 1,
               overflow: TextOverflow.ellipsis,
               style: TextStyle(

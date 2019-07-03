@@ -1,8 +1,9 @@
 import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/material.dart';
+import 'package:flutter/services.dart';
 import 'package:flutter_campus_connected/pages/password_reset.dart';
 
-import 'helper/authentication.dart';
+import 'package:flutter_campus_connected/services/authentication.dart';
 import 'pages/create_event.dart';
 import 'pages/dashboard.dart';
 import 'pages/login_signup_page.dart';
@@ -16,6 +17,13 @@ void main() => runApp(MyApp());
 class MyApp extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
+    SystemChrome.setPreferredOrientations([
+      DeviceOrientation.portraitUp,
+      DeviceOrientation.portraitDown,
+    ]);
+    SystemChrome.setSystemUIOverlayStyle(SystemUiOverlayStyle(
+      statusBarColor: Colors.red, // status bar color
+    ));
     return new MaterialApp(
       title: 'Campus Connected',
       debugShowCheckedModeBanner: false,

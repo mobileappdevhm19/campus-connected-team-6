@@ -1,3 +1,4 @@
+import 'package:cached_network_image/cached_network_image.dart';
 import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/material.dart';
@@ -143,10 +144,15 @@ class _SearchEventState extends State<SearchEvent> {
                       child: SizedBox(
                         width: screenAwareSize(80, context),
                         height: screenAwareSize(60, context),
-                        child: FadeInImage.assetNetwork(
-                          placeholder: 'assets/loadingfailed.png',
-                          image: snapshot[index]['eventPhotoUrl'],
+                        child: CachedNetworkImage(
+                          imageUrl: snapshot[index]['eventPhotoUrl'],
                           fit: BoxFit.cover,
+                          placeholder: (context, url) => Image.asset(
+                                'assets/loadingfailed.png',
+                                fit: BoxFit.cover,
+                              ),
+                          errorWidget: (context, url, error) =>
+                              new Icon(Icons.error),
                         ),
                       ),
                     )),
