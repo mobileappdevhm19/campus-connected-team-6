@@ -17,7 +17,7 @@ void main() {
     });
 
     testWidgets('widgets test', (WidgetTester tester) async {
-      final String searchStr = 'Search...';
+      final String searchStr = 'Search users...';
 
       final StatefulWidget usersProfile = UsersProfile();
 

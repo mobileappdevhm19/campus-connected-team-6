@@ -182,7 +182,7 @@ class UsersProfileState extends State<UsersProfile> {
           decoration: new InputDecoration(
             prefixIcon: new Icon(Icons.search),
             border: InputBorder.none,
-            hintText: 'Search Profile',
+            hintText: 'Search users...',
           ),
           onChanged: (value) {
             initialSearch(value);
