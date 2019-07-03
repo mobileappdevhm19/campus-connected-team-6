@@ -10,6 +10,7 @@ import 'pages/login_signup_page.dart';
 import 'pages/profile.dart';
 import 'pages/search_events.dart';
 import 'pages/signup_page.dart';
+import 'pages/users_profile.dart';
 import 'root_page.dart';
 
 void main() => runApp(MyApp());
@@ -59,7 +60,8 @@ class _MyHomePageState extends State<MyHomePage> {
   int currentTab = 0;
 
   Dashboard dashboard;
-  SearchEvent searchEvent;
+  //SearchEvent searchEvent;
+  UsersProfile usersProfile;
   CreateEvent createEvent;
   ProfilePage profilePage;
   static List<Widget> pages;
@@ -73,13 +75,13 @@ class _MyHomePageState extends State<MyHomePage> {
       setState(() {
         firebaseUser = user;
         dashboard = Dashboard();
-        searchEvent = SearchEvent(currentUser: firebaseUser);
+        usersProfile = UsersProfile();
         createEvent = CreateEvent(currentUser: firebaseUser);
         profilePage = ProfilePage(firebaseUser: firebaseUser);
-        pages = [dashboard, searchEvent, createEvent, profilePage];
+        pages = [dashboard, usersProfile, createEvent, profilePage];
       });
     });
-    pages = [dashboard, searchEvent, createEvent, profilePage];
+    pages = [dashboard, usersProfile, createEvent, profilePage];
     currentPage = dashboard;
   }
 

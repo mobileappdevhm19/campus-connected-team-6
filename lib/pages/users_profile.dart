@@ -72,11 +72,16 @@ class UsersProfileState extends State<UsersProfile> {
 
   @override
   Widget build(BuildContext context) {
-    return Scaffold(
-      appBar: appBar(context),
-      body: SafeArea(
-        top: true,
-        child: usersProfileList(),
+    return WillPopScope(
+      onWillPop: () {
+        Navigator.of(context).pushReplacementNamed('/home');
+      },
+      child: Scaffold(
+        appBar: appBar(context),
+        body: SafeArea(
+          top: true,
+          child: usersProfileList(),
+        ),
       ),
     );
   }
@@ -177,7 +182,7 @@ class UsersProfileState extends State<UsersProfile> {
           decoration: new InputDecoration(
             prefixIcon: new Icon(Icons.search),
             border: InputBorder.none,
-            hintText: 'Search...',
+            hintText: 'Search Profile',
           ),
           onChanged: (value) {
             initialSearch(value);
@@ -190,7 +195,7 @@ class UsersProfileState extends State<UsersProfile> {
         ),
         color: Colors.white,
         onPressed: () {
-          Navigator.of(context).pop();
+          Navigator.of(context).pushReplacementNamed('/home');
         },
       ),
     );
