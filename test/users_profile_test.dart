@@ -8,7 +8,8 @@ import 'test_helper.dart';
 void main() {
   group('usersProfile test', () {
     test('UserEntity test', () {
-      final entity = UserEntity('test', 'test.png', 'test@test.com', null);
+      final entity = UserEntity('test', 'test.png', 'test@test.com', '25',
+          'FK 07', 'HM Student living in Munich', null);
       expect(entity, isNotNull);
       expect(entity.photoUrl, isNotEmpty);
       expect(entity.email, isNotEmpty);
@@ -54,7 +55,8 @@ void main() {
           of: find.byType(StreamBuilder), matching: find.byType(ListView));
       expect(findListView, findsNothing);
 
-      final entity = UserEntity('test', 'test.png', 'test@test.com', null);
+      final entity = UserEntity('test', 'test.png', 'test@test.com', '25',
+          'FK 07', 'HM Student living in Munich', null);
       var item = state.getItemList(entity, 1, context);
       expect(item != null, true);
 

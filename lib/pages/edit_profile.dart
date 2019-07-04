@@ -57,7 +57,7 @@ class EditProfileState extends State<EditProfile> {
     "FK 12",
     "FK 13",
     "FK 14",
-  ]; //TODO add more categories
+  ];
 
   //selected dropdown value will be save here
   var dropdownValue;
@@ -69,11 +69,12 @@ class EditProfileState extends State<EditProfile> {
   Future getImage() async {
     var connectionStatus = await checkInternetConnection();
     if (connectionStatus == false) {
-      _showInternetAlertDialouge();
+      _showInternetAlertDialogue();
       return;
     }
     var tempImage = await ImagePicker.pickImage(
-        source: ImageSource.gallery, maxHeight: 200, maxWidth: 200);
+        source: ImageSource.gallery, maxHeight: 500, maxWidth: 500);
+
     setState(() {
       sampleImage = tempImage;
     });
@@ -105,16 +106,11 @@ class EditProfileState extends State<EditProfile> {
     });
   }
 
-  final formats = {
-    InputType.date: DateFormat('yyyy-MM-dd'),
-    InputType.time: DateFormat("h:mma"),
-  };
-
   void submitForm() async {
     FocusScope.of(context).requestFocus(new FocusNode());
     var connectionStatus = await checkInternetConnection();
     if (connectionStatus == false) {
-      _showInternetAlertDialouge();
+      _showInternetAlertDialogue();
       return;
     }
     if (entity.photoUrl == null) {
@@ -176,7 +172,7 @@ class EditProfileState extends State<EditProfile> {
     entity = widget.userEntity;
   }
 
-  void _showInternetAlertDialouge() {
+  void _showInternetAlertDialogue() {
     showDialog(
         context: context,
         builder: (BuildContext context) {
@@ -374,36 +370,22 @@ class EditProfileState extends State<EditProfile> {
     return Stack(
       alignment: Alignment.bottomRight,
       children: <Widget>[
-        Stack(
-          children: <Widget>[
-            ClipRRect(
-              borderRadius: BorderRadius.circular(100),
-              child: Container(
-                width: 120,
-                height: 120,
-                child: Image.asset(
-                  'assets/person.jpg',
-                  fit: BoxFit.cover,
-                ),
-              ),
+        ClipRRect(
+          borderRadius: BorderRadius.circular(100),
+          child: Container(
+            width: 120,
+            height: 120,
+            child: CachedNetworkImage(
+              useOldImageOnUrlChange: true,
+              imageUrl: entity.photoUrl,
+              fit: BoxFit.cover,
+              placeholder: (context, url) => Image.asset(
+                    'assets/person.jpg',
+                    fit: BoxFit.cover,
+                  ),
+              errorWidget: (context, url, error) => new Icon(Icons.error),
             ),
-            ClipRRect(
-              borderRadius: BorderRadius.circular(100),
-              child: Container(
-                width: 120,
-                height: 120,
-                child: CachedNetworkImage(
-                  imageUrl: entity.photoUrl,
-                  fit: BoxFit.cover,
-                  placeholder: (context, url) => Image.asset(
-                        'assets/person.jpg',
-                        fit: BoxFit.cover,
-                      ),
-                  errorWidget: (context, url, error) => new Icon(Icons.error),
-                ),
-              ),
-            )
-          ],
+          ),
         ),
         IconButton(
           icon: Icon(
@@ -580,7 +562,7 @@ class EditProfileState extends State<EditProfile> {
   TextFormField hobbyTextForm(BuildContext context) {
     return TextFormField(
       keyboardType: TextInputType.multiline,
-      initialValue: entity.hobby,
+      initialValue: entity.biography,
       decoration: new InputDecoration(
         border: new OutlineInputBorder(
           borderRadius: BorderRadius.circular(screenAwareSize(10, context)),
@@ -592,7 +574,7 @@ class EditProfileState extends State<EditProfile> {
         ),
       ),
       onSaved: (value) {
-        entity.hobby = value;
+        entity.biography = value;
       },
       validator: (value) {
         if (value.isEmpty) {

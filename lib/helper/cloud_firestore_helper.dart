@@ -38,7 +38,7 @@ class FireCloudStoreHelper {
       'displayName': entity.displayName,
       'photoUrl': entity.photoUrl,
       'age': entity.age,
-      'hobby': entity.hobby,
+      'biography': entity.biography,
       'faculty': entity.faculty
     });
 

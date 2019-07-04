@@ -4,8 +4,8 @@ class UserEntityAdd {
   String email;
   String age;
   String faculty;
-  String hobby;
+  String biography;
 
   UserEntityAdd(this.displayName, this.photoUrl, this.email, this.age,
-      this.faculty, this.hobby);
+      this.faculty, this.biography);
 }

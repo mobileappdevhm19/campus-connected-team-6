@@ -6,6 +6,7 @@ import 'package:flutter_campus_connected/models/event_entity.dart';
 import 'package:flutter_campus_connected/models/user_entity.dart';
 import 'package:flutter_campus_connected/pages/view_event.dart';
 import 'package:flutter_campus_connected/utils/screen_aware_size.dart';
+import 'package:flutter_campus_connected/utils/text_aware_size.dart';
 
 class UsersProfileDetails extends StatefulWidget {
   final details;
@@ -44,7 +45,8 @@ class UsersProfileDetailsPageState extends State<UsersProfileDetails> {
                   'My Events',
                   style: TextStyle(
                       color: Colors.black87,
-                      fontSize: screenAwareSize(16, context)),
+                      fontSize: textAwareSize(16, context),
+                      fontWeight: FontWeight.w600),
                 ),
               ),
             ),
@@ -123,15 +125,21 @@ class UsersProfileDetailsPageState extends State<UsersProfileDetails> {
                 child: SizedBox(
                   width: screenAwareSize(80, context),
                   height: screenAwareSize(60, context),
-                  child: CachedNetworkImage(
-                    imageUrl: entity.eventPhotoUrl,
-                    fit: BoxFit.cover,
-                    placeholder: (context, url) => Image.asset(
-                          'assets/loadingfailed.png',
+                  child: (entity.eventPhotoUrl == 'assets/gallery.png')
+                      ? Image(
+                          image: AssetImage('assets/gallery.png'),
                           fit: BoxFit.cover,
+                        )
+                      : CachedNetworkImage(
+                          imageUrl: entity.eventPhotoUrl,
+                          fit: BoxFit.cover,
+                          placeholder: (context, url) => Image.asset(
+                                'assets/loadingfailed.png',
+                                fit: BoxFit.cover,
+                              ),
+                          errorWidget: (context, url, error) =>
+                              new Icon(Icons.error),
                         ),
-                    errorWidget: (context, url, error) => new Icon(Icons.error),
-                  ),
                 ),
               )),
         ),
@@ -185,6 +193,9 @@ class UsersProfileDetailsPageState extends State<UsersProfileDetails> {
                 snapshot.data.documents[0]['displayName'],
                 snapshot.data.documents[0]['photoUrl'],
                 snapshot.data.documents[0]['email'],
+                snapshot.data.documents[0]['age'],
+                snapshot.data.documents[0]['faculty'],
+                snapshot.data.documents[0]['biography'],
                 null);
             return getRootTop(entity, context);
           },
@@ -216,16 +227,15 @@ class UsersProfileDetailsPageState extends State<UsersProfileDetails> {
                   fontWeight: FontWeight.bold,
                   letterSpacing: 1),
             )),
-        Padding(
-            padding: const EdgeInsets.all(2.0),
-            child: Text(
-              //snapshot.data.documents[0]['email'],
-              entity.email,
-              maxLines: 1,
-              overflow: TextOverflow.ellipsis,
-              style: TextStyle(
-                  color: Colors.white, fontSize: screenAwareSize(18, context)),
-            ))
+//        Padding(
+//            padding: const EdgeInsets.all(2.0),
+//            child: Text(
+//              entity.email,
+//              maxLines: 1,
+//              overflow: TextOverflow.ellipsis,
+//              style: TextStyle(
+//                  color: Colors.white, fontSize: screenAwareSize(18, context)),
+//            ))
       ],
     );
   }

@@ -138,11 +138,21 @@ class _EventViewState extends State<EventView> {
       ),
       background: Hero(
         tag: widget.event.documentID,
-        child: CachedNetworkImage(
-          imageUrl: widget.event['eventPhotoUrl'],
-          colorBlendMode: BlendMode.softLight,
-          fit: BoxFit.fill,
-        ),
+        child: widget.event['eventPhotoUrl'] == 'assets/gallery.png'
+            ? Image(
+                image: AssetImage('assets/gallery.png'),
+                fit: BoxFit.cover,
+              )
+            : CachedNetworkImage(
+                imageUrl: widget.event['eventPhotoUrl'],
+                colorBlendMode: BlendMode.softLight,
+                placeholder: (context, url) => Image.asset(
+                      'assets/loadingfailed.png',
+                      fit: BoxFit.cover,
+                    ),
+                errorWidget: (context, url, error) => new Icon(Icons.error),
+                fit: BoxFit.fill,
+              ),
       ),
     );
   }

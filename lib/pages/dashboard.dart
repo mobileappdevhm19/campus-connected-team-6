@@ -3,6 +3,7 @@ import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
+import 'package:flutter_campus_connected/pages/profil/friend_details_page.dart';
 import 'package:flutter_campus_connected/services/authentication.dart';
 import 'package:flutter_campus_connected/logos/campus_logo.dart';
 import 'package:flutter_campus_connected/models/dashboard_item.dart';
@@ -174,17 +175,24 @@ class DashboardState extends State<Dashboard> {
                       child: SizedBox(
                         width: screenAwareSize(80, context),
                         height: screenAwareSize(60, context),
-                        child: CachedNetworkImage(
-                          imageUrl: snapshot.data.documents[ind]
-                              ['eventPhotoUrl'],
-                          fit: BoxFit.cover,
-                          placeholder: (context, url) => Image.asset(
-                                'assets/loadingfailed.png',
+                        //'assets/gallery.png,
+                        child: (snapshot.data.documents[ind]['eventPhotoUrl'] ==
+                                'assets/gallery.png')
+                            ? Image(
+                                image: AssetImage('assets/gallery.png'),
                                 fit: BoxFit.cover,
+                              )
+                            : CachedNetworkImage(
+                                imageUrl: snapshot.data.documents[ind]
+                                    ['eventPhotoUrl'],
+                                fit: BoxFit.cover,
+                                placeholder: (context, url) => Image.asset(
+                                      'assets/loadingfailed.png',
+                                      fit: BoxFit.cover,
+                                    ),
+                                errorWidget: (context, url, error) =>
+                                    new Icon(Icons.error),
                               ),
-                          errorWidget: (context, url, error) =>
-                              new Icon(Icons.error),
-                        ),
                       ),
                     )),
               ),

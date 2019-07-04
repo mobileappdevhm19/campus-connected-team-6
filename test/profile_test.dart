@@ -1,6 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_campus_connected/models/profile_item.dart';
 import 'package:flutter_campus_connected/models/user_entity_add.dart';
+import 'package:flutter_campus_connected/pages/profil/friend_details_page.dart';
 import 'package:flutter_campus_connected/pages/profile.dart';
 import 'package:flutter_test/flutter_test.dart';
 

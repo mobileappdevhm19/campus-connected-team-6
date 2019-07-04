@@ -66,8 +66,8 @@ class UsersProfileState extends State<UsersProfile> {
 
   @override
   void dispose() {
-    super.dispose();
     _profileController?.close();
+    super.dispose();
   }
 
   @override
@@ -100,6 +100,9 @@ class UsersProfileState extends State<UsersProfile> {
               snapshot.data[ind]['displayName'],
               snapshot.data[ind]['photoUrl'],
               snapshot.data[ind]['email'],
+              snapshot.data[ind]['age'],
+              snapshot.data[ind]['faculty'],
+              snapshot.data[ind]['biography'],
               snapshot.data[ind]);
           return getItemList(entity, ind, context);
         });

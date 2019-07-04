@@ -5,9 +5,13 @@ import 'package:flutter/material.dart';
 import 'package:flutter_campus_connected/helper/cloud_firestore_helper.dart';
 import 'package:flutter_campus_connected/models/profile_item.dart';
 import 'package:flutter_campus_connected/models/user_entity_add.dart';
+import 'package:flutter_campus_connected/pages/profil/footer/friend_detail_footer.dart';
+import 'package:flutter_campus_connected/pages/profil/friend_detail_body.dart';
+import 'package:flutter_campus_connected/pages/profil/header/friend_detail_header.dart';
 import 'package:flutter_campus_connected/pages/view_event.dart';
 import 'package:flutter_campus_connected/utils/screen_aware_size.dart';
 import 'package:flutter_campus_connected/utils/text_aware_size.dart';
+import 'package:font_awesome_flutter/font_awesome_flutter.dart';
 
 import 'edit_profile.dart';
 
@@ -20,14 +24,64 @@ class ProfilePage extends StatefulWidget {
   ProfilePageState createState() => ProfilePageState();
 }
 
-class ProfilePageState extends State<ProfilePage> {
+class ProfilePageState extends State<ProfilePage>
+    with SingleTickerProviderStateMixin {
   String photoUrl;
   String displayName;
   UserEntityAdd _userEntity;
   FireCloudStoreHelper cloudStoreHelper = new FireCloudStoreHelper();
+  final double ratio = 1.7; //TODO fix ratio for scaling
+  List<Tab> _tabs;
+  TabController _tabController;
+  ScrollController _scrollViewController;
+
+  @override
+  void initState() {
+    super.initState();
+    _tabs = [
+      new Tab(
+        icon: Icon(
+          Icons.event,
+        ),
+        child: Text(
+          "Created Events",
+        ),
+      ),
+      new Tab(
+        icon: Icon(
+          Icons.event_available,
+        ),
+        child: Text(
+          "Participations",
+        ),
+      )
+    ];
+    _tabController = new TabController(
+      length: _tabs.length,
+      vsync: this,
+    );
+    _scrollViewController = ScrollController();
+  }
+
+  @override
+  void dispose() {
+    _tabController.dispose();
+    _scrollViewController.dispose();
+    super.dispose();
+  }
 
   @override
   Widget build(BuildContext context) {
+//    var linearGradient = const BoxDecoration(
+//      gradient: const LinearGradient(
+//        begin: FractionalOffset.centerRight,
+//        end: FractionalOffset.bottomLeft,
+//        colors: <Color>[
+//          const Color(0xFF413070),
+//          const Color(0xFF2B264A),
+//        ],
+//      ),
+//    );
     return WillPopScope(
       onWillPop: () {
         Navigator.of(context).pushReplacementNamed('/home');
@@ -37,6 +91,7 @@ class ProfilePageState extends State<ProfilePage> {
         child: Scaffold(
           appBar: appBar(context),
           body: TabBarView(
+            controller: _tabController,
             children: <Widget>[
               getBodyEvent(context),
               getBodyParticipation(context),
@@ -48,7 +103,7 @@ class ProfilePageState extends State<ProfilePage> {
   }
 
   AppBar appBar(BuildContext context) {
-    return new AppBar(
+    return AppBar(
       title: Text("My Profile"),
       centerTitle: true,
       textTheme: TextTheme(
@@ -74,29 +129,42 @@ class ProfilePageState extends State<ProfilePage> {
       bottom: PreferredSize(
         child: Container(
           color: Colors.red,
-          height: MediaQuery.of(context).size.height / 2.3,
+          height: (MediaQuery.of(context).size.height / ratio) + 1,
           child: Column(
             mainAxisAlignment: MainAxisAlignment.center,
             children: <Widget>[
               userProfileTopPart(),
-              TabBar(
-                tabs: <Widget>[
-                  Tab(
-                    icon: Icon(Icons.event, color: Colors.white),
-                    text: "Created Events",
-                  ),
-                  Tab(
-                    icon: Icon(Icons.event_available, color: Colors.white),
-                    text: "Participations",
-                  )
-                ],
-              ),
+              Spacer(),
+              getTabBar(),
             ],
           ),
         ),
         preferredSize: Size(MediaQuery.of(context).size.width,
-            MediaQuery.of(context).size.height / 2.3),
+            MediaQuery.of(context).size.height / ratio + 30),
       ),
+    );
+  }
+
+  Widget getTabBar() {
+    return TabBar(
+      controller: _tabController,
+      unselectedLabelColor: Colors.grey,
+      indicatorWeight: 3,
+      indicatorColor: Colors.white,
+      tabs: <Widget>[
+        Tab(
+          icon: Icon(
+            Icons.event,
+          ),
+          text: "Created Events",
+        ),
+        Tab(
+          icon: Icon(
+            Icons.event_available,
+          ),
+          text: "Participations",
+        )
+      ],
     );
   }
 
@@ -104,7 +172,6 @@ class ProfilePageState extends State<ProfilePage> {
     return Column(
       mainAxisSize: MainAxisSize.max,
       children: <Widget>[
-        Container(),
         userEvents(),
       ],
     );
@@ -112,9 +179,8 @@ class ProfilePageState extends State<ProfilePage> {
 
   Column getBodyParticipation(BuildContext context) {
     return Column(
-      mainAxisSize: MainAxisSize.max,
+      mainAxisSize: MainAxisSize.min,
       children: <Widget>[
-        Container(),
         userJoinedEvents(),
       ],
     );
@@ -209,15 +275,21 @@ class ProfilePageState extends State<ProfilePage> {
                 child: SizedBox(
                   width: screenAwareSize(80, context),
                   height: screenAwareSize(60, context),
-                  child: CachedNetworkImage(
-                    imageUrl: item.eventPhotoUrl,
-                    fit: BoxFit.cover,
-                    placeholder: (context, url) => Image.asset(
-                          'assets/loadingfailed.png',
+                  child: (item.eventPhotoUrl == 'assets/gallery.png')
+                      ? Image(
+                          image: AssetImage('assets/gallery.png'),
                           fit: BoxFit.cover,
+                        )
+                      : CachedNetworkImage(
+                          imageUrl: item.eventPhotoUrl,
+                          fit: BoxFit.cover,
+                          placeholder: (context, url) => Image.asset(
+                                'assets/loadingfailed.png',
+                                fit: BoxFit.cover,
+                              ),
+                          errorWidget: (context, url, error) =>
+                              new Icon(Icons.error),
                         ),
-                    errorWidget: (context, url, error) => new Icon(Icons.error),
-                  ),
                 ),
               )),
         ),
@@ -244,13 +316,39 @@ class ProfilePageState extends State<ProfilePage> {
                   color: Colors.deepPurple,
                 ),
                 onPressed: () {
-                  cloudStoreHelper.deleteEvent(docId);
+                  _deleteEvent(context, docId);
                 })
           ],
         ),
         onTap: () {},
       ),
     );
+  }
+
+  Future<bool> _deleteEvent(BuildContext context, String docId) {
+    return showDialog(
+          context: context,
+          child: new AlertDialog(
+            title: new Text('Do you want to delete this Event?'),
+            content: new Text('Deleted Events can not be restored!'),
+            actions: <Widget>[
+              new FlatButton(
+                onPressed: () {
+                  cloudStoreHelper.deleteEvent(docId);
+                  Navigator.of(context).pop(false);
+                },
+                child: new Text('Yes'),
+              ),
+              new FlatButton(
+                onPressed: () {
+                  Navigator.of(context).pop(false);
+                },
+                child: new Text('No'),
+              ),
+            ],
+          ),
+        ) ??
+        false;
   }
 
   Expanded userJoinedEvents() {
@@ -369,8 +467,12 @@ class ProfilePageState extends State<ProfilePage> {
         }
 
         if (!(snapshot.hasData && snapshot.data.documents.length == 0)) {
-          photoUrl = snapshot.data.documents[0]['photoUrl'];
-          displayName = snapshot.data.documents[0]['displayName'];
+//          photoUrl = snapshot.data.documents[0]['photoUrl'];
+//          displayName = snapshot.data.documents[0]['displayName'];
+//          email = snapshot.data.documents[0]['email'];
+//          age = snapshot.data.documents[0]['age'];
+//          faculty = snapshot.data.documents[0]['faculty'];
+//          displayName = snapshot.data.documents[0]['biography'];
         } else {
           return Container();
         }
@@ -380,104 +482,115 @@ class ProfilePageState extends State<ProfilePage> {
             snapshot.data.documents[0]['email'],
             snapshot.data.documents[0]['age'],
             snapshot.data.documents[0]['faculty'],
-            snapshot.data.documents[0]['hobby']);
+            snapshot.data.documents[0]['biography']);
         return getProfileItem(_userEntity, context);
       },
     );
   }
 
   Column getProfileItem(UserEntityAdd entity, BuildContext context) {
+    var theme = Theme.of(context);
+    var textTheme = theme.textTheme;
     return Column(
       mainAxisAlignment: MainAxisAlignment.start,
       children: <Widget>[
-        Row(
-            mainAxisAlignment: MainAxisAlignment.start,
+        Column(
+            mainAxisAlignment: MainAxisAlignment.center,
             mainAxisSize: MainAxisSize.min,
             children: <Widget>[
-              Container(
-                child: Column(
-                  children: <Widget>[
-                    Text(
-                      'Age: ${entity.age}',
-                      overflow: TextOverflow.ellipsis,
-                      style: TextStyle(
-                          color: Colors.white,
-                          fontWeight: FontWeight.w600,
-                          fontSize: screenAwareSize(18, context)),
-                    ),
-                    Text(
-                      'Faculty: ${entity.faculty}',
-                      style: TextStyle(
-                          color: Colors.white,
-                          fontWeight: FontWeight.w600,
-                          fontSize: screenAwareSize(18, context)),
-                    ),
-                  ],
+              ClipRRect(
+                borderRadius: BorderRadius.circular(180),
+                child: Container(
+                  width: 180,
+                  height: 180,
+                  child: CachedNetworkImage(
+                    useOldImageOnUrlChange: true,
+                    imageUrl: entity.photoUrl,
+                    fit: BoxFit.cover,
+                    placeholder: (context, url) => Image.asset(
+                          'assets/person.jpg',
+                          fit: BoxFit.cover,
+                        ),
+                    errorWidget: (context, url, error) => new Icon(Icons.error),
+                  ),
                 ),
               ),
-              Stack(
+            ]),
+        Column(
+          crossAxisAlignment: CrossAxisAlignment.start,
+          mainAxisSize: MainAxisSize.min,
+          children: <Widget>[
+            Padding(
+              padding: const EdgeInsets.all(8.0),
+              child: Text(
+                entity.displayName,
+                style: textTheme.headline.copyWith(color: Colors.white),
+              ),
+            ),
+            Padding(
+              padding: const EdgeInsets.only(top: 4.0, left: 8.0),
+              child: Row(
                 children: <Widget>[
-                  ClipRRect(
-                    borderRadius: BorderRadius.circular(100),
+                  new Icon(
+                    Icons.school,
+                    color: Colors.white,
+                    size: 16.0,
+                  ),
+                  new Padding(
+                    padding: const EdgeInsets.only(left: 8.0),
+                    child: new Text(entity.faculty,
+                        style: textTheme.subhead.copyWith(color: Colors.white)),
+                  ),
+                ],
+              ),
+            ),
+            Padding(
+              padding: const EdgeInsets.all(8.0),
+              child: Row(
+                children: <Widget>[
+                  new Icon(
+                    Icons.mail_outline,
+                    color: Colors.white,
+                    size: 16.0,
+                  ),
+                  Padding(
+                    padding: const EdgeInsets.all(8.0),
+                    child: new Text(entity.email,
+                        style: textTheme.subhead.copyWith(color: Colors.white)),
+                  ),
+                ],
+              ),
+            ),
+            Padding(
+              padding: const EdgeInsets.all(8.0),
+              child: Row(
+                children: <Widget>[
+                  new Icon(
+                    Icons.person_outline,
+                    color: Colors.white,
+                    size: 16.0,
+                  ),
+                  Padding(
+                    padding: const EdgeInsets.all(8.0),
                     child: Container(
-                      width: 120,
-                      height: 120,
-                      child: Image.asset(
-                        'assets/person.jpg',
-                        fit: BoxFit.cover,
+                      width: MediaQuery.of(context).size.width - 50,
+                      child: Text(
+                        entity.biography.isEmpty
+                            ? 'This user has no Biography...'
+                            : entity.biography,
+                        style: textTheme.body1.copyWith(
+                            color: Colors.white,
+                            fontSize: textAwareSize(15.0, context)),
+                        overflow: TextOverflow.ellipsis,
+                        maxLines: 3,
                       ),
                     ),
                   ),
-                  ClipRRect(
-                    borderRadius: BorderRadius.circular(100),
-                    child: Container(
-                      width: 120,
-                      height: 120,
-                      child: CachedNetworkImage(
-                        imageUrl: entity.photoUrl,
-                        fit: BoxFit.cover,
-                        placeholder: (context, url) => Image.asset(
-                              'assets/person.jpg',
-                              fit: BoxFit.cover,
-                            ),
-                        errorWidget: (context, url, error) =>
-                            new Icon(Icons.error),
-                      ),
-                    ),
-                  )
                 ],
               ),
-            ]),
-        Padding(
-            padding: const EdgeInsets.only(top: 10.0),
-            child: Text(
-              entity.displayName,
-              maxLines: 1,
-              overflow: TextOverflow.ellipsis,
-              style: TextStyle(
-                  color: Colors.white,
-                  fontSize: screenAwareSize(20, context),
-                  fontWeight: FontWeight.bold,
-                  letterSpacing: 1),
-            )),
-        Padding(
-            padding: const EdgeInsets.all(2.0),
-            child: Text(
-              entity.email,
-              maxLines: 1,
-              overflow: TextOverflow.ellipsis,
-              style: TextStyle(
-                  color: Colors.white, fontSize: screenAwareSize(18, context)),
-            )),
-        Padding(
-            padding: const EdgeInsets.all(2.0),
-            child: Text(
-              'Hobby: ${entity.hobby}',
-              maxLines: 1,
-              overflow: TextOverflow.ellipsis,
-              style: TextStyle(
-                  color: Colors.white, fontSize: screenAwareSize(18, context)),
-            ))
+            ),
+          ],
+        ),
       ],
     );
   }
