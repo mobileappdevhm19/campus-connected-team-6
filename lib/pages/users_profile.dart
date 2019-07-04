@@ -129,6 +129,7 @@ class UsersProfileState extends State<UsersProfile> {
           maxLines: 1,
           overflow: TextOverflow.ellipsis,
         ),
+        /*
         subtitle: Text(
           //snapshot.data[ind]['email'],
           entity.email,
@@ -136,6 +137,7 @@ class UsersProfileState extends State<UsersProfile> {
           maxLines: 1,
           overflow: TextOverflow.ellipsis,
         ),
+        */
         leading: ClipRRect(
           borderRadius: BorderRadius.circular(40),
           child: Container(
