@@ -6,6 +6,10 @@ import 'package:flutter_test/flutter_test.dart';
 import 'test_helper.dart';
 
 void main() {
+
+  //Icons Tests
+  final find_search_Icon = find.byIcon(Icons.search);
+  final find_arrow_back_ios_Icon = find.byIcon(Icons.arrow_back_ios);
   var photoUrl =
       'https://www.google.com/images/branding/googlelogo/1x/googlelogo_color_272x92dp.png';
 

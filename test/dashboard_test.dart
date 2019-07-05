@@ -6,6 +6,16 @@ import 'package:flutter_test/flutter_test.dart';
 import 'test_helper.dart';
 
 void main() {
+
+  //Icons Tests
+  final find_account_circle_Icon = find.byIcon(Icons.account_circle);
+  final find_person_Icon = find.byIcon(Icons.person);
+  final find_event_available_Icon = find.byIcon(Icons.event_available);
+  final find_event_Icon = find.byIcon(Icons.event);
+  final find_question_answer_Icon = find.byIcon(Icons.question_answer);
+  final find_exit_to_app_Icon = find.byIcon(Icons.exit_to_app);
+  final find_settings_Icon = find.byIcon(Icons.settings);
+
   checkListTitle(ListTile item, String title) {
     expect(item.title is Text, true);
     final Text text = item.title as Text;

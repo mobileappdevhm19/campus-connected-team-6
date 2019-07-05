@@ -18,6 +18,17 @@ void main() {
     });
 
     testWidgets('edit_profile widget test', (WidgetTester tester) async {
+
+      final findSchoolIcon = find.byIcon(Icons.school);
+      final findCalenderIcon = find.byIcon(Icons.date_range);
+      final findEyeIcon = find.byIcon(Icons.remove_red_eye);
+      final find_arrow_back_ios_Icon = find.byIcon(Icons.arrow_back_ios);
+
+      final find_add_circle_Icon = find.byIcon(Icons.add_circle);
+      final find_library_books_Icon = find.byIcon(Icons.library_books);
+      final find_person_Icon = find.byIcon(Icons.person);
+      final find_confirmation_number_Icon = find.byIcon(Icons.confirmation_number);
+
       //url рисунков не работают в тестах
       //объяснение https://iirokrankka.com/2018/09/16/image-network-widget-tests/
       //используем  пакет "заглушку"

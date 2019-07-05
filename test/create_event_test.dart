@@ -6,6 +6,18 @@ import 'package:flutter_test/flutter_test.dart';
 import 'test_helper.dart';
 
 void main() {
+
+  //Icons Tests
+  final find_arrow_back_ios_Icon = find.byIcon(Icons.arrow_back_ios);
+  final find_category_Icon = find.byIcon(Icons.category);
+  final find_add_circle_Icon = find.byIcon(Icons.add_circle);
+  final find_event_Icon = find.byIcon(Icons.event);
+  final find_description_Icon = find.byIcon(Icons.description);
+  final find_location_city_Icon = find.byIcon(Icons.location_city);
+  final find_looks_Icon = find.byIcon(Icons.looks);
+  final find_date_range_Icon = find.byIcon(Icons.date_range);
+  final find_access_time_Icon = find.byIcon(Icons.access_time);
+
   var photoUrl =
       'https://www.google.com/images/branding/googlelogo/1x/googlelogo_color_272x92dp.png';
 
