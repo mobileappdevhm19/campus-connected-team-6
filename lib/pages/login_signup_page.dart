@@ -229,7 +229,7 @@ class _LoginSignUpPageState extends State<LoginSignUpPage>
             contentPadding: EdgeInsets.all(0.0),
             filled: true,
             labelText: 'Email',
-            fillColor: Colors.red,
+            fillColor: Colors.white,
             prefixIcon: new Icon(
               Icons.mail,
             )),
@@ -259,7 +259,7 @@ class _LoginSignUpPageState extends State<LoginSignUpPage>
             filled: true,
             labelText: 'Password',
             contentPadding: EdgeInsets.all(0.0),
-            fillColor: Colors.red,
+            fillColor: Colors.white,
             prefixIcon: new Icon(
               Icons.lock,
             )),
