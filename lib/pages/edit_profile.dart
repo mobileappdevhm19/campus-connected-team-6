@@ -3,7 +3,6 @@ import 'dart:math';
 
 import 'package:cached_network_image/cached_network_image.dart';
 import 'package:connectivity/connectivity.dart';
-import 'package:datetime_picker_formfield/datetime_picker_formfield.dart';
 import 'package:firebase_auth/firebase_auth.dart';
 import 'package:firebase_storage/firebase_storage.dart';
 import 'package:flutter/material.dart';
@@ -12,7 +11,6 @@ import 'package:flutter_campus_connected/helper/cloud_firestore_helper.dart';
 import 'package:flutter_campus_connected/models/user_entity_add.dart';
 import 'package:flutter_campus_connected/utils/screen_aware_size.dart';
 import 'package:image_picker/image_picker.dart';
-import 'package:intl/intl.dart';
 
 class EditProfile extends StatefulWidget {
   final userInfo;
@@ -167,7 +165,6 @@ class EditProfileState extends State<EditProfile> {
 
   @override
   void initState() {
-    // TODO: implement initState
     super.initState();
     entity = widget.userEntity;
   }
@@ -308,7 +305,7 @@ class EditProfileState extends State<EditProfile> {
                   SizedBox(
                     height: screenAwareSize(15, context),
                   ),
-                  hobbyTextForm(context),
+                  biographyTextForm(context),
                   SizedBox(
                     height: screenAwareSize(15, context),
                   ),
@@ -533,54 +530,24 @@ class EditProfileState extends State<EditProfile> {
     );
   }
 
-  //TODO: not used
-  TextFormField facultyTextForm(BuildContext context) {
-    return TextFormField(
-      keyboardType: TextInputType.number,
-      initialValue: entity.faculty,
-      decoration: new InputDecoration(
-        border: new OutlineInputBorder(
-          borderRadius: BorderRadius.circular(screenAwareSize(10, context)),
-        ),
-        contentPadding: EdgeInsets.all(0.0),
-        labelText: 'Faculty',
-        prefixIcon: const Icon(
-          Icons.people,
-        ),
-      ),
-      onSaved: (value) {
-        entity.faculty = value;
-      },
-      validator: (value) {
-        /*if (value.isEmpty) {
-          return 'Faculty can\'t be empty';
-        }*/
-      },
-    );
-  }
-
-  TextFormField hobbyTextForm(BuildContext context) {
+  TextFormField biographyTextForm(BuildContext context) {
     return TextFormField(
       keyboardType: TextInputType.multiline,
       initialValue: entity.biography,
       decoration: new InputDecoration(
-        border: new OutlineInputBorder(
-          borderRadius: BorderRadius.circular(screenAwareSize(10, context)),
-        ),
-        contentPadding: EdgeInsets.all(0.0),
-        labelText: 'Hobby',
-        prefixIcon: const Icon(
-          Icons.library_books,
-        ),
-      ),
+          border: new OutlineInputBorder(
+            borderRadius: BorderRadius.circular(screenAwareSize(10, context)),
+          ),
+          contentPadding: EdgeInsets.all(10.0),
+          labelText: 'My Biography',
+          prefixIcon: const Icon(
+            Icons.library_books,
+          ),
+          alignLabelWithHint: true),
       onSaved: (value) {
         entity.biography = value;
       },
-      validator: (value) {
-        if (value.isEmpty) {
-          return 'Hobby can\'t be empty';
-        }
-      },
+      validator: (value) {},
       maxLengthEnforced: true,
       maxLength: 100,
       maxLines: null,

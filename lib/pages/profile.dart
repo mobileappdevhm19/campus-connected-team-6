@@ -5,13 +5,9 @@ import 'package:flutter/material.dart';
 import 'package:flutter_campus_connected/helper/cloud_firestore_helper.dart';
 import 'package:flutter_campus_connected/models/profile_item.dart';
 import 'package:flutter_campus_connected/models/user_entity_add.dart';
-import 'package:flutter_campus_connected/pages/profil/footer/friend_detail_footer.dart';
-import 'package:flutter_campus_connected/pages/profil/friend_detail_body.dart';
-import 'package:flutter_campus_connected/pages/profil/header/friend_detail_header.dart';
 import 'package:flutter_campus_connected/pages/view_event.dart';
 import 'package:flutter_campus_connected/utils/screen_aware_size.dart';
 import 'package:flutter_campus_connected/utils/text_aware_size.dart';
-import 'package:font_awesome_flutter/font_awesome_flutter.dart';
 
 import 'edit_profile.dart';
 
@@ -28,9 +24,13 @@ class ProfilePageState extends State<ProfilePage>
     with SingleTickerProviderStateMixin {
   String photoUrl;
   String displayName;
+  String email;
+  String age;
+  String faculty;
+  String biography;
   UserEntityAdd _userEntity;
   FireCloudStoreHelper cloudStoreHelper = new FireCloudStoreHelper();
-  final double ratio = 1.7; //TODO fix ratio for scaling
+  final double ratio = 1.8;
   List<Tab> _tabs;
   TabController _tabController;
   ScrollController _scrollViewController;
@@ -60,7 +60,8 @@ class ProfilePageState extends State<ProfilePage>
       length: _tabs.length,
       vsync: this,
     );
-    _scrollViewController = ScrollController();
+    _scrollViewController =
+        ScrollController(debugLabel: "Scroll Controller error");
   }
 
   @override
@@ -90,12 +91,15 @@ class ProfilePageState extends State<ProfilePage>
         length: 2,
         child: Scaffold(
           appBar: appBar(context),
-          body: TabBarView(
-            controller: _tabController,
-            children: <Widget>[
-              getBodyEvent(context),
-              getBodyParticipation(context),
-            ],
+          body: Container(
+            height: MediaQuery.of(context).size.height,
+            child: TabBarView(
+              controller: _tabController,
+              children: <Widget>[
+                getBodyEvent(context),
+                getBodyParticipation(context),
+              ],
+            ),
           ),
         ),
       ),
@@ -129,7 +133,7 @@ class ProfilePageState extends State<ProfilePage>
       bottom: PreferredSize(
         child: Container(
           color: Colors.red,
-          height: (MediaQuery.of(context).size.height / ratio) + 1,
+          height: (MediaQuery.of(context).size.height / ratio) - 14,
           child: Column(
             mainAxisAlignment: MainAxisAlignment.center,
             children: <Widget>[
@@ -140,7 +144,7 @@ class ProfilePageState extends State<ProfilePage>
           ),
         ),
         preferredSize: Size(MediaQuery.of(context).size.width,
-            MediaQuery.of(context).size.height / ratio + 30),
+            MediaQuery.of(context).size.height / ratio + 10),
       ),
     );
   }
@@ -155,12 +159,14 @@ class ProfilePageState extends State<ProfilePage>
         Tab(
           icon: Icon(
             Icons.event,
+            size: 20,
           ),
           text: "Created Events",
         ),
         Tab(
           icon: Icon(
             Icons.event_available,
+            size: 20,
           ),
           text: "Participations",
         )
@@ -467,12 +473,12 @@ class ProfilePageState extends State<ProfilePage>
         }
 
         if (!(snapshot.hasData && snapshot.data.documents.length == 0)) {
-//          photoUrl = snapshot.data.documents[0]['photoUrl'];
-//          displayName = snapshot.data.documents[0]['displayName'];
-//          email = snapshot.data.documents[0]['email'];
-//          age = snapshot.data.documents[0]['age'];
-//          faculty = snapshot.data.documents[0]['faculty'];
-//          displayName = snapshot.data.documents[0]['biography'];
+          displayName = snapshot.data.documents[0]['displayName'];
+          photoUrl = snapshot.data.documents[0]['photoUrl'];
+          email = snapshot.data.documents[0]['email'];
+          age = snapshot.data.documents[0]['age'];
+          faculty = snapshot.data.documents[0]['faculty'];
+          biography = snapshot.data.documents[0]['biography'];
         } else {
           return Container();
         }
@@ -499,10 +505,10 @@ class ProfilePageState extends State<ProfilePage>
             mainAxisSize: MainAxisSize.min,
             children: <Widget>[
               ClipRRect(
-                borderRadius: BorderRadius.circular(180),
+                borderRadius: BorderRadius.circular(140),
                 child: Container(
-                  width: 180,
-                  height: 180,
+                  width: 140,
+                  height: 140,
                   child: CachedNetworkImage(
                     useOldImageOnUrlChange: true,
                     imageUrl: entity.photoUrl,

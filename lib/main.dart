@@ -2,7 +2,6 @@ import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
 import 'package:flutter_campus_connected/pages/password_reset.dart';
-import 'package:flutter_campus_connected/pages/profil/friend_details_page.dart';
 
 import 'package:flutter_campus_connected/services/authentication.dart';
 import 'pages/create_event.dart';
