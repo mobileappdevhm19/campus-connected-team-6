@@ -1,6 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_campus_connected/models/profile_item.dart';
-import 'package:flutter_campus_connected/models/user_entity_add.dart';
+import 'package:flutter_campus_connected/models/user_model.dart';
 import 'package:flutter_campus_connected/pages/profile.dart';
 import 'package:flutter_test/flutter_test.dart';
 
@@ -70,9 +70,16 @@ void main() {
 
       TestHelper.checkWidget<Card>(item);
 
-      UserEntityAdd entityAdd = UserEntityAdd(
-          'test', 'test.png', 'test@test.com', '19', 'IT', 'sport');
-      var userItem = state.getProfileItem(entityAdd, context);
+      UserModel userEntity = UserModel(
+          isEmailVerified: true,
+          displayName: 'test',
+          photoUrl: 'test.png',
+          email: 'test@test.com',
+          age: '19',
+          biography: 'IT',
+          faculty: 'FK 08',
+          uid: 'xs2sg4sgs');
+      var userItem = state.getProfileItem(userEntity, context);
       TestHelper.checkWidget<Column>(userItem);
     });
   });

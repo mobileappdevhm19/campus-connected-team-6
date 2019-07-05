@@ -6,15 +6,15 @@ import 'package:connectivity/connectivity.dart';
 import 'package:firebase_auth/firebase_auth.dart';
 import 'package:firebase_storage/firebase_storage.dart';
 import 'package:flutter/material.dart';
+import 'package:flutter_campus_connected/models/user_model.dart';
 import 'package:flutter_campus_connected/services/authentication.dart';
 import 'package:flutter_campus_connected/helper/cloud_firestore_helper.dart';
-import 'package:flutter_campus_connected/models/user_entity_add.dart';
 import 'package:flutter_campus_connected/utils/screen_aware_size.dart';
 import 'package:image_picker/image_picker.dart';
 
 class EditProfile extends StatefulWidget {
   final userInfo;
-  final UserEntityAdd userEntity;
+  final UserModel userEntity;
 
   //final photoUrl;
   //final displayName;
@@ -34,7 +34,7 @@ class EditProfileState extends State<EditProfile> {
   var _formState = new GlobalKey<FormState>();
   Auth auth = new Auth();
   File sampleImage;
-  UserEntityAdd entity;
+  UserModel entity;
 
   bool uploadingStatus = false;
   bool imageRequired = false;

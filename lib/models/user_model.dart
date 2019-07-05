@@ -1,4 +1,3 @@
-//TODO: remove if not used
 class UserModel {
   String uid;
   String email;
@@ -7,6 +6,7 @@ class UserModel {
   String age;
   String faculty;
   String biography;
+  bool isEmailVerified;
 
   UserModel(
       {this.uid,
@@ -15,7 +15,8 @@ class UserModel {
       this.photoUrl,
       this.age,
       this.faculty,
-      this.biography});
+      this.biography,
+      this.isEmailVerified});
 
   UserModel.fromJson(Map<String, String> json) {
     uid = json['uid'];
@@ -25,6 +26,8 @@ class UserModel {
     age = json['age'];
     faculty = json['faculty'];
     biography = json['biography'];
+    isEmailVerified =
+        json['isEmailVerified'].toLowerCase() == 'true' ? true : false;
   }
 
   Map<String, dynamic> toJson() {
@@ -36,6 +39,7 @@ class UserModel {
     data['age'] = this.age;
     data['faculty'] = this.faculty;
     data['biography'] = this.biography;
+    data['isEmailVerified'] = this.isEmailVerified == true ? 'true' : 'false';
     return data;
   }
 }

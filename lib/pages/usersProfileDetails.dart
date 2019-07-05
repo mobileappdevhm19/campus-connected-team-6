@@ -3,14 +3,13 @@ import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_campus_connected/helper/cloud_firestore_helper.dart';
 import 'package:flutter_campus_connected/models/event_entity.dart';
-import 'package:flutter_campus_connected/models/user_entity.dart';
-import 'package:flutter_campus_connected/models/user_entity_add.dart';
+import 'package:flutter_campus_connected/models/user_model.dart';
 import 'package:flutter_campus_connected/pages/view_event.dart';
 import 'package:flutter_campus_connected/utils/screen_aware_size.dart';
 import 'package:flutter_campus_connected/utils/text_aware_size.dart';
 
 class UsersProfileDetails extends StatefulWidget {
-  final details;
+  final UserModel details;
   final firebaseUser;
 
   UsersProfileDetails({this.details, this.firebaseUser});
@@ -26,7 +25,7 @@ class UsersProfileDetailsPageState extends State<UsersProfileDetails> {
   String faculty;
   String biography;
 
-  UserEntityAdd _userEntity;
+  UserModel _userEntity;
 
   FireCloudStoreHelper cloudStoreHelper = new FireCloudStoreHelper();
   final double ratio = 2.3;
@@ -50,7 +49,7 @@ class UsersProfileDetailsPageState extends State<UsersProfileDetails> {
             Align(
               alignment: Alignment.centerLeft,
               child: Container(
-                //color: Colors.red,
+                color: Theme.of(context).primaryColor,
                 child: Row(
                   mainAxisAlignment: MainAxisAlignment.center,
                   children: <Widget>[
@@ -80,7 +79,7 @@ class UsersProfileDetailsPageState extends State<UsersProfileDetails> {
 
   //for testing purpose
   String _getUid() {
-    return (widget.details != null) ? widget.details['uid'] : '123';
+    return (widget.details != null) ? widget.details.uid : '123';
   }
 
   // organized Event List by the user
@@ -210,14 +209,15 @@ class UsersProfileDetailsPageState extends State<UsersProfileDetails> {
             } else {
               return Container();
             }
-            final entity = UserEntity(
-                snapshot.data.documents[0]['displayName'],
-                snapshot.data.documents[0]['photoUrl'],
-                snapshot.data.documents[0]['email'],
-                snapshot.data.documents[0]['age'],
-                snapshot.data.documents[0]['faculty'],
-                snapshot.data.documents[0]['biography'],
-                null);
+            final entity = UserModel(
+                displayName: snapshot.data.documents[0]['displayName'],
+                photoUrl: snapshot.data.documents[0]['photoUrl'],
+                email: snapshot.data.documents[0]['email'],
+                age: snapshot.data.documents[0]['age'],
+                faculty: snapshot.data.documents[0]['faculty'],
+                biography: snapshot.data.documents[0]['biography'],
+                uid: snapshot.data.documents[0]['uid'],
+                isEmailVerified: snapshot.data.documents[0]['isEmailVerified']);
             return getRootTop(entity, context);
           },
         ),
@@ -225,7 +225,7 @@ class UsersProfileDetailsPageState extends State<UsersProfileDetails> {
     );
   }
 
-  Column getRootTop(UserEntity entity, BuildContext context) {
+  Column getRootTop(UserModel entity, BuildContext context) {
     return Column(
       mainAxisAlignment: MainAxisAlignment.center,
       children: <Widget>[
@@ -336,19 +336,21 @@ class UsersProfileDetailsPageState extends State<UsersProfileDetails> {
         } else {
           return Container();
         }
-        _userEntity = UserEntityAdd(
-            snapshot.data.documents[0]['displayName'],
-            snapshot.data.documents[0]['photoUrl'],
-            snapshot.data.documents[0]['email'],
-            snapshot.data.documents[0]['age'],
-            snapshot.data.documents[0]['faculty'],
-            snapshot.data.documents[0]['biography']);
+        _userEntity = UserModel(
+            displayName: snapshot.data.documents[0]['displayName'],
+            photoUrl: snapshot.data.documents[0]['photoUrl'],
+            email: snapshot.data.documents[0]['email'],
+            age: snapshot.data.documents[0]['age'],
+            faculty: snapshot.data.documents[0]['faculty'],
+            biography: snapshot.data.documents[0]['biography'],
+            isEmailVerified: snapshot.data.documents[0]['isEmailVerified'],
+            uid: snapshot.data.documents[0]['uid']);
         return getProfileItem(_userEntity, context);
       },
     );
   }
 
-  Column getProfileItem(UserEntityAdd entity, BuildContext context) {
+  Column getProfileItem(UserModel entity, BuildContext context) {
     var theme = Theme.of(context);
     var textTheme = theme.textTheme;
     return Column(
@@ -400,8 +402,24 @@ class UsersProfileDetailsPageState extends State<UsersProfileDetails> {
                     padding: const EdgeInsets.only(left: 8.0),
                     child: new Text(
                         entity.faculty == null || entity.faculty.isEmpty
-                            ? "Unknown Faculty..."
+                            ? "??"
                             : entity.faculty,
+                        style: textTheme.subhead.copyWith(color: Colors.white)),
+                  ),
+                  SizedBox(
+                    width: screenAwareSize(20, context),
+                  ),
+                  Icon(
+                    Icons.person,
+                    color: Colors.white,
+                    size: 16.0,
+                  ),
+                  new Padding(
+                    padding: const EdgeInsets.only(left: 8.0),
+                    child: new Text(
+                        entity.age == null || entity.age.isEmpty
+                            ? "?? y/o"
+                            : entity.age + " y/o",
                         style: textTheme.subhead.copyWith(color: Colors.white)),
                   ),
                 ],
