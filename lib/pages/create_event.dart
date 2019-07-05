@@ -142,12 +142,13 @@ class _CreateEventState extends State<CreateEvent> {
                 padding: EdgeInsets.all(15),
                 decoration: BoxDecoration(
                     gradient: LinearGradient(colors: [
-                  DynamicTheme.of(context).data.primaryColor != Colors.red
-                      ? DynamicTheme.of(context).data.primaryColor
-                      : Colors.red,
-                  DynamicTheme.of(context).data.primaryColor != Colors.red
-                      ? DynamicTheme.of(context).data.primaryColor
-                      : Colors.red,
+                  Theme.of(context).primaryColor, Theme.of(context).primaryColor
+//                  DynamicTheme.of(context).data.primaryColor != Colors.red
+//                      ? DynamicTheme.of(context).data.primaryColor
+//                      : Colors.red,
+//                  DynamicTheme.of(context).data.primaryColor != Colors.red
+//                      ? DynamicTheme.of(context).data.primaryColor
+//                      : Colors.red,
                 ])),
                 child: Center(
                   child: Form(
