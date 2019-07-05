@@ -96,7 +96,7 @@ class FAQPageState extends State<FAQPage> {
 
   Container appColor(BuildContext context) {
     return Container(
-        color: Colors.redAccent,
+        //color: Colors.red,
         height: screenAwareSize(150, context),
         child: Center());
   }

@@ -111,9 +111,6 @@ class _CreateEventState extends State<CreateEvent> {
 
   @override
   Widget build(BuildContext context) {
-    //TODO: HERE NEED FIX zeile 147 macht alles kaputt...die farbe muss dynamisch sein und sich auch entsprechend ändern
-    Color color = DynamicTheme.of(context).data.backgroundColor;
-
     return WillPopScope(
       onWillPop: () {
         uploadingStatus == true
@@ -144,7 +141,14 @@ class _CreateEventState extends State<CreateEvent> {
               Container(
                 padding: EdgeInsets.all(15),
                 decoration: BoxDecoration(
-                    gradient: LinearGradient(colors: [color, color])),
+                    gradient: LinearGradient(colors: [
+                  DynamicTheme.of(context).data.primaryColor != Colors.red
+                      ? DynamicTheme.of(context).data.primaryColor
+                      : Colors.red,
+                  DynamicTheme.of(context).data.primaryColor != Colors.red
+                      ? DynamicTheme.of(context).data.primaryColor
+                      : Colors.red,
+                ])),
                 child: Center(
                   child: Form(
                       key: _formState,

@@ -15,10 +15,6 @@ import 'root_page.dart';
 import 'package:dynamic_theme/dynamic_theme.dart';
 
 Future main() async {
-  Brightness brightness;
-  SharedPreferences prefs = await SharedPreferences.getInstance();
-  brightness =
-      (prefs.getBool("isDark") ?? false) ? Brightness.dark : Brightness.light;
   runApp(new MyApp());
 }
 
@@ -29,16 +25,17 @@ class MyApp extends StatelessWidget {
       DeviceOrientation.portraitUp,
       DeviceOrientation.portraitDown,
     ]);
-    SystemChrome.setSystemUIOverlayStyle(SystemUiOverlayStyle(
-      statusBarColor: Colors.red, // status bar color
-    ));
     return new DynamicTheme(
       defaultBrightness: Brightness.light,
       data: (brightness) => new ThemeData(
             primarySwatch: Colors.red,
             brightness: brightness,
+            accentColor: Colors.redAccent,
           ),
       themedWidgetBuilder: (context, theme) {
+        SystemChrome.setSystemUIOverlayStyle(SystemUiOverlayStyle(
+          statusBarColor: Colors.red, // status bar color
+        ));
         return new MaterialApp(
           title: 'Campus Connected',
           debugShowCheckedModeBanner: false,

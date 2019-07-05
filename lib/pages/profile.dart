@@ -198,7 +198,7 @@ class ProfilePageState extends State<ProfilePage>
         'Edit',
         style: TextStyle(
             color: Colors.white,
-            fontSize: screenAwareSize(20, context),
+            fontSize: textAwareSize(20, context),
             fontWeight: FontWeight.bold,
             letterSpacing: 1),
       ),
@@ -263,14 +263,14 @@ class ProfilePageState extends State<ProfilePage>
           item.eventName,
           maxLines: 1,
           overflow: TextOverflow.ellipsis,
-          style: TextStyle(fontSize: 20),
+          style: TextStyle(fontSize: textAwareSize(20, context)),
         ),
         subtitle: Padding(
           padding: const EdgeInsets.only(top: 6.0),
           child: Text(item.eventDescription,
               maxLines: 1,
               overflow: TextOverflow.ellipsis,
-              style: TextStyle(fontSize: 16)),
+              style: TextStyle(fontSize: textAwareSize(16, context))),
         ),
         leading: Padding(
           padding: const EdgeInsets.all(2.0),
@@ -395,7 +395,8 @@ class ProfilePageState extends State<ProfilePage>
                           snapshot.data.documents[ind]['eventName'],
                           maxLines: 1,
                           overflow: TextOverflow.ellipsis,
-                          style: TextStyle(fontSize: 20),
+                          style:
+                              TextStyle(fontSize: textAwareSize(20, context)),
                         ),
                         subtitle: Padding(
                           padding: const EdgeInsets.only(top: 6.0),
@@ -403,7 +404,8 @@ class ProfilePageState extends State<ProfilePage>
                               snapshot.data.documents[ind]['eventDescription'],
                               maxLines: 1,
                               overflow: TextOverflow.ellipsis,
-                              style: TextStyle(fontSize: 16)),
+                              style: TextStyle(
+                                  fontSize: textAwareSize(16, context))),
                         ),
                         leading: Padding(
                           padding: const EdgeInsets.all(2.0),
