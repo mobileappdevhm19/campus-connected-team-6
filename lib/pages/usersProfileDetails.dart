@@ -277,7 +277,7 @@ class UsersProfileDetailsPageState extends State<UsersProfileDetails> {
 
   AppBar appBar(BuildContext context) {
     return AppBar(
-      title: Text("My Profile"),
+      title: Text("Profile"),
       centerTitle: true,
       textTheme: TextTheme(
         title: TextStyle(
@@ -398,7 +398,10 @@ class UsersProfileDetailsPageState extends State<UsersProfileDetails> {
                   ),
                   new Padding(
                     padding: const EdgeInsets.only(left: 8.0),
-                    child: new Text(entity.faculty,
+                    child: new Text(
+                        entity.faculty == null || entity.faculty.isEmpty
+                            ? "Unknown Faculty..."
+                            : entity.faculty,
                         style: textTheme.subhead.copyWith(color: Colors.white)),
                   ),
                 ],

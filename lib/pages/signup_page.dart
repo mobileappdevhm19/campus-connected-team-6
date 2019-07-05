@@ -19,7 +19,29 @@ class _SignUpPageState extends State<SignUpPage>
   String _name;
   String _email;
   String _password;
+  String _age;
+  String _faculty;
   String _confirmPassword; //only for compare purpose
+  // Event Dropdown Categories list
+  static var _categories = [
+    "FK 01",
+    "FK 02",
+    "FK 03",
+    "FK 04",
+    "FK 05",
+    "FK 06",
+    "FK 07",
+    "FK 08",
+    "FK 09",
+    "FK 10",
+    "FK 11",
+    "FK 12",
+    "FK 13",
+    "FK 14",
+  ];
+
+  //selected dropdown value will be save here
+  var dropdownValue;
   static final RegExp _emailRegExp = RegExp(
     r'^[a-zA-Z0-9.!#$%&’*+/=?^_`{|}~-]+@hm.edu$',
   );
@@ -243,6 +265,8 @@ class _SignUpPageState extends State<SignUpPage>
               padding: EdgeInsets.all(20),
             ),
             _showNameInput(),
+            _showAgeInput(),
+            _showFacultyCategoryDropdownInput(),
             _showEmailInput(),
             _showPasswordInput(),
             _showConfirmPasswordInput(),
@@ -254,6 +278,173 @@ class _SignUpPageState extends State<SignUpPage>
         ),
       ),
     ));
+  }
+
+  // user name
+  Widget _showNameInput() {
+    return Padding(
+      padding: const EdgeInsets.only(left: 14.0, right: 14.0, bottom: 10),
+      child: TextFormField(
+        maxLines: 1,
+        keyboardType: TextInputType.text,
+        autofocus: false,
+        decoration: new InputDecoration(
+            border: OutlineInputBorder(
+              borderRadius: BorderRadius.circular(5),
+            ),
+            contentPadding: EdgeInsets.all(0.0),
+            filled: true,
+            labelText: 'Name',
+            fillColor: Colors.white,
+            prefixIcon: new Icon(
+              Icons.person,
+            )),
+        validator: (value) {
+          if (value.isEmpty) {
+            return 'Name can\'t be empty';
+          }
+        },
+        maxLength: 30,
+        maxLengthEnforced: true,
+        onSaved: (value) => _name = value,
+      ),
+    );
+  }
+
+  // user faculty
+  Widget _showFacultyCategoryDropdownInput() {
+    /*return Padding(
+      padding: const EdgeInsets.only(left: 14.0, right: 14.0, bottom: 10),
+      child: TextFormField(
+        maxLines: 1,
+        keyboardType: TextInputType.text,
+        autofocus: false,
+        decoration: new InputDecoration(
+            border: OutlineInputBorder(
+              borderRadius: BorderRadius.circular(5),
+            ),
+            contentPadding: EdgeInsets.all(0.0),
+            filled: true,
+            labelText: 'Name',
+            fillColor: Colors.white,
+            prefixIcon: new Icon(
+              Icons.person,
+            )),
+        validator: (value) {
+          if (value.isEmpty) {
+            return 'Name can\'t be empty';
+          }
+        },
+        onSaved: (value) => _name = value,
+      ),
+    );*/
+    return Padding(
+      padding: const EdgeInsets.only(left: 14.0, right: 14.0, bottom: 10),
+      child: FormField<String>(
+        validator: (value) {
+          if (value == null) {
+            return "Select Event Category";
+          }
+        },
+        onSaved: (value) => _name = value,
+        builder: (
+          FormFieldState<String> state,
+        ) {
+          return Column(
+            crossAxisAlignment: CrossAxisAlignment.start,
+            children: <Widget>[
+              new Container(
+                width: double.infinity,
+                padding: EdgeInsets.all(8),
+                decoration: BoxDecoration(
+                  border: new Border.all(color: Colors.black),
+                  borderRadius: BorderRadius.circular(5),
+                ),
+                child: Row(
+                  mainAxisSize: MainAxisSize.max,
+                  children: <Widget>[
+                    Icon(
+                      Icons.school,
+                      color: Colors.grey,
+                    ),
+                    SizedBox(
+                      width: screenAwareSize(8, context),
+                    ),
+                    Expanded(
+                      flex: 9,
+                      child: DropdownButtonHideUnderline(
+                        child: DropdownButton(
+                            iconEnabledColor: Colors.red,
+                            hint: Text("eg. FK 07"),
+                            isDense: true,
+                            value: dropdownValue,
+                            items: _categories.map((String item) {
+                              return DropdownMenuItem<String>(
+                                child: Text(item),
+                                value: item,
+                              );
+                            }).toList(),
+                            onChanged: (value) {
+                              state.didChange(value);
+                              setState(() {
+                                dropdownValue = value;
+                              });
+                            }),
+                      ),
+                    )
+                  ],
+                ),
+              ),
+              state.hasError
+                  ? SizedBox(height: 5.0)
+                  : Container(
+                      height: 0,
+                    ),
+              state.hasError
+                  ? Text(
+                      state.errorText,
+                      style: TextStyle(
+                          color: Colors.redAccent.shade700, fontSize: 12.0),
+                    )
+                  : Container(),
+            ],
+          );
+        },
+      ),
+    );
+  }
+
+  // user age
+  Widget _showAgeInput() {
+    return Padding(
+      padding: const EdgeInsets.only(left: 14.0, right: 14.0, bottom: 10),
+      child: TextFormField(
+        maxLines: 1,
+        keyboardType: TextInputType.number,
+        autofocus: false,
+        decoration: new InputDecoration(
+            border: OutlineInputBorder(
+              borderRadius: BorderRadius.circular(5),
+            ),
+            contentPadding: EdgeInsets.all(0.0),
+            filled: true,
+            labelText: 'Age',
+            fillColor: Colors.white,
+            prefixIcon: new Icon(
+              Icons.person,
+            )),
+        validator: (value) {
+          if (value.isEmpty) {
+            return 'Age can\'t be empty';
+          } else if (int.parse(value) > 100 || int.parse(value) < 1) {
+            return 'Please type a valid age';
+          } else {
+            return 'Type a valid Number';
+          }
+        },
+        onSaved: (value) => _name = value,
+      ),
+    );
   }
 
   //user email
@@ -285,35 +476,6 @@ class _SignUpPageState extends State<SignUpPage>
         maxLength: 30,
         maxLengthEnforced: true,
         onSaved: (value) => _email = value,
-      ),
-    );
-  }
-
-  // user name
-  Widget _showNameInput() {
-    return Padding(
-      padding: const EdgeInsets.only(left: 14.0, right: 14.0, bottom: 10),
-      child: TextFormField(
-        maxLines: 1,
-        keyboardType: TextInputType.text,
-        autofocus: false,
-        decoration: new InputDecoration(
-            border: OutlineInputBorder(
-              borderRadius: BorderRadius.circular(5),
-            ),
-            contentPadding: EdgeInsets.all(0.0),
-            filled: true,
-            labelText: 'Name',
-            fillColor: Colors.white,
-            prefixIcon: new Icon(
-              Icons.person,
-            )),
-        validator: (value) {
-          if (value.isEmpty) {
-            return 'Name can\'t be empty';
-          }
-        },
-        onSaved: (value) => _name = value,
       ),
     );
   }
