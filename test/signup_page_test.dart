@@ -20,7 +20,7 @@ void main() {
     final findIconPerson = find.byIcon(Icons.person);
 
     expect(findIconLock, findsNWidgets(2));
-    expect(findIconPerson, findsOneWidget);
+    expect(findIconPerson, findsNWidgets(2));
 
     final boxDecoration =
         tester.firstWidget(find.byType(Container)) as Container;

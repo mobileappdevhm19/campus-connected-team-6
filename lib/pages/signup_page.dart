@@ -313,31 +313,6 @@ class _SignUpPageState extends State<SignUpPage>
 
   // user faculty
   Widget _showFacultyCategoryDropdownInput() {
-    /*return Padding(
-      padding: const EdgeInsets.only(left: 14.0, right: 14.0, bottom: 10),
-      child: TextFormField(
-        maxLines: 1,
-        keyboardType: TextInputType.text,
-        autofocus: false,
-        decoration: new InputDecoration(
-            border: OutlineInputBorder(
-              borderRadius: BorderRadius.circular(5),
-            ),
-            contentPadding: EdgeInsets.all(0.0),
-            filled: true,
-            labelText: 'Name',
-            fillColor: Colors.white,
-            prefixIcon: new Icon(
-              Icons.person,
-            )),
-        validator: (value) {
-          if (value.isEmpty) {
-            return 'Name can\'t be empty';
-          }
-        },
-        onSaved: (value) => _name = value,
-      ),
-    );*/
     return Padding(
       padding: const EdgeInsets.only(left: 14.0, right: 14.0, bottom: 10),
       child: FormField<String>(
