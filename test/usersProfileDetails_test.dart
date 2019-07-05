@@ -46,7 +46,8 @@ void main() {
       var top = state.topPart(context);
       expect(top, isNotNull);
 
-      final entity = UserEntity('test', 'test.png', 'test@test.com', null);
+      final entity = UserEntity('test', 'test.png', 'test@test.com', '25',
+          'FK 07', 'HM Student living in Munich', null);
       var root = state.getRootTop(entity, context);
       expect(root, isNotNull);
       expect(state, isNotNull);

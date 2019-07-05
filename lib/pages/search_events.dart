@@ -144,16 +144,22 @@ class _SearchEventState extends State<SearchEvent> {
                       child: SizedBox(
                         width: screenAwareSize(80, context),
                         height: screenAwareSize(60, context),
-                        child: CachedNetworkImage(
-                          imageUrl: snapshot[index]['eventPhotoUrl'],
-                          fit: BoxFit.cover,
-                          placeholder: (context, url) => Image.asset(
-                                'assets/loadingfailed.png',
+                        child: snapshot[index]['eventPhotoUrl'] ==
+                                'assets/gallery.png'
+                            ? Image(
+                                image: AssetImage('assets/gallery.png'),
                                 fit: BoxFit.cover,
+                              )
+                            : CachedNetworkImage(
+                                imageUrl: snapshot[index]['eventPhotoUrl'],
+                                fit: BoxFit.cover,
+                                placeholder: (context, url) => Image.asset(
+                                      'assets/loadingfailed.png',
+                                      fit: BoxFit.cover,
+                                    ),
+                                errorWidget: (context, url, error) =>
+                                    new Icon(Icons.error),
                               ),
-                          errorWidget: (context, url, error) =>
-                              new Icon(Icons.error),
-                        ),
                       ),
                     )),
               ),

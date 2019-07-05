@@ -58,6 +58,9 @@ class EventUsersList extends StatelessWidget {
             snapshot.data.documents[0]['displayName'],
             snapshot.data.documents[0]['photoUrl'],
             snapshot.data.documents[0]['email'],
+            snapshot.data.documents[0]['age'],
+            snapshot.data.documents[0]['faculty'],
+            snapshot.data.documents[0]['biography'],
             snapshot.data.documents[0]);
         return !(snapshot.hasData && snapshot.data.documents.length == 0)
             ? ListTile(

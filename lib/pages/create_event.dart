@@ -157,16 +157,23 @@ class _CreateEventState extends State<CreateEvent> {
                                   height: screenAwareSize(20, context),
                                 ),
                                 selectImageWidget(),
-                                imageRequired == true
-                                    ? Padding(
-                                        padding:
-                                            const EdgeInsets.only(top: 12.0),
-                                        child: Text(
-                                          'Please Upload Event Image',
-                                          style: TextStyle(color: Colors.red),
-                                        ),
-                                      )
-                                    : SizedBox(),
+//                                imageRequired == true
+//                                    ? Padding(
+//                                        padding:
+//                                            const EdgeInsets.only(top: 12.0),
+//                                        child: Text(
+//                                          'Please Upload Event Image',
+//                                          style: TextStyle(color: Colors.red),
+//                                        ),
+//                                      )
+//                                    : SizedBox(),
+                                Padding(
+                                  padding: const EdgeInsets.only(top: 12.0),
+                                  child: Text(
+                                    'Event Image is Optional',
+                                    style: TextStyle(color: Colors.black),
+                                  ),
+                                ),
                                 SizedBox(
                                   height: screenAwareSize(30, context),
                                 ),
@@ -250,14 +257,16 @@ class _CreateEventState extends State<CreateEvent> {
     //will close the keyboard
     FocusScope.of(context).requestFocus(new FocusNode());
     if (imageUrl == null) {
+      imageUrl = 'assets/gallery.png';
+      eventModel.eventPhotoUrl = imageUrl;
       setState(() {
         imageRequired = true;
       });
-      Future.delayed(Duration(seconds: 3), () {
-        setState(() {
-          imageRequired = false;
-        });
-      });
+//      Future.delayed(Duration(seconds: 3), () {
+//        setState(() {
+//          imageRequired = false;
+//        });
+//      });
     }
     //imageUrl = 'assets/loadingfailed.png';
 
@@ -379,12 +388,15 @@ class _CreateEventState extends State<CreateEvent> {
             width: 120,
             height: 120,
             child: imageUrl == null
-                ? Image.asset('assets/gallery.png')
+                ? Image(
+                    image: AssetImage('assets/gallery.png'),
+                    fit: BoxFit.cover,
+                  )
                 : CachedNetworkImage(
                     imageUrl: imageUrl,
                     fit: BoxFit.cover,
                     placeholder: (context, url) => Image.asset(
-                          'assets/loadingfailed.png',
+                          'assets/gallery.png',
                           fit: BoxFit.cover,
                         ),
                     errorWidget: (context, url, error) => new Icon(Icons.error),
