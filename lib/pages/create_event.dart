@@ -5,6 +5,7 @@ import 'dart:math';
 import 'package:cached_network_image/cached_network_image.dart';
 import 'package:connectivity/connectivity.dart';
 import 'package:datetime_picker_formfield/datetime_picker_formfield.dart';
+import 'package:dynamic_theme/dynamic_theme.dart';
 import 'package:firebase_auth/firebase_auth.dart';
 import 'package:firebase_storage/firebase_storage.dart';
 import 'package:flutter/material.dart';
@@ -110,6 +111,9 @@ class _CreateEventState extends State<CreateEvent> {
 
   @override
   Widget build(BuildContext context) {
+    //TODO: HERE NEED FIX zeile 147 macht alles kaputt...die farbe muss dynamisch sein und sich auch entsprechend ändern
+    Color color = DynamicTheme.of(context).data.backgroundColor;
+
     return WillPopScope(
       onWillPop: () {
         uploadingStatus == true
@@ -118,7 +122,7 @@ class _CreateEventState extends State<CreateEvent> {
       },
       child: Scaffold(
         appBar: new AppBar(
-          backgroundColor: Colors.red,
+          //backgroundColor: Colors.red,
           elevation: 0.0,
           leading: new IconButton(
             icon: new Icon(
@@ -140,7 +144,7 @@ class _CreateEventState extends State<CreateEvent> {
               Container(
                 padding: EdgeInsets.all(15),
                 decoration: BoxDecoration(
-                    gradient: LinearGradient(colors: [Colors.red, Colors.red])),
+                    gradient: LinearGradient(colors: [color, color])),
                 child: Center(
                   child: Form(
                       key: _formState,

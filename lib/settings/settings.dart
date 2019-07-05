@@ -1,3 +1,4 @@
+import 'package:dynamic_theme/dynamic_theme.dart';
 import 'package:flutter/material.dart';
 
 import 'package:flutter_campus_connected/settings/color_box.dart';
@@ -7,18 +8,11 @@ import 'package:meta/meta.dart';
 typedef ClockColorCallback(Color color);
 
 class SettingPage extends StatefulWidget {
-
-  SettingPage
-
-      ({
+  SettingPage({
     Key key,
     @required this.activeColor,
-
-  })
-      :
-        assert(activeColor == null),
-        super (key:key);
-
+  })  : assert(activeColor == null),
+        super(key: key);
 
   final Color activeColor;
 
@@ -27,22 +21,16 @@ class SettingPage extends StatefulWidget {
 }
 
 class SettingPageState extends State<SettingPage> {
-
   bool _value = false;
-
 
   void _onChanged(bool value) {
     setState(() {
       _value = value;
     });
-  }
-
-  bool _value2 = false;
-
-  void _onChanged2(bool value2) {
-    setState(() {
-      _value2 = value2;
-    });
+    DynamicTheme.of(context).setBrightness(
+        Theme.of(context).brightness == Brightness.dark
+            ? Brightness.light
+            : Brightness.dark);
   }
 
   @override
@@ -50,28 +38,19 @@ class SettingPageState extends State<SettingPage> {
     final ThemeData themeData = Theme.of(context);
     return new Scaffold(
         appBar: appBar(context),
-
         body: Container(
           padding: EdgeInsets.all(5.0),
           child: Column(
             children: <Widget>[
-              SwitchListTile(value: _value,
-                  title: Text("Dark"),
+              SwitchListTile(
+                  value: _value,
+                  title: Text("Dark / Light"),
                   activeColor: Colors.red,
                   secondary: Icon(Icons.color_lens),
                   subtitle: Text("You can switch your app in dark"),
-
                   onChanged: (bool value) {
                     _onChanged(value);
                   }),
-              SwitchListTile(value: _value2,
-                  title: Text("Light"),
-                  activeColor: Colors.red,
-                  secondary: Icon(Icons.color_lens),
-                  onChanged: (bool value2) {
-                    _onChanged2(value2);
-                  }),
-
               ListTile(
                 title: new ColorBoxGroup(
                     width: 25.0,
@@ -88,17 +67,32 @@ class SettingPageState extends State<SettingPage> {
                     ],
                     groupValue: widget.activeColor,
                     onTap: (color) {
-
-                    }
-
-                ),
+                      DynamicTheme.of(context).setThemeData(
+                        new ThemeData(primaryColor: getColor(color)),
+                      );
+                    }),
               )
             ],
           ),
+        ));
+  }
 
-
-        )
-    );
+  getColor(Color color) {
+    if (color == Colors.red) {
+      return Colors.red;
+    } else if (color == Colors.orange) {
+      return Colors.orange;
+    } else if (color == Colors.green) {
+      return Colors.green;
+    } else if (color == Colors.purple) {
+      return Colors.purple;
+    } else if (color == Colors.blue) {
+      return Colors.blue;
+    } else if (color == Colors.yellow) {
+      return Colors.yellow;
+    } else {
+      return Colors.black;
+    }
   }
 
   AppBar appBar(BuildContext context) {

@@ -11,6 +11,7 @@ import 'package:flutter_campus_connected/pages/create_event.dart';
 import 'package:flutter_campus_connected/pages/profile.dart';
 import 'package:flutter_campus_connected/pages/users_profile.dart';
 import 'package:flutter_campus_connected/pages/view_event.dart';
+import 'package:flutter_campus_connected/settings/settings.dart';
 import 'package:flutter_campus_connected/utils/screen_aware_size.dart';
 
 import 'faq_page.dart';
@@ -216,7 +217,10 @@ class DashboardState extends State<Dashboard> {
       actions: <Widget>[
         IconButton(
           icon: Icon(Icons.settings),
-          onPressed: () {},
+          onPressed: () {
+            Navigator.of(context).push(new MaterialPageRoute(
+                builder: (BuildContext context) => new SettingPage()));
+          },
         )
       ],
     );

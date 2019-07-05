@@ -252,7 +252,7 @@ class EditProfileState extends State<EditProfile> {
       children: <Widget>[
         Container(
           padding: EdgeInsets.all(15),
-          color: Colors.red,
+          //color: Colors.red,
           child: Center(
             child: SingleChildScrollView(
               child: getForm(context),
@@ -318,7 +318,7 @@ class EditProfileState extends State<EditProfile> {
   //appbar
   AppBar appBar(BuildContext context) {
     return AppBar(
-      backgroundColor: Colors.red,
+      //backgroundColor: Colors.red,
       elevation: 0.0,
       leading: new IconButton(
         icon: new Icon(

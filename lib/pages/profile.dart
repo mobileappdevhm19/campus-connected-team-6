@@ -116,7 +116,7 @@ class ProfilePageState extends State<ProfilePage>
             fontSize: textAwareSize(20, context),
             fontWeight: FontWeight.bold),
       ),
-      backgroundColor: Colors.red,
+      //backgroundColor: Colors.red,
       elevation: 0.0,
       leading: new IconButton(
         icon: new Icon(
@@ -132,7 +132,7 @@ class ProfilePageState extends State<ProfilePage>
       ],
       bottom: PreferredSize(
         child: Container(
-          color: Colors.red,
+          //color: Colors.red,
           height: (MediaQuery.of(context).size.height / ratio) - 14,
           child: Column(
             mainAxisAlignment: MainAxisAlignment.center,
@@ -202,7 +202,7 @@ class ProfilePageState extends State<ProfilePage>
             fontWeight: FontWeight.bold,
             letterSpacing: 1),
       ),
-      color: Colors.red,
+      //color: Colors.red,
       onPressed: () {
         Navigator.of(context).push(MaterialPageRoute(builder: (context) {
           _userEntity.displayName = displayName;
