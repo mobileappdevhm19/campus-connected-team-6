@@ -1,5 +1,6 @@
 import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/material.dart';
+import 'package:flutter_campus_connected/models/user_model.dart';
 import 'package:flutter_campus_connected/services/authentication.dart';
 import 'package:flutter_campus_connected/helper/cloud_firestore_helper.dart';
 import 'package:flutter_campus_connected/utils/screen_aware_size.dart';
@@ -17,11 +18,15 @@ class _SignUpPageState extends State<SignUpPage>
   final _scaffoldKey = new GlobalKey<ScaffoldState>();
   FireCloudStoreHelper cloudhelper = new FireCloudStoreHelper();
   String _name;
+  final String _photoUrl =
+      'https://fertilitynetworkuk.org/wp-content/uploads/2017/01/Facebook-no-profile-picture-icon-620x389.jpg';
   String _email;
   String _password;
   String _age;
   String _faculty;
   String _confirmPassword; //only for compare purpose
+  UserModel _userModel;
+
   // Event Dropdown Categories list
   static var _categories = [
     "FK 01",
@@ -142,12 +147,20 @@ class _SignUpPageState extends State<SignUpPage>
         if (user != null) {
           var userUpdateInfo = new UserUpdateInfo();
           userUpdateInfo.displayName = _name;
-          userUpdateInfo.photoUrl =
-              'https://fertilitynetworkuk.org/wp-content/uploads/2017/01/Facebook-no-profile-picture-icon-620x389.jpg';
+          userUpdateInfo.photoUrl = _photoUrl;
           await user.updateProfile(userUpdateInfo);
           auth.getCurrentUser().then((currentUser) async {
             if (currentUser != null) {
-              var result = await cloudhelper.storeNewUser(currentUser);
+              _userModel = UserModel(
+                  photoUrl: _photoUrl,
+                  faculty: _faculty,
+                  email: _email,
+                  displayName: _name,
+                  biography: "",
+                  age: _age,
+                  uid: currentUser.uid);
+
+              var result = await cloudhelper.storeNewUser(_userModel);
               if (result) {
                 showDialog(
                     context: context,
@@ -202,6 +215,8 @@ class _SignUpPageState extends State<SignUpPage>
                         titlePadding: EdgeInsets.all(20),
                       );
                     });
+              } else {
+                _showSnackBar('Uknown Error by Account Registration');
               }
             }
           });
@@ -321,7 +336,7 @@ class _SignUpPageState extends State<SignUpPage>
             return "Select Event Category";
           }
         },
-        onSaved: (value) => _name = value,
+        onSaved: (value) => _faculty = value,
         builder: (
           FormFieldState<String> state,
         ) {
@@ -411,13 +426,14 @@ class _SignUpPageState extends State<SignUpPage>
         validator: (value) {
           if (value.isEmpty) {
             return 'Age can\'t be empty';
-          } else if (int.parse(value) > 100 || int.parse(value) < 1) {
-            return 'Please type a valid age';
-          } else {
-            return 'Type a valid Number';
+          } else if (value.contains(".")) {
+            return "Only whole numbers allowed";
+          }
+          if (int.parse(value) > 100 || int.parse(value) < 16) {
+            return 'Age should be over 16 years of old';
           }
         },
-        onSaved: (value) => _name = value,
+        onSaved: (value) => _age = value,
       ),
     );
   }
@@ -478,6 +494,7 @@ class _SignUpPageState extends State<SignUpPage>
           } else if (value.length < 6) {
             return 'Password can\'t be less than 6 character';
           }
+          _password = value; //for comparison with comfirmation password
         },
         onSaved: (value) => _password = value,
       ),

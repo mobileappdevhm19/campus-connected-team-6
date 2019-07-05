@@ -4,7 +4,7 @@ import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_campus_connected/helper/cloud_firestore_helper.dart';
 import 'package:flutter_campus_connected/models/profile_item.dart';
-import 'package:flutter_campus_connected/models/user_entity_add.dart';
+import 'package:flutter_campus_connected/models/user_model.dart';
 import 'package:flutter_campus_connected/pages/view_event.dart';
 import 'package:flutter_campus_connected/utils/screen_aware_size.dart';
 import 'package:flutter_campus_connected/utils/text_aware_size.dart';
@@ -28,7 +28,7 @@ class ProfilePageState extends State<ProfilePage>
   String age;
   String faculty;
   String biography;
-  UserEntityAdd _userEntity;
+  UserModel _userEntity;
   FireCloudStoreHelper cloudStoreHelper = new FireCloudStoreHelper();
   final double ratio = 1.8;
   List<Tab> _tabs;
@@ -478,25 +478,30 @@ class ProfilePageState extends State<ProfilePage>
           displayName = snapshot.data.documents[0]['displayName'];
           photoUrl = snapshot.data.documents[0]['photoUrl'];
           email = snapshot.data.documents[0]['email'];
-          age = snapshot.data.documents[0]['age'];
-          faculty = snapshot.data.documents[0]['faculty'];
-          biography = snapshot.data.documents[0]['biography'];
+          age = snapshot.data.documents[0]['age'] ?? "??";
+          faculty = snapshot.data.documents[0]['faculty'] ?? "Unknown Faculty";
+          biography =
+              snapshot.data.documents[0]['biography'] ?? "Unknown Biography";
         } else {
           return Container();
         }
-        _userEntity = UserEntityAdd(
-            snapshot.data.documents[0]['displayName'],
-            snapshot.data.documents[0]['photoUrl'],
-            snapshot.data.documents[0]['email'],
-            snapshot.data.documents[0]['age'],
-            snapshot.data.documents[0]['faculty'],
-            snapshot.data.documents[0]['biography']);
+        _userEntity = UserModel(
+            uid: widget.firebaseUser.uid,
+            age: age,
+            biography: biography,
+            email: email,
+            faculty: faculty,
+            photoUrl: photoUrl,
+            displayName: displayName,
+            isEmailVerified: widget.firebaseUser.isEmailVerified
+            //displayName, photoUrl, email, age, faculty, biography);
+            );
         return getProfileItem(_userEntity, context);
       },
     );
   }
 
-  Column getProfileItem(UserEntityAdd entity, BuildContext context) {
+  Column getProfileItem(UserModel entity, BuildContext context) {
     var theme = Theme.of(context);
     var textTheme = theme.textTheme;
     return Column(
@@ -546,7 +551,26 @@ class ProfilePageState extends State<ProfilePage>
                   ),
                   new Padding(
                     padding: const EdgeInsets.only(left: 8.0),
-                    child: new Text(entity.faculty,
+                    child: new Text(
+                        entity.faculty == null || entity.faculty.isEmpty
+                            ? "??"
+                            : entity.faculty,
+                        style: textTheme.subhead.copyWith(color: Colors.white)),
+                  ),
+                  SizedBox(
+                    width: screenAwareSize(20, context),
+                  ),
+                  Icon(
+                    Icons.person,
+                    color: Colors.white,
+                    size: 16.0,
+                  ),
+                  new Padding(
+                    padding: const EdgeInsets.only(left: 8.0),
+                    child: new Text(
+                        entity.age == null || entity.age.isEmpty
+                            ? "??"
+                            : entity.age + " y/o",
                         style: textTheme.subhead.copyWith(color: Colors.white)),
                   ),
                 ],
@@ -583,7 +607,7 @@ class ProfilePageState extends State<ProfilePage>
                     child: Container(
                       width: MediaQuery.of(context).size.width - 50,
                       child: Text(
-                        entity.biography.isEmpty
+                        entity.biography == null || entity.biography.isEmpty
                             ? 'This user has no Biography...'
                             : entity.biography,
                         style: textTheme.body1.copyWith(

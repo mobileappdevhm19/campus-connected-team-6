@@ -36,15 +36,14 @@ class ColorBoxGroup extends StatelessWidget {
   Widget build(BuildContext context) {
     return new Wrap(
       spacing: spacing,
-      children: new List.from(colors.map((color) =>
-      new ColorBox(
-        key: new Key("color-$color"),
-        width: width,
-        height: height,
-        color: color,
-        selected: color == groupValue,
-        onTap: () => onTap(color),
-      ))),
+      children: new List.from(colors.map((color) => new ColorBox(
+            key: new Key("color-$color"),
+            width: width,
+            height: height,
+            color: color,
+            selected: color == groupValue,
+            onTap: () => onTap(color),
+          ))),
     );
   }
 }
@@ -57,8 +56,7 @@ class ColorBox extends StatelessWidget {
     @required this.color,
     this.selected = false,
     this.onTap,
-  })
-      : assert(width != null && width > 0),
+  })  : assert(width != null && width > 0),
         assert(height != null && height > 0),
         assert(color != null),
         super(key: key);

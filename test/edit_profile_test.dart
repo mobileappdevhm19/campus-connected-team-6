@@ -1,7 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_campus_connected/helper/cloud_firestore_helper.dart';
 import 'package:flutter_campus_connected/mock/cloud_firestore_helper_mock.dart';
-import 'package:flutter_campus_connected/models/user_entity_add.dart';
+import 'package:flutter_campus_connected/models/user_model.dart';
 import 'package:flutter_campus_connected/pages/edit_profile.dart';
 import 'package:flutter_test/flutter_test.dart';
 import 'package:image_test_utils/image_test_utils.dart';
@@ -23,8 +23,15 @@ void main() {
       //используем  пакет "заглушку"
       provideMockedNetworkImages(() async {
         final storeMock = FireCloudStoreHelperMock();
-        UserEntityAdd entity = UserEntityAdd(
-            'test', 'test.png', 'test@test.com', '19', 'IT', 'sport');
+        UserModel entity = UserModel(
+            isEmailVerified: true,
+            displayName: 'test',
+            photoUrl: 'test.png',
+            email: 'test@test.com',
+            age: '19',
+            biography: 'IT',
+            faculty: 'FK 08',
+            uid: 'xs2sg4sgs');
         expect(entity, isNotNull);
         when(storeMock.updateUser(null, entity))
             .thenAnswer((_) async => Future.value(true));

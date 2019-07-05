@@ -1,6 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_campus_connected/models/event_entity.dart';
-import 'package:flutter_campus_connected/models/user_entity.dart';
+import 'package:flutter_campus_connected/models/user_model.dart';
 import 'package:flutter_campus_connected/pages/usersProfileDetails.dart';
 import 'package:flutter_test/flutter_test.dart';
 
@@ -46,8 +46,16 @@ void main() {
       var top = state.topPart(context);
       expect(top, isNotNull);
 
-      final entity = UserEntity('test', 'test.png', 'test@test.com', '25',
-          'FK 07', 'HM Student living in Munich', null);
+      final entity = UserModel(
+        displayName: 'test',
+        photoUrl: 'test.png',
+        email: 'test@test.com',
+        age: '25',
+        faculty: 'FK 07',
+        biography: 'HM Student living in Munich',
+        isEmailVerified: true,
+        uid: null,
+      );
       var root = state.getRootTop(entity, context);
       expect(root, isNotNull);
       expect(state, isNotNull);

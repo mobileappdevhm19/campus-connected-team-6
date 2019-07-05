@@ -71,6 +71,7 @@ class _MyHomePageState extends State<MyHomePage> {
   int currentTab = 0;
 
   Dashboard dashboard;
+
   //SearchEvent searchEvent;
   UsersProfile usersProfile;
   CreateEvent createEvent;
@@ -86,7 +87,7 @@ class _MyHomePageState extends State<MyHomePage> {
       setState(() {
         firebaseUser = user;
         dashboard = Dashboard();
-        usersProfile = UsersProfile();
+        usersProfile = UsersProfile(firebaseUser);
         createEvent = CreateEvent(currentUser: firebaseUser);
         profilePage = ProfilePage(firebaseUser: firebaseUser);
         pages = [dashboard, usersProfile, createEvent, profilePage];

@@ -1,7 +1,7 @@
 import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:flutter_campus_connected/models/event_model.dart';
 import 'package:flutter_campus_connected/models/event_user_model.dart';
-import 'package:flutter_campus_connected/models/user_entity_add.dart';
+import 'package:flutter_campus_connected/models/user_model.dart';
 
 class FireCloudStoreHelper {
   CollectionReference userReference = Firestore.instance.collection('/users');
@@ -10,14 +10,8 @@ class FireCloudStoreHelper {
       Firestore.instance.collection('/eventUsers');
 
   //creating new organizer
-  Future<bool> storeNewUser(user) async {
-    var result = await userReference.add({
-      'email': user.email,
-      'uid': user.uid,
-      'displayName': user.displayName,
-      'photoUrl': user.photoUrl,
-      'isEmailVerified': user.isEmailVerified
-    });
+  Future<bool> storeNewUser(UserModel entity) async {
+    var result = await userReference.add(entity.toJson());
     if (result.documentID != null) {
       return true;
     } else {
@@ -26,7 +20,7 @@ class FireCloudStoreHelper {
   }
 
   // update organizer profile
-  Future<void> updateUser(user, UserEntityAdd entity) async {
+  Future<void> updateUser(user, UserModel entity) async {
     var documentID;
     await userReference
         .where('uid', isEqualTo: user.uid)
@@ -35,14 +29,7 @@ class FireCloudStoreHelper {
       documentID = queryDocumentSnapshot.documents[0].documentID;
     });
 
-    var res = userReference.document(documentID).updateData({
-      'displayName': entity.displayName,
-      'photoUrl': entity.photoUrl,
-      'age': entity.age,
-      'biography': entity.biography,
-      'faculty': entity.faculty
-    });
-
+    var res = userReference.document(documentID).updateData(entity.toJson());
     return res;
   }
 

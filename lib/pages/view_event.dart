@@ -3,6 +3,7 @@ import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:connectivity/connectivity.dart';
 import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/material.dart';
+import 'package:flutter_campus_connected/models/user_model.dart';
 import 'package:flutter_campus_connected/services/authentication.dart';
 import 'package:flutter_campus_connected/helper/cloud_firestore_helper.dart';
 import 'package:flutter_campus_connected/models/event_model.dart';
@@ -253,6 +254,21 @@ class _EventViewState extends State<EventView> {
                                         ConnectionState.waiting) {
                                       return Container();
                                     }
+                                    final entity = UserModel(
+                                        displayName: snapshot.data.documents[0]
+                                            ['displayName'],
+                                        photoUrl: snapshot.data.documents[0]
+                                            ['photoUrl'],
+                                        email: snapshot.data.documents[0]
+                                            ['email'],
+                                        age: snapshot.data.documents[0]['age'],
+                                        faculty: snapshot.data.documents[0]
+                                            ['faculty'],
+                                        biography: snapshot.data.documents[0]
+                                            ['biography'],
+                                        isEmailVerified: snapshot.data
+                                            .documents[0]['isEmailVerified'],
+                                        uid: snapshot.data.documents[0]['uid']);
                                     return !(snapshot.hasData &&
                                             snapshot.data.documents.length == 0)
                                         ? InkWell(
@@ -265,8 +281,7 @@ class _EventViewState extends State<EventView> {
                                                 height: screenAwareSize(
                                                     37, context),
                                                 child: CachedNetworkImage(
-                                                  imageUrl: snapshot.data
-                                                      .documents[0]['photoUrl'],
+                                                  imageUrl: entity.photoUrl,
                                                   placeholder: (context, url) =>
                                                       new CircularProgressIndicator(),
                                                   errorWidget:
@@ -281,8 +296,7 @@ class _EventViewState extends State<EventView> {
                                                   MaterialPageRoute(
                                                       builder: (context) {
                                                 return UsersProfileDetails(
-                                                  details: snapshot
-                                                      .data.documents[0],
+                                                  details: entity,
                                                   firebaseUser:
                                                       widget.firebaseUser,
                                                 );
@@ -472,7 +486,6 @@ class _EventViewState extends State<EventView> {
     _eventUserModel.eventId = widget.event.documentID; //changed
     _eventUserModel.userId = widget.firebaseUser.uid;
     await cloudStoreHelper.addEventUser(_eventUserModel);
-    //Navigator.of(context).pop();
   }
 
   //will delete participant data in database
@@ -484,7 +497,6 @@ class _EventViewState extends State<EventView> {
       return;
     }
     await cloudStoreHelper.deleteEventUser(currentEventUser);
-    //Navigator.of(context).pop();
   }
 
   //Event Items like date, time , location , category
@@ -526,6 +538,16 @@ class _EventViewState extends State<EventView> {
         if (snapshot.connectionState == ConnectionState.waiting) {
           return Container();
         }
+        final entity = UserModel(
+            displayName: snapshot.data.documents[0]['displayName'],
+            photoUrl: snapshot.data.documents[0]['photoUrl'],
+            email: snapshot.data.documents[0]['email'],
+            age: snapshot.data.documents[0]['age'],
+            faculty: snapshot.data.documents[0]['faculty'],
+            biography: snapshot.data.documents[0]['biography'],
+            isEmailVerified: snapshot.data.documents[0]['isEmailVerified'],
+            uid: snapshot.data.documents[0]['uid']);
+
         return !(snapshot.hasData && snapshot.data.documents.length == 0)
             ? InkWell(
                 child: Row(
@@ -536,7 +558,7 @@ class _EventViewState extends State<EventView> {
                         width: screenAwareSize(37, context),
                         height: screenAwareSize(37, context),
                         child: CachedNetworkImage(
-                          imageUrl: snapshot.data.documents[0]['photoUrl'],
+                          imageUrl: entity.photoUrl,
                           fit: BoxFit.cover,
                           placeholder: (context, url) => Image.asset(
                                 'assets/person.jpg',
@@ -551,8 +573,7 @@ class _EventViewState extends State<EventView> {
                       width: screenAwareSize(10, context),
                     ),
                     Text(
-                      "Organized by " +
-                          snapshot.data.documents[0]['displayName'],
+                      "Organized by " + entity.displayName,
                       style: TextStyle(
                           color: Colors.black87,
                           fontSize: textAwareSize(16, context)),
@@ -565,7 +586,7 @@ class _EventViewState extends State<EventView> {
                   Navigator.of(context)
                       .push(MaterialPageRoute(builder: (context) {
                     return UsersProfileDetails(
-                      details: snapshot.data.documents[0],
+                      details: entity,
                       firebaseUser: widget.firebaseUser,
                     );
                   }));

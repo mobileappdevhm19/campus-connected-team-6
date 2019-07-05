@@ -2,9 +2,8 @@ import 'dart:async';
 
 import 'package:cached_network_image/cached_network_image.dart';
 import 'package:cloud_firestore/cloud_firestore.dart';
-import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/material.dart';
-import 'package:flutter_campus_connected/models/user_entity.dart';
+import 'package:flutter_campus_connected/models/user_model.dart';
 import 'package:flutter_campus_connected/pages/usersProfileDetails.dart';
 import 'package:flutter_campus_connected/utils/screen_aware_size.dart';
 
@@ -62,7 +61,10 @@ class UsersProfileState extends State<UsersProfile> {
 
   void initQueryResultSet(QuerySnapshot docs) {
     for (int i = 0; i < docs.documents.length; i++) {
-      if (docs.documents[i].data['isEmailVerified']) {
+      if (docs.documents[i].data['isEmailVerified'].toString().toLowerCase() ==
+              'true'
+          ? true
+          : false) {
         queryResultSet.add(docs.documents[i]);
       }
     }
@@ -106,14 +108,15 @@ class UsersProfileState extends State<UsersProfile> {
     return ListView.builder(
         itemCount: snapshot.data.length,
         itemBuilder: (context, ind) {
-          final entity = UserEntity(
-              snapshot.data[ind]['displayName'],
-              snapshot.data[ind]['photoUrl'],
-              snapshot.data[ind]['email'],
-              snapshot.data[ind]['age'],
-              snapshot.data[ind]['faculty'],
-              snapshot.data[ind]['biography'],
-              snapshot.data[ind]);
+          final entity = UserModel(
+              displayName: snapshot.data[ind]['displayName'],
+              photoUrl: snapshot.data[ind]['photoUrl'],
+              email: snapshot.data[ind]['email'],
+              age: snapshot.data[ind]['age'],
+              faculty: snapshot.data[ind]['faculty'],
+              biography: snapshot.data[ind]['biography'],
+              isEmailVerified: snapshot.data[ind]['isEmailVerified'],
+              uid: snapshot.data[ind]['uid']);
           return getItemList(entity, ind, context);
         });
   }
@@ -124,14 +127,13 @@ class UsersProfileState extends State<UsersProfile> {
     );
   }
 
-  Card getItemList(UserEntity entity, int ind, BuildContext context) {
+  Card getItemList(UserModel entity, int ind, BuildContext context) {
     return Card(
       shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(6)),
       margin: EdgeInsets.all(6.0),
       elevation: 3.0,
       child: ListTile(
         title: Text(
-          //snapshot.data[ind]['displayName'],
           entity.displayName,
           style: TextStyle(fontSize: 18),
           maxLines: 1,
@@ -170,10 +172,10 @@ class UsersProfileState extends State<UsersProfile> {
     );
   }
 
-  void tapOnItem(BuildContext context, UserEntity entity) {
+  void tapOnItem(BuildContext context, UserModel entity) {
     Navigator.of(context).push(MaterialPageRoute(builder: (context) {
       return UsersProfileDetails(
-        details: entity.data,
+        details: entity,
         firebaseUser: widget.firebaseUser,
       );
     }));

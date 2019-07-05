@@ -3,6 +3,7 @@ import 'package:flutter/material.dart';
 
 import 'package:flutter_campus_connected/settings/color_box.dart';
 import 'package:flutter_campus_connected/utils/screen_aware_size.dart';
+import 'package:flutter_campus_connected/utils/text_aware_size.dart';
 import 'package:meta/meta.dart';
 
 typedef ClockColorCallback(Color color);
@@ -44,33 +45,49 @@ class SettingPageState extends State<SettingPage> {
             children: <Widget>[
               SwitchListTile(
                   value: _value,
-                  title: Text("Dark / Light"),
+                  title: Text(
+                    "Dark / Light",
+                  ),
                   activeColor: Colors.red,
                   secondary: Icon(Icons.color_lens),
-                  subtitle: Text("You can switch your app in dark"),
+                  subtitle: Text(
+                    "You can switch your app in Dark or in Light mode",
+                  ),
                   onChanged: (bool value) {
                     _onChanged(value);
                   }),
               ListTile(
-                title: new ColorBoxGroup(
-                    width: 25.0,
-                    height: 25.0,
-                    spacing: 10.0,
-                    colors: [
-                      themeData.textTheme.display1.color,
-                      Colors.red,
-                      Colors.orange,
-                      Colors.green,
-                      Colors.purple,
-                      Colors.blue,
-                      Colors.yellow,
-                    ],
-                    groupValue: widget.activeColor,
-                    onTap: (color) {
-                      DynamicTheme.of(context).setThemeData(
-                        new ThemeData(primaryColor: getColor(color)),
-                      );
-                    }),
+                title: Column(
+                  crossAxisAlignment: CrossAxisAlignment.start,
+                  mainAxisAlignment: MainAxisAlignment.start,
+                  children: <Widget>[
+                    new ColorBoxGroup(
+                        width: 25.0,
+                        height: 25.0,
+                        spacing: 10.0,
+                        colors: [
+                          themeData.textTheme.display1.color,
+                          Colors.red,
+                          Colors.orange,
+                          Colors.green,
+                          Colors.purple,
+                          Colors.blue,
+                          Colors.yellow,
+                        ],
+                        groupValue: widget.activeColor,
+                        onTap: (color) {
+                          DynamicTheme.of(context).setThemeData(
+                            new ThemeData(primaryColor: getColor(color)),
+                          );
+                        }),
+                    Padding(
+                      padding: const EdgeInsets.only(top: 8.0),
+                      child: Text(
+                        "Select Theme Color...",
+                      ),
+                    )
+                  ],
+                ),
               )
             ],
           ),

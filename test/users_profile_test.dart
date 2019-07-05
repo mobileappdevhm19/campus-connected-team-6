@@ -1,5 +1,5 @@
 import 'package:flutter/material.dart';
-import 'package:flutter_campus_connected/models/user_entity.dart';
+import 'package:flutter_campus_connected/models/user_model.dart';
 import 'package:flutter_campus_connected/pages/users_profile.dart';
 import 'package:flutter_test/flutter_test.dart';
 
@@ -8,13 +8,24 @@ import 'test_helper.dart';
 void main() {
   group('usersProfile test', () {
     test('UserEntity test', () {
-      final entity = UserEntity('test', 'test.png', 'test@test.com', '25',
-          'FK 07', 'HM Student living in Munich', null);
+      final entity = UserModel(
+        displayName: 'test',
+        photoUrl: 'test.png',
+        email: 'test@test.com',
+        age: '25',
+        faculty: 'FK 07',
+        biography: 'HM Student living in Munich',
+        isEmailVerified: true,
+        uid: null,
+      );
       expect(entity, isNotNull);
       expect(entity.photoUrl, isNotEmpty);
       expect(entity.email, isNotEmpty);
       expect(entity.displayName, isNotEmpty);
-      expect(entity.data, isNull);
+      expect(entity.isEmailVerified, true);
+      expect(entity.uid, isNull);
+      expect(entity.faculty, isNotEmpty);
+      expect(entity.biography, isNotEmpty);
     });
 
     testWidgets('widgets test', (WidgetTester tester) async {
@@ -55,8 +66,16 @@ void main() {
           of: find.byType(StreamBuilder), matching: find.byType(ListView));
       expect(findListView, findsNothing);
 
-      final entity = UserEntity('test', 'test.png', 'test@test.com', '25',
-          'FK 07', 'HM Student living in Munich', null);
+      final entity = UserModel(
+        displayName: 'test',
+        photoUrl: 'test.png',
+        email: 'test@test.com',
+        age: '25',
+        faculty: 'FK 07',
+        biography: 'HM Student living in Munich',
+        isEmailVerified: true,
+        uid: 'a5sf4a5f45v',
+      );
       var item = state.getItemList(entity, 1, context);
       expect(item != null, true);
 
@@ -83,6 +102,7 @@ void main() {
       expect(bt, findsOneWidget);
 
       await tester.tap(bt);
+      await tester.enterText(find.byType(TextField), "123456789");
       await tester.pump();
     });
   });

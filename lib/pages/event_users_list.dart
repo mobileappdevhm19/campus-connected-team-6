@@ -2,7 +2,7 @@ import 'package:cached_network_image/cached_network_image.dart';
 import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/material.dart';
-import 'package:flutter_campus_connected/models/user_entity.dart';
+import 'package:flutter_campus_connected/models/user_model.dart';
 import 'package:flutter_campus_connected/pages/usersProfileDetails.dart';
 import 'package:flutter_campus_connected/utils/screen_aware_size.dart';
 
@@ -54,14 +54,15 @@ class EventUsersList extends StatelessWidget {
         if (snapshot.connectionState == ConnectionState.waiting) {
           return Container();
         }
-        final entity = UserEntity(
-            snapshot.data.documents[0]['displayName'],
-            snapshot.data.documents[0]['photoUrl'],
-            snapshot.data.documents[0]['email'],
-            snapshot.data.documents[0]['age'],
-            snapshot.data.documents[0]['faculty'],
-            snapshot.data.documents[0]['biography'],
-            snapshot.data.documents[0]);
+        final entity = UserModel(
+            displayName: snapshot.data.documents[0]['displayName'],
+            photoUrl: snapshot.data.documents[0]['photoUrl'],
+            email: snapshot.data.documents[0]['email'],
+            age: snapshot.data.documents[0]['age'],
+            faculty: snapshot.data.documents[0]['faculty'],
+            biography: snapshot.data.documents[0]['biography'],
+            isEmailVerified: snapshot.data.documents[0]['isEmailVerified'],
+            uid: snapshot.data.documents[0]['uid']);
         return !(snapshot.hasData && snapshot.data.documents.length == 0)
             ? ListTile(
                 title: Text(
@@ -98,10 +99,10 @@ class EventUsersList extends StatelessWidget {
     );
   }
 
-  void tapOnItem(BuildContext context, UserEntity entity) {
+  void tapOnItem(BuildContext context, UserModel entity) {
     Navigator.of(context).push(MaterialPageRoute(builder: (context) {
       return UsersProfileDetails(
-        details: entity.data,
+        details: entity,
         firebaseUser: firebaseUser,
       );
     }));

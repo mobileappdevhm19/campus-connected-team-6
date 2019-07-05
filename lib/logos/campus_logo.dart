@@ -12,13 +12,14 @@ class CampusLogo extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     return new Scaffold(
-      body: new Stack(fit: StackFit.expand, children: <Widget>[_showLogo()]),
+      body: new Stack(
+          fit: StackFit.expand, children: <Widget>[_showLogo(context)]),
     );
   }
 
-  Widget _showLogo() {
+  Widget _showLogo(BuildContext context) {
     return new Material(
-      color: Colors.red,
+      color: Theme.of(context).primaryColor,
       child: Padding(
         padding: EdgeInsets.fromLTRB(0.0, 0.0, 0.0, 0.0),
         child: Image.asset(
