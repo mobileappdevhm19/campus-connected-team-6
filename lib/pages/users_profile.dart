@@ -2,6 +2,7 @@ import 'dart:async';
 
 import 'package:cached_network_image/cached_network_image.dart';
 import 'package:cloud_firestore/cloud_firestore.dart';
+import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_campus_connected/models/user_entity.dart';
 import 'package:flutter_campus_connected/pages/usersProfileDetails.dart';
@@ -39,7 +40,9 @@ class UsersProfileState extends State<UsersProfile> {
               .contains(value.toLowerCase()) ||
           element.data['email'].toLowerCase().contains(value.toLowerCase())) {
         counter++;
-        tempSearchStore.add(element);
+        if (element.data['isEmailVerified']) {
+          tempSearchStore.add(element);
+        }
       }
     });
     if (counter == 0) {
@@ -59,7 +62,9 @@ class UsersProfileState extends State<UsersProfile> {
 
   void initQueryResultSet(QuerySnapshot docs) {
     for (int i = 0; i < docs.documents.length; i++) {
-      queryResultSet.add(docs.documents[i]);
+      if (docs.documents[i].data['isEmailVerified']) {
+        queryResultSet.add(docs.documents[i]);
+      }
     }
     _profileController.add(queryResultSet);
   }
