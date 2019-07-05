@@ -11,8 +11,13 @@ void main() {
 
 
 
-    final iconTest = find.byIcon(Icons.arrow_back_ios);
-    expect(iconTest, findsOneWidget);
+    final iconArrow = find.byIcon(Icons.arrow_back_ios);
+    expect(iconArrow, findsOneWidget);
+
+
+    final textOne = find.text("Interested People");
+    expect(textOne, findsOneWidget);
+
 
 
   });
