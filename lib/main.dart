@@ -4,16 +4,19 @@ import 'package:flutter/services.dart';
 import 'package:flutter_campus_connected/pages/password_reset.dart';
 
 import 'package:flutter_campus_connected/services/authentication.dart';
+import 'package:shared_preferences/shared_preferences.dart';
 import 'pages/create_event.dart';
 import 'pages/dashboard.dart';
 import 'pages/login_signup_page.dart';
 import 'pages/profile.dart';
-import 'pages/search_events.dart';
 import 'pages/signup_page.dart';
 import 'pages/users_profile.dart';
 import 'root_page.dart';
+import 'package:dynamic_theme/dynamic_theme.dart';
 
-void main() => runApp(MyApp());
+Future main() async {
+  runApp(new MyApp());
+}
 
 class MyApp extends StatelessWidget {
   @override
@@ -22,26 +25,34 @@ class MyApp extends StatelessWidget {
       DeviceOrientation.portraitUp,
       DeviceOrientation.portraitDown,
     ]);
-    SystemChrome.setSystemUIOverlayStyle(SystemUiOverlayStyle(
-      statusBarColor: Colors.red, // status bar color
-    ));
-    return new MaterialApp(
-      title: 'Campus Connected',
-      debugShowCheckedModeBanner: false,
-      routes: <String, WidgetBuilder>{
-        '/login': (BuildContext context) => new LoginSignUpPage(),
-        '/dashboard': (BuildContext context) => new Dashboard(),
-        '/createevent': (BuildContext context) => new CreateEvent(),
-        '/signup': (BuildContext context) => new SignUpPage(),
-        '/home': (BuildContext context) => new MyHomePage(),
-        '/logout': (BuildContext context) => new LoginSignUpPage(),
-        '/home': (BuildContext context) => new MyHomePage(),
-        '/passwordreset': (BuildContext context) => new PasswordResetPage(),
+    return new DynamicTheme(
+      defaultBrightness: Brightness.light,
+      data: (brightness) => new ThemeData(
+            primarySwatch: Colors.red,
+            brightness: brightness,
+            accentColor: Colors.redAccent,
+          ),
+      themedWidgetBuilder: (context, theme) {
+        SystemChrome.setSystemUIOverlayStyle(SystemUiOverlayStyle(
+          statusBarColor: Colors.red, // status bar color
+        ));
+        return new MaterialApp(
+          title: 'Campus Connected',
+          debugShowCheckedModeBanner: false,
+          routes: <String, WidgetBuilder>{
+            '/login': (BuildContext context) => new LoginSignUpPage(),
+            '/dashboard': (BuildContext context) => new Dashboard(),
+            '/createevent': (BuildContext context) => new CreateEvent(),
+            '/signup': (BuildContext context) => new SignUpPage(),
+            '/home': (BuildContext context) => new MyHomePage(),
+            '/logout': (BuildContext context) => new LoginSignUpPage(),
+            '/home': (BuildContext context) => new MyHomePage(),
+            '/passwordreset': (BuildContext context) => new PasswordResetPage(),
+          },
+          theme: theme,
+          home: new RootPage(),
+        );
       },
-      theme: new ThemeData(
-        primarySwatch: Colors.red,
-      ),
-      home: new RootPage(),
     );
   }
 }

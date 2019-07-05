@@ -50,7 +50,7 @@ class UsersProfileDetailsPageState extends State<UsersProfileDetails> {
             Align(
               alignment: Alignment.centerLeft,
               child: Container(
-                color: Colors.red,
+                //color: Colors.red,
                 child: Row(
                   mainAxisAlignment: MainAxisAlignment.center,
                   children: <Widget>[
@@ -191,7 +191,7 @@ class UsersProfileDetailsPageState extends State<UsersProfileDetails> {
   //users's photo, name , email
   Container topPart(BuildContext context) {
     return Container(
-      color: Colors.red,
+      //color: Colors.red,
       height: MediaQuery.of(context).size.height / 3,
       child: Center(
         child: StreamBuilder(
@@ -285,7 +285,7 @@ class UsersProfileDetailsPageState extends State<UsersProfileDetails> {
             fontSize: textAwareSize(20, context),
             fontWeight: FontWeight.bold),
       ),
-      backgroundColor: Colors.red,
+      //backgroundColor: Colors.red,
       elevation: 0.0,
       leading: new IconButton(
         icon: new Icon(
@@ -298,7 +298,7 @@ class UsersProfileDetailsPageState extends State<UsersProfileDetails> {
       ),
       bottom: PreferredSize(
         child: Container(
-          color: Colors.red,
+          //color: Colors.red,
           height: (MediaQuery.of(context).size.height / ratio) - 14,
           child: Column(
             mainAxisAlignment: MainAxisAlignment.center,

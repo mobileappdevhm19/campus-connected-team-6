@@ -116,7 +116,7 @@ class ProfilePageState extends State<ProfilePage>
             fontSize: textAwareSize(20, context),
             fontWeight: FontWeight.bold),
       ),
-      backgroundColor: Colors.red,
+      //backgroundColor: Colors.red,
       elevation: 0.0,
       leading: new IconButton(
         icon: new Icon(
@@ -132,7 +132,7 @@ class ProfilePageState extends State<ProfilePage>
       ],
       bottom: PreferredSize(
         child: Container(
-          color: Colors.red,
+          //color: Colors.red,
           height: (MediaQuery.of(context).size.height / ratio) - 14,
           child: Column(
             mainAxisAlignment: MainAxisAlignment.center,
@@ -198,11 +198,11 @@ class ProfilePageState extends State<ProfilePage>
         'Edit',
         style: TextStyle(
             color: Colors.white,
-            fontSize: screenAwareSize(20, context),
+            fontSize: textAwareSize(20, context),
             fontWeight: FontWeight.bold,
             letterSpacing: 1),
       ),
-      color: Colors.red,
+      //color: Colors.red,
       onPressed: () {
         Navigator.of(context).push(MaterialPageRoute(builder: (context) {
           _userEntity.displayName = displayName;
@@ -263,14 +263,14 @@ class ProfilePageState extends State<ProfilePage>
           item.eventName,
           maxLines: 1,
           overflow: TextOverflow.ellipsis,
-          style: TextStyle(fontSize: 20),
+          style: TextStyle(fontSize: textAwareSize(20, context)),
         ),
         subtitle: Padding(
           padding: const EdgeInsets.only(top: 6.0),
           child: Text(item.eventDescription,
               maxLines: 1,
               overflow: TextOverflow.ellipsis,
-              style: TextStyle(fontSize: 16)),
+              style: TextStyle(fontSize: textAwareSize(16, context))),
         ),
         leading: Padding(
           padding: const EdgeInsets.all(2.0),
@@ -395,7 +395,8 @@ class ProfilePageState extends State<ProfilePage>
                           snapshot.data.documents[ind]['eventName'],
                           maxLines: 1,
                           overflow: TextOverflow.ellipsis,
-                          style: TextStyle(fontSize: 20),
+                          style:
+                              TextStyle(fontSize: textAwareSize(20, context)),
                         ),
                         subtitle: Padding(
                           padding: const EdgeInsets.only(top: 6.0),
@@ -403,7 +404,8 @@ class ProfilePageState extends State<ProfilePage>
                               snapshot.data.documents[ind]['eventDescription'],
                               maxLines: 1,
                               overflow: TextOverflow.ellipsis,
-                              style: TextStyle(fontSize: 16)),
+                              style: TextStyle(
+                                  fontSize: textAwareSize(16, context))),
                         ),
                         leading: Padding(
                           padding: const EdgeInsets.all(2.0),
