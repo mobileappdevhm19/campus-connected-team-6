@@ -80,9 +80,7 @@ void main() {
     expect(materialSecondRaised.shape, RoundedRectangleBorder(borderRadius: BorderRadius.circular(2.0)));
 
 
-    String msg;
-    final findText = find.text(msg);
-    expect(findText,findsOneWidget);
+
 
 
   });
