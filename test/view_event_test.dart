@@ -17,7 +17,9 @@ void main() {
 //      },
 //    );
 
+
     var event = new EventModel();
+
     event.createdBy = "XXPzw4xX8UgRx4JcqQJLFz0oUDl2";
     event.eventName = "My Event";
     event.eventDescription = "A Description";
@@ -28,6 +30,11 @@ void main() {
         "https://firebasestorage.googleapis.com/v0/b/campus-connected.appspot.com/o/eventImage-2023-9283-9263.jpg?alt=media&token=1b6c5441-bdb9-4b94-bce8-a0f321576c8d";
     event.eventCategory = "Outdoor";
     event.maximumLimit = 2;
+
+
+
+//    final editText = find.text('Delete Event');
+//    expect(editText, findsOneWidget);
 
 //    await tester.pumpWidget(TestHelper.buildPage(EventView(event, null)));
 //
