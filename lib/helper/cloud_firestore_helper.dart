@@ -15,7 +15,8 @@ class FireCloudStoreHelper {
       'email': user.email,
       'uid': user.uid,
       'displayName': user.displayName,
-      'photoUrl': user.photoUrl
+      'photoUrl': user.photoUrl,
+      'isEmailVerified': user.isEmailVerified
     });
     if (result.documentID != null) {
       return true;
