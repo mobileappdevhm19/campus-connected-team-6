@@ -3,9 +3,9 @@
 
 
 ## Campus Connected
-#### Hochschule München - Mobile Anwendungen - Team 6
+#### University of applied Sciences Munich - Mobile Applications - Team 6
 
-This Application is ideally meant to bring students from the University of applied Sciences together through Events which are organized only by Students and for Students for all Faculties. The use of this app is entirely Free. A HM mail account is necessary for using this app.
+This Application is ideally meant to bring students from the University of applied Sciences Munich together through Events which are organized only by Students and for Students for all Faculties. The use of this app is entirely Free. A HM mail account is necessary for using this app.
 
 Have any **Feature Request**? [click here for request a Feature](https://github.com/mobileappdevhm19/campus-connected-team-6/blob/master/.github/ISSUE_TEMPLATE/feature_request.md) or have found any **bugs**? [Please report it using this template](https://github.com/mobileappdevhm19/campus-connected-team-6/blob/master/.github/ISSUE_TEMPLATE/bug_report.md)
 
