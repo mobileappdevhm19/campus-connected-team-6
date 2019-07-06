@@ -98,24 +98,30 @@ class _SignUpPageState extends State<SignUpPage>
     return new Scaffold(
       key: _scaffoldKey,
       body: SingleChildScrollView(
-        child: Container(
-          height: MediaQuery.of(context).size.height,
-          width: MediaQuery.of(context).size.width,
-          decoration: BoxDecoration(
-              gradient: LinearGradient(colors: [Colors.red, Colors.redAccent])),
+        child: Theme(
+          data: ThemeData(
+            primaryColor: Theme.of(context).primaryColor,
+          ),
           child: Container(
-            child: Stack(
-              alignment: Alignment.topCenter,
-              children: <Widget>[
-                Align(
-                  child: _showCircularProgressIndicator(),
-                  alignment: Alignment.bottomCenter,
-                ),
-                Positioned(
-                    width: MediaQuery.of(context).size.width - 30,
-                    top: MediaQuery.of(context).size.height * 0.20,
-                    child: _showBody()),
-              ],
+            height: MediaQuery.of(context).size.height,
+            width: MediaQuery.of(context).size.width,
+            decoration: BoxDecoration(
+                gradient:
+                    LinearGradient(colors: [Colors.red, Colors.redAccent])),
+            child: Container(
+              child: Stack(
+                alignment: Alignment.topCenter,
+                children: <Widget>[
+                  Align(
+                    child: _showCircularProgressIndicator(),
+                    alignment: Alignment.bottomCenter,
+                  ),
+                  Positioned(
+                      width: MediaQuery.of(context).size.width - 30,
+                      top: MediaQuery.of(context).size.height * 0.20,
+                      child: _showBody()),
+                ],
+              ),
             ),
           ),
         ),
@@ -158,7 +164,8 @@ class _SignUpPageState extends State<SignUpPage>
                   displayName: _name,
                   biography: "",
                   age: _age,
-                  uid: currentUser.uid);
+                  uid: currentUser.uid,
+                  isEmailVerified: currentUser.isEmailVerified);
 
               var result = await cloudhelper.storeNewUser(_userModel);
               if (result) {

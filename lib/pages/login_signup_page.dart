@@ -86,30 +86,35 @@ class _LoginSignUpPageState extends State<LoginSignUpPage>
   Widget build(BuildContext context) {
     return WillPopScope(
       onWillPop: () => SystemNavigator.pop(),
-      child: Scaffold(
-        key: _scaffoldKey,
-        body: SingleChildScrollView(
-          child: Container(
-            height: MediaQuery.of(context).size.height,
-            width: MediaQuery.of(context).size.width,
-            decoration: BoxDecoration(
-                gradient:
-                    LinearGradient(colors: [Colors.red, Colors.redAccent])),
-            child: Stack(
-              alignment: Alignment.topCenter,
-              children: <Widget>[
-                Align(
-                  child: _showCircularProgressIndicator(),
-                  alignment: Alignment.bottomCenter,
-                ),
-                Positioned(
-                    top: MediaQuery.of(context).size.height * 0.12,
-                    child: _showLogo()),
-                Positioned(
-                    width: MediaQuery.of(context).size.width - 30,
-                    top: MediaQuery.of(context).size.height * 0.35,
-                    child: _showBody()),
-              ],
+      child: Theme(
+        data: ThemeData(
+          primaryColor: Theme.of(context).primaryColor,
+        ),
+        child: Scaffold(
+          key: _scaffoldKey,
+          body: SingleChildScrollView(
+            child: Container(
+              height: MediaQuery.of(context).size.height,
+              width: MediaQuery.of(context).size.width,
+              decoration: BoxDecoration(
+                  gradient:
+                      LinearGradient(colors: [Colors.red, Colors.redAccent])),
+              child: Stack(
+                alignment: Alignment.topCenter,
+                children: <Widget>[
+                  Align(
+                    child: _showCircularProgressIndicator(),
+                    alignment: Alignment.bottomCenter,
+                  ),
+                  Positioned(
+                      top: MediaQuery.of(context).size.height * 0.12,
+                      child: _showLogo()),
+                  Positioned(
+                      width: MediaQuery.of(context).size.width - 30,
+                      top: MediaQuery.of(context).size.height * 0.35,
+                      child: _showBody()),
+                ],
+              ),
             ),
           ),
         ),
@@ -179,6 +184,7 @@ class _LoginSignUpPageState extends State<LoginSignUpPage>
         child: new Form(
       key: _formKey,
       child: Card(
+        color: Colors.white,
         elevation: 10,
         shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(10)),
         child: Column(

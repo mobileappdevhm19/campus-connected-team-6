@@ -39,7 +39,7 @@ class UserModel {
     data['age'] = this.age;
     data['faculty'] = this.faculty;
     data['biography'] = this.biography;
-    data['isEmailVerified'] = this.isEmailVerified == true ? 'true' : 'false';
+    data['isEmailVerified'] = this.isEmailVerified;
     return data;
   }
 }

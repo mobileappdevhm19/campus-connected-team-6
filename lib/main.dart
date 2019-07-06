@@ -4,7 +4,6 @@ import 'package:flutter/services.dart';
 import 'package:flutter_campus_connected/pages/password_reset.dart';
 
 import 'package:flutter_campus_connected/services/authentication.dart';
-import 'package:shared_preferences/shared_preferences.dart';
 import 'pages/create_event.dart';
 import 'pages/dashboard.dart';
 import 'pages/login_signup_page.dart';
@@ -19,6 +18,8 @@ Future main() async {
 }
 
 class MyApp extends StatelessWidget {
+  final Brightness brightness = Brightness.light;
+  MyApp({Brightness brightness});
   @override
   Widget build(BuildContext context) {
     SystemChrome.setPreferredOrientations([
@@ -34,7 +35,7 @@ class MyApp extends StatelessWidget {
           ),
       themedWidgetBuilder: (context, theme) {
         SystemChrome.setSystemUIOverlayStyle(SystemUiOverlayStyle(
-          statusBarColor: Colors.red, // status bar color
+          statusBarColor: theme.primaryColor, // status bar color
         ));
         return new MaterialApp(
           title: 'Campus Connected',
@@ -42,7 +43,6 @@ class MyApp extends StatelessWidget {
           routes: <String, WidgetBuilder>{
             '/login': (BuildContext context) => new LoginSignUpPage(),
             '/dashboard': (BuildContext context) => new Dashboard(),
-            '/createevent': (BuildContext context) => new CreateEvent(),
             '/signup': (BuildContext context) => new SignUpPage(),
             '/home': (BuildContext context) => new MyHomePage(),
             '/logout': (BuildContext context) => new LoginSignUpPage(),
@@ -71,8 +71,6 @@ class _MyHomePageState extends State<MyHomePage> {
   int currentTab = 0;
 
   Dashboard dashboard;
-
-  //SearchEvent searchEvent;
   UsersProfile usersProfile;
   CreateEvent createEvent;
   ProfilePage profilePage;

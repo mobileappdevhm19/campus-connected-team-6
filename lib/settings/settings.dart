@@ -1,5 +1,6 @@
 import 'package:dynamic_theme/dynamic_theme.dart';
 import 'package:flutter/material.dart';
+import 'package:flutter/services.dart';
 
 import 'package:flutter_campus_connected/settings/color_box.dart';
 import 'package:flutter_campus_connected/utils/screen_aware_size.dart';
@@ -24,14 +25,20 @@ class SettingPage extends StatefulWidget {
 class SettingPageState extends State<SettingPage> {
   bool _value = false;
 
-  void _onChanged(bool value) {
+  void _onChanged(bool value) async {
     setState(() {
       _value = value;
     });
-    DynamicTheme.of(context).setBrightness(
-        Theme.of(context).brightness == Brightness.dark
+    await DynamicTheme.of(context)
+        .setBrightness(Theme.of(context).brightness == Brightness.dark
             ? Brightness.light
-            : Brightness.dark);
+            : Brightness.dark)
+        .then((data) => SystemChrome.setSystemUIOverlayStyle(
+            SystemUiOverlayStyle(
+                statusBarColor: DynamicTheme.of(context)
+                    .data
+                    .primaryColor, // status bar color
+                statusBarBrightness: Brightness.light)));
   }
 
   @override
@@ -79,6 +86,12 @@ class SettingPageState extends State<SettingPage> {
                           DynamicTheme.of(context).setThemeData(
                             new ThemeData(primaryColor: getColor(color)),
                           );
+                          SystemChrome.setSystemUIOverlayStyle(
+                              SystemUiOverlayStyle(
+                            statusBarColor: DynamicTheme.of(context)
+                                .data
+                                .primaryColor, // status bar color
+                          ));
                         }),
                     Padding(
                       padding: const EdgeInsets.only(top: 8.0),

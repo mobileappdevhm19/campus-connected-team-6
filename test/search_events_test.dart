@@ -22,7 +22,7 @@ void main() {
   testWidgets("Search Events Page wird getestet", (WidgetTester tester) async {
     await tester.pumpWidget(TestHelper.buildPage(SearchEvent()));
 
-    final totalParticipants = find.text("Search...");
+    final totalParticipants = find.text("Search Events...");
     expect(totalParticipants, findsOneWidget);
 
     final findEventTime = find.byIcon(Icons.search);

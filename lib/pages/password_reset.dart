@@ -1,7 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_campus_connected/services/authentication.dart';
 import 'package:flutter_campus_connected/logos/login_logo.dart';
-import 'package:flutter_campus_connected/pages/welcome_page.dart';
 import 'package:flutter_campus_connected/utils/screen_aware_size.dart';
 
 class PasswordResetPage extends StatefulWidget {
@@ -75,26 +74,32 @@ class _PasswordResetPageState extends State<PasswordResetPage> {
     return new Scaffold(
       key: _scaffoldKey,
       body: SingleChildScrollView(
-        child: Container(
-          height: MediaQuery.of(context).size.height,
-          width: MediaQuery.of(context).size.width,
-          decoration: BoxDecoration(
-              gradient: LinearGradient(colors: [Colors.red, Colors.redAccent])),
-          child: Stack(
-            alignment: Alignment.topCenter,
-            children: <Widget>[
-              Align(
-                child: _showCircularProgressIndicator(),
-                alignment: Alignment.bottomCenter,
-              ),
-              Positioned(
-                  top: MediaQuery.of(context).size.height * 0.12,
-                  child: _showLogo()),
-              Positioned(
-                  width: MediaQuery.of(context).size.width - 30,
-                  top: MediaQuery.of(context).size.height * 0.35,
-                  child: _showBody()),
-            ],
+        child: Theme(
+          data: ThemeData(
+            primaryColor: Theme.of(context).primaryColor,
+          ),
+          child: Container(
+            height: MediaQuery.of(context).size.height,
+            width: MediaQuery.of(context).size.width,
+            decoration: BoxDecoration(
+                gradient:
+                    LinearGradient(colors: [Colors.red, Colors.redAccent])),
+            child: Stack(
+              alignment: Alignment.topCenter,
+              children: <Widget>[
+                Align(
+                  child: _showCircularProgressIndicator(),
+                  alignment: Alignment.bottomCenter,
+                ),
+                Positioned(
+                    top: MediaQuery.of(context).size.height * 0.12,
+                    child: _showLogo()),
+                Positioned(
+                    width: MediaQuery.of(context).size.width - 30,
+                    top: MediaQuery.of(context).size.height * 0.35,
+                    child: _showBody()),
+              ],
+            ),
           ),
         ),
       ),
