@@ -111,7 +111,7 @@ class EventUsersList extends StatelessWidget {
   //app bar
   AppBar appBar(BuildContext context) {
     return AppBar(
-      backgroundColor: Colors.red,
+      //backgroundColor: Colors.red,
       elevation: 0.0,
       leading: new IconButton(
         icon: new Icon(
@@ -124,97 +124,5 @@ class EventUsersList extends StatelessWidget {
       ),
       title: new Text('Interested People'),
     );
-  }
-
-  //TODO: remove later
-  //for showign user information on dialog
-  void _showAlertDialouge(name, email, context) {
-    showDialog(
-        context: context,
-        builder: (BuildContext context) {
-          return AlertDialog(
-            shape: RoundedRectangleBorder(
-                borderRadius: BorderRadius.all(Radius.circular(12.0))),
-            content: Column(
-              mainAxisSize: MainAxisSize.min,
-              mainAxisAlignment: MainAxisAlignment.center,
-              children: <Widget>[
-                SizedBox(height: screenAwareSize(10, context)),
-                Text(
-                  'Participant Information',
-                  style: TextStyle(
-                      color: Colors.black87,
-                      fontSize: screenAwareSize(20, context)),
-                ),
-                SizedBox(height: screenAwareSize(10, context)),
-                Padding(
-                  padding: EdgeInsets.all(screenAwareSize(8.0, context)),
-                  child: Row(
-                    mainAxisAlignment: MainAxisAlignment.start,
-                    mainAxisSize: MainAxisSize.max,
-                    children: <Widget>[
-                      Icon(
-                        Icons.person,
-                        color: Colors.green,
-                      ),
-                      SizedBox(
-                        width: screenAwareSize(10, context),
-                      ),
-                      Text(
-                        name,
-                        style: TextStyle(
-                            color: Colors.black87,
-                            fontSize: screenAwareSize(16, context)),
-                      ),
-                    ],
-                  ),
-                ),
-                Padding(
-                  padding: EdgeInsets.all(screenAwareSize(8.0, context)),
-                  child: Row(
-                    mainAxisAlignment: MainAxisAlignment.start,
-                    mainAxisSize: MainAxisSize.max,
-                    children: <Widget>[
-                      Icon(
-                        Icons.email,
-                        color: Colors.green,
-                      ),
-                      SizedBox(
-                        width: screenAwareSize(10, context),
-                      ),
-                      Text(
-                        email,
-                        style: TextStyle(
-                            color: Colors.black87,
-                            fontSize: screenAwareSize(16, context)),
-                      ),
-                    ],
-                  ),
-                ),
-                SizedBox(
-                  width: screenAwareSize(10, context),
-                ),
-                Align(
-                  alignment: Alignment.center,
-                  child: RaisedButton(
-                    onPressed: () {
-                      Navigator.of(context).pop();
-                    },
-                    child: Text(
-                      'CLOSE',
-                      style: TextStyle(color: Colors.white),
-                    ),
-                    color: Colors.red,
-                    shape: RoundedRectangleBorder(
-                        borderRadius: BorderRadius.circular(10)),
-                    elevation: 6.0,
-                  ),
-                )
-              ],
-            ),
-            contentPadding: EdgeInsets.all(10),
-            titlePadding: EdgeInsets.all(20),
-          );
-        });
   }
 }

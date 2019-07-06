@@ -377,7 +377,7 @@ class ProfilePageState extends State<ProfilePage>
                 return StreamBuilder(
                   stream: Firestore.instance
                       .collection('events')
-                      //.where('documentId', isEqualTo: userEventId)
+                      .document(userEventId)
                       .snapshots(),
                   builder: (context, snapshot) {
                     if (snapshot.connectionState == ConnectionState.waiting) {
@@ -385,14 +385,12 @@ class ProfilePageState extends State<ProfilePage>
                         child: CircularProgressIndicator(),
                       );
                     }
-                    //TODO: not showing the correct participations
-                    //TODO: start
                     return Card(
                       margin: EdgeInsets.all(6.0),
                       elevation: 3.0,
                       child: ListTile(
                         title: Text(
-                          snapshot.data.documents[ind]['eventName'],
+                          snapshot.data['eventName'],
                           maxLines: 1,
                           overflow: TextOverflow.ellipsis,
                           style:
@@ -400,8 +398,7 @@ class ProfilePageState extends State<ProfilePage>
                         ),
                         subtitle: Padding(
                           padding: const EdgeInsets.only(top: 6.0),
-                          child: Text(
-                              snapshot.data.documents[ind]['eventDescription'],
+                          child: Text(snapshot.data['eventDescription'],
                               maxLines: 1,
                               overflow: TextOverflow.ellipsis,
                               style: TextStyle(
@@ -410,23 +407,31 @@ class ProfilePageState extends State<ProfilePage>
                         leading: Padding(
                           padding: const EdgeInsets.all(2.0),
                           child: Hero(
-                              tag: snapshot.data.documents[ind].documentID,
+                              tag: snapshot.data.documentID,
                               child: ClipRRect(
                                 borderRadius: BorderRadius.circular(6),
                                 child: SizedBox(
                                   width: screenAwareSize(80, context),
                                   height: screenAwareSize(60, context),
-                                  child: CachedNetworkImage(
-                                    imageUrl: snapshot.data.documents[ind]
-                                        ['eventPhotoUrl'],
-                                    fit: BoxFit.cover,
-                                    placeholder: (context, url) => Image.asset(
-                                          'assets/loadingfailed.png',
+                                  child: (snapshot.data['eventPhotoUrl'] ==
+                                          'assets/gallery.png')
+                                      ? Image(
+                                          image:
+                                              AssetImage('assets/gallery.png'),
                                           fit: BoxFit.cover,
+                                        )
+                                      : CachedNetworkImage(
+                                          imageUrl:
+                                              snapshot.data['eventPhotoUrl'],
+                                          fit: BoxFit.cover,
+                                          placeholder: (context, url) =>
+                                              Image.asset(
+                                                'assets/loadingfailed.png',
+                                                fit: BoxFit.cover,
+                                              ),
+                                          errorWidget: (context, url, error) =>
+                                              new Icon(Icons.error),
                                         ),
-                                    errorWidget: (context, url, error) =>
-                                        new Icon(Icons.error),
-                                  ),
                                 ),
                               )),
                         ),
@@ -442,7 +447,7 @@ class ProfilePageState extends State<ProfilePage>
                                   Navigator.of(context).push(
                                       new MaterialPageRoute(builder: (context) {
                                     return EventView(
-                                      snapshot.data.documents[ind],
+                                      snapshot.data,
                                       widget.firebaseUser,
                                     );
                                   }));
@@ -452,8 +457,6 @@ class ProfilePageState extends State<ProfilePage>
                         onTap: () {},
                       ),
                     );
-
-                    //TODO: end
                   },
                 );
               },

@@ -3,6 +3,7 @@ import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
+import 'package:flutter_campus_connected/pages/search_events.dart';
 import 'package:flutter_campus_connected/services/authentication.dart';
 import 'package:flutter_campus_connected/logos/campus_logo.dart';
 import 'package:flutter_campus_connected/models/dashboard_item.dart';
@@ -23,11 +24,17 @@ class Dashboard extends StatefulWidget {
 
 class DashboardState extends State<Dashboard> {
   FirebaseUser firebaseUser;
-  String email = '';
   Auth auth = new Auth();
   EventModel eventModel;
 
   bool isLoggedIn = false;
+  Icon actionIcon = new Icon(Icons.search);
+  Widget appBarTitle = Text('Campus Connected');
+  var queryResultSet = [];
+  var tempSearchStore = [];
+  final CollectionReference collectionReference =
+      Firestore.instance.collection("events");
+  bool onSearchState = false;
 
   //to check if a user logged in or not , it will call from initState
   checkIsLoggedIn() async {
@@ -53,6 +60,11 @@ class DashboardState extends State<Dashboard> {
         firebaseUser = user;
       });
     });
+    collectionReference.getDocuments().then((QuerySnapshot docs) {
+      for (int i = 0; i < docs.documents.length; i++) {
+        queryResultSet.add(docs.documents[i]);
+      }
+    });
   }
 
   @override
@@ -65,13 +77,122 @@ class DashboardState extends State<Dashboard> {
   @override
   Widget build(BuildContext context) {
     return WillPopScope(
-      onWillPop: () => _exitApp(context),
+      onWillPop: () {
+        onSearchState
+            ? Navigator.of(context).pushReplacementNamed('/home')
+            : _exitApp(context);
+      },
       child: Scaffold(
         key: scaffoldKey,
         appBar: appBar(context),
         drawer: getDrawer(context),
-        body: getBody(context),
+        //body: getBody(context),
+        body: onSearchState ? getSearchList(tempSearchStore) : getBody(context),
       ),
+    );
+  }
+
+  //first we will fetch data from the firebase and will store in queryResultSet and then we can filterout data from queryResultSet list and store in
+  // tempsearchStore list and will show the data from tempsearchstore list
+  initialSearch(value) {
+    var counter = 0;
+    if (value.length == 0) {
+      setState(() {
+        tempSearchStore = [];
+      });
+      return;
+    }
+
+    tempSearchStore = [];
+    queryResultSet.forEach((element) {
+      if (element.data['eventName']
+              .toLowerCase()
+              .contains(value.toLowerCase()) ||
+          element.data['eventDescription']
+              .toLowerCase()
+              .contains(value.toLowerCase()) ||
+          element.data['eventLocation']
+              .toLowerCase()
+              .contains(value.toLowerCase()) ||
+          element.data['eventCategory']
+              .toLowerCase()
+              .contains(value.toLowerCase())) {
+        counter++;
+        setState(() {
+          tempSearchStore.add(element);
+        });
+      }
+    });
+    if (counter == 0) {
+      setState(() {
+        tempSearchStore = [];
+      });
+    }
+  }
+
+  Container getSearchList(snapshot) {
+    return Container(
+      child: ListView.builder(
+          itemCount: snapshot.length,
+          itemBuilder: (context, index) {
+            return Card(
+              shape: RoundedRectangleBorder(
+                  borderRadius: BorderRadius.circular(6)),
+              margin: EdgeInsets.all(6.0),
+              elevation: 3.0,
+              child: ListTile(
+                title: Text(
+                  snapshot[index]['eventName'],
+                  style: TextStyle(fontSize: 20),
+                  maxLines: 1,
+                  overflow: TextOverflow.ellipsis,
+                ),
+                subtitle: Padding(
+                  padding: const EdgeInsets.only(top: 6.0),
+                  child: Text(
+                    snapshot[index]['eventDescription'],
+                    style: TextStyle(fontSize: 16),
+                    maxLines: 1,
+                    overflow: TextOverflow.ellipsis,
+                  ),
+                ),
+                leading: Padding(
+                  padding: const EdgeInsets.all(2.0),
+                  child: Hero(
+                      tag: snapshot[index].documentID,
+                      child: ClipRRect(
+                        borderRadius: BorderRadius.circular(6),
+                        child: SizedBox(
+                          width: screenAwareSize(80, context),
+                          height: screenAwareSize(60, context),
+                          child: snapshot[index]['eventPhotoUrl'] ==
+                                  'assets/gallery.png'
+                              ? Image(
+                                  image: AssetImage('assets/gallery.png'),
+                                  fit: BoxFit.cover,
+                                )
+                              : CachedNetworkImage(
+                                  imageUrl: snapshot[index]['eventPhotoUrl'],
+                                  fit: BoxFit.cover,
+                                  placeholder: (context, url) => Image.asset(
+                                        'assets/loadingfailed.png',
+                                        fit: BoxFit.cover,
+                                      ),
+                                  errorWidget: (context, url, error) =>
+                                      new Icon(Icons.error),
+                                ),
+                        ),
+                      )),
+                ),
+                onTap: () {
+                  Navigator.of(context)
+                      .push(new MaterialPageRoute(builder: (context) {
+                    return EventView(snapshot[index], firebaseUser);
+                  }));
+                },
+              ),
+            );
+          }),
     );
   }
 
@@ -213,15 +334,45 @@ class DashboardState extends State<Dashboard> {
   //appBar
   AppBar appBar(BuildContext context) {
     return AppBar(
-      title: Text('Campus Connected'),
+      centerTitle: true,
+      title: appBarTitle,
       actions: <Widget>[
+        IconButton(
+          icon: actionIcon,
+          onPressed: () {
+            setState(() {
+              if (actionIcon.icon == Icons.search) {
+                onSearchState = true;
+                actionIcon = new Icon(Icons.close);
+                appBarTitle = new TextField(
+                  autofocus: true,
+                  style: new TextStyle(
+                    color: Colors.white,
+                  ),
+                  decoration: new InputDecoration(
+                      border: InputBorder.none,
+                      prefixIcon: new Icon(Icons.search, color: Colors.white),
+                      hintText: "Search events...",
+                      hintStyle: new TextStyle(color: Colors.white)),
+                  onChanged: (value) {
+                    initialSearch(value.trim());
+                  },
+                );
+              } else {
+                onSearchState = false;
+                actionIcon = new Icon(Icons.search);
+                appBarTitle = new Text("Campus Connected");
+              }
+            });
+          },
+        ),
         IconButton(
           icon: Icon(Icons.settings),
           onPressed: () {
             Navigator.of(context).push(new MaterialPageRoute(
                 builder: (BuildContext context) => new SettingPage()));
           },
-        )
+        ),
       ],
     );
   }
@@ -277,7 +428,6 @@ class DashboardState extends State<Dashboard> {
         ? ListTile(
             title: Text(
               item.displayName,
-              //snapshot.data.documents[0]['displayName'],
               style: TextStyle(fontSize: 18),
               maxLines: 1,
               key: Key('UserName'),

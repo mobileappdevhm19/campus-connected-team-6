@@ -15,10 +15,16 @@ import 'root_page.dart';
 import 'package:dynamic_theme/dynamic_theme.dart';
 
 Future main() async {
+//  Brightness brightness;
+//  SharedPreferences prefs = await SharedPreferences.getInstance();
+//  brightness =
+//      (prefs.getBool("isDark") ?? false) ? Brightness.dark : Brightness.light;
   runApp(new MyApp());
 }
 
 class MyApp extends StatelessWidget {
+  final Brightness brightness = Brightness.light;
+  MyApp({Brightness brightness});
   @override
   Widget build(BuildContext context) {
     SystemChrome.setPreferredOrientations([
@@ -34,7 +40,7 @@ class MyApp extends StatelessWidget {
           ),
       themedWidgetBuilder: (context, theme) {
         SystemChrome.setSystemUIOverlayStyle(SystemUiOverlayStyle(
-          statusBarColor: Colors.red, // status bar color
+          statusBarColor: theme.primaryColor, // status bar color
         ));
         return new MaterialApp(
           title: 'Campus Connected',
@@ -42,7 +48,6 @@ class MyApp extends StatelessWidget {
           routes: <String, WidgetBuilder>{
             '/login': (BuildContext context) => new LoginSignUpPage(),
             '/dashboard': (BuildContext context) => new Dashboard(),
-            '/createevent': (BuildContext context) => new CreateEvent(),
             '/signup': (BuildContext context) => new SignUpPage(),
             '/home': (BuildContext context) => new MyHomePage(),
             '/logout': (BuildContext context) => new LoginSignUpPage(),
@@ -71,8 +76,6 @@ class _MyHomePageState extends State<MyHomePage> {
   int currentTab = 0;
 
   Dashboard dashboard;
-
-  //SearchEvent searchEvent;
   UsersProfile usersProfile;
   CreateEvent createEvent;
   ProfilePage profilePage;

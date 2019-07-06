@@ -238,7 +238,6 @@ class UsersProfileDetailsPageState extends State<UsersProfileDetails> {
         Padding(
             padding: const EdgeInsets.only(top: 10.0),
             child: Text(
-              //snapshot.data.documents[0]['displayName'],
               entity.displayName,
               maxLines: 1,
               overflow: TextOverflow.ellipsis,

@@ -35,9 +35,8 @@ class UsersProfileState extends State<UsersProfile> {
     tempSearchStore = [];
     queryResultSet.forEach((element) {
       if (element.data['displayName']
-              .toLowerCase()
-              .contains(value.toLowerCase()) ||
-          element.data['email'].toLowerCase().contains(value.toLowerCase())) {
+          .toLowerCase()
+          .contains(value.toLowerCase())) {
         counter++;
         if (element.data['isEmailVerified']) {
           tempSearchStore.add(element);

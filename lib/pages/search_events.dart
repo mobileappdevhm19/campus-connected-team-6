@@ -86,7 +86,7 @@ class _SearchEventState extends State<SearchEvent> {
               decoration: new InputDecoration(
                 prefixIcon: new Icon(Icons.search),
                 border: InputBorder.none,
-                hintText: 'Search...',
+                hintText: 'Search Events...',
               ),
               onChanged: (value) {
                 initialSearch(value);
