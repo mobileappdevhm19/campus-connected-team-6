@@ -4,7 +4,6 @@ import 'package:flutter/services.dart';
 import 'package:flutter_campus_connected/pages/password_reset.dart';
 
 import 'package:flutter_campus_connected/services/authentication.dart';
-import 'package:shared_preferences/shared_preferences.dart';
 import 'pages/create_event.dart';
 import 'pages/dashboard.dart';
 import 'pages/login_signup_page.dart';
@@ -15,10 +14,6 @@ import 'root_page.dart';
 import 'package:dynamic_theme/dynamic_theme.dart';
 
 Future main() async {
-//  Brightness brightness;
-//  SharedPreferences prefs = await SharedPreferences.getInstance();
-//  brightness =
-//      (prefs.getBool("isDark") ?? false) ? Brightness.dark : Brightness.light;
   runApp(new MyApp());
 }
 
