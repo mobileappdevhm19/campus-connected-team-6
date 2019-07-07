@@ -187,7 +187,7 @@ class EditProfileState extends State<EditProfile> {
         children: <Widget>[
           SizedBox(height: screenAwareSize(10, context)),
           Text(
-            'No Internet ðŸ˜ž',
+            'No Internet 😞',
             style: TextStyle(
                 color: Colors.black87, fontSize: screenAwareSize(26, context)),
           ),
@@ -324,7 +324,7 @@ class EditProfileState extends State<EditProfile> {
         icon: new Icon(
           Icons.arrow_back_ios,
         ),
-        color: const Color(0xFFDDDDDD),
+        color: Colors.white,
         onPressed: () {
           uploadingStatus == true ? null : Navigator.of(context).pop();
         },

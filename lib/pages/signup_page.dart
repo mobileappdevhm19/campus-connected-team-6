@@ -4,6 +4,7 @@ import 'package:flutter_campus_connected/models/user_model.dart';
 import 'package:flutter_campus_connected/services/authentication.dart';
 import 'package:flutter_campus_connected/helper/cloud_firestore_helper.dart';
 import 'package:flutter_campus_connected/utils/screen_aware_size.dart';
+import 'package:flutter_markdown/flutter_markdown.dart';
 
 class SignUpPage extends StatefulWidget {
   @override
@@ -25,7 +26,39 @@ class _SignUpPageState extends State<SignUpPage>
   String _age;
   String _faculty;
   String _confirmPassword; //only for compare purpose
+  bool isChecked = false;
+  bool _termsChecked = false;
+
   UserModel _userModel;
+  Widget _md;
+
+  final String _termsAndConditionMarkdownData = """## Terms & Conditions
+
+By downloading or using the app, these terms will automatically apply to you – you should make sure therefore that you read them carefully before using the app. You’re not allowed to copy, or modify the app, any part of the app, or our trademarks in any way. You’re not allowed to attempt to extract the source code of the app, and you also shouldn’t try to translate the app into other languages, or make derivative versions. The app itself, and all the trade marks, copyright, database rights and other intellectual property rights related to it, still belong to Junior Contreras, Saif Sliti, Nihan Danis, Tamara Isaeva.
+
+Junior Contreras, Saif Sliti, Nihan Danis, Tamara Isaeva is committed to ensuring that the app is as useful and efficient as possible. For that reason, we reserve the right to make changes to the app or to charge for its services, at any time and for any reason. We will never charge you for the app or its services without making it very clear to you exactly what you’re paying for.
+
+The Campus Connected app stores and processes personal data that you have provided to us, in order to provide my Service. It’s your responsibility to keep your phone and access to the app secure. We therefore recommend that you do not jailbreak or root your phone, which is the process of removing software restrictions and limitations imposed by the official operating system of your device. It could make your phone vulnerable to malware/viruses/malicious programs, compromise your phone’s security features and it could mean that the Campus Connected app won’t work properly or at all.
+
+You should be aware that there are certain things that Junior Contreras, Saif Sliti, Nihan Danis, Tamara Isaeva will not take responsibility for. Certain functions of the app will require the app to have an active internet connection. The connection can be Wi-Fi, or provided by your mobile network provider, but Junior Contreras, Saif Sliti, Nihan Danis, Tamara Isaeva cannot take responsibility for the app not working at full functionality if you don’t have access to Wi-Fi, and you don’t have any of your data allowance left.
+
+If you’re using the app outside of an area with Wi-Fi, you should remember that your terms of the agreement with your mobile network provider will still apply. As a result, you may be charged by your mobile provider for the cost of data for the duration of the connection while accessing the app, or other third party charges. In using the app, you’re accepting responsibility for any such charges, including roaming data charges if you use the app outside of your home territory (i.e. region or country) without turning off data roaming. If you are not the bill payer for the device on which you’re using the app, please be aware that we assume that you have received permission from the bill payer for using the app.
+
+Along the same lines, Junior Contreras, Saif Sliti, Nihan Danis, Tamara Isaeva cannot always take responsibility for the way you use the app i.e. You need to make sure that your device stays charged – if it runs out of battery and you can’t turn it on to avail the Service, Junior Contreras, Saif Sliti, Nihan Danis, Tamara Isaeva cannot accept responsibility.
+
+With respect to Junior Contreras, Saif Sliti, Nihan Danis, Tamara Isaeva’s responsibility for your use of the app, when you’re using the app, it’s important to bear in mind that although we endeavour to ensure that it is updated and correct at all times, we do rely on third parties to provide information to us so that we can make it available to you. Junior Contreras, Saif Sliti, Nihan Danis, Tamara Isaeva accepts no liability for any loss, direct or indirect, you experience as a result of relying wholly on this functionality of the app.
+
+At some point, we may wish to update the app. The app is currently available on Android & iOS – the requirements for both systems (and for any additional systems we decide to extend the availability of the app to) may change, and you’ll need to download the updates if you want to keep using the app. Junior Contreras, Saif Sliti, Nihan Danis, Tamara Isaeva does not promise that it will always update the app so that it is relevant to you and/or works with the Android & iOS version that you have installed on your device. However, you promise to always accept updates to the application when offered to you, We may also wish to stop providing the app, and may terminate use of it at any time without giving notice of termination to you. Unless we tell you otherwise, upon any termination, (a) the rights and licenses granted to you in these terms will end; (b) you must stop using the app, and (if needed) delete it from your device.
+
+**Changes to This Terms and Conditions**
+
+I may update our Terms and Conditions from time to time. Thus, you are advised to review this page periodically for any changes. I will notify you of any changes by posting the new Terms and Conditions on this page. These changes are effective immediately after they are posted on this page.
+
+**Contact Us**
+
+If you have any questions or suggestions about my Terms and Conditions, do not hesitate to contact me at campus.connected.hm@hm.edu.
+
+This Terms and Conditions page was generated by [App Privacy Policy Generator](https://app-privacy-policy-generator.firebaseapp.com/)""";
 
   // Event Dropdown Categories list
   static var _categories = [
@@ -118,7 +151,7 @@ class _SignUpPageState extends State<SignUpPage>
                   ),
                   Positioned(
                       width: MediaQuery.of(context).size.width - 30,
-                      top: MediaQuery.of(context).size.height * 0.20,
+                      top: MediaQuery.of(context).size.height * 0.08,
                       child: _showBody()),
                 ],
               ),
@@ -129,10 +162,10 @@ class _SignUpPageState extends State<SignUpPage>
     );
   }
 
-  // Check if form is valid before perform login or signup
+  // Check if form is valid before perform signup
   bool _validateAndSave() {
     final form = _formKey.currentState;
-    if (form.validate()) {
+    if (form.validate() && _termsChecked) {
       FocusScope.of(context).requestFocus(new FocusNode()); //keyboard close
       form.save();
       return true;
@@ -192,7 +225,7 @@ class _SignUpPageState extends State<SignUpPage>
                               padding:
                                   EdgeInsets.all(screenAwareSize(8.0, context)),
                               child: Text(
-                                'Yeah, you have successfully created an account. ',
+                                'You have successfully created an account.',
                                 style: TextStyle(
                                     color: Colors.black87,
                                     fontSize: screenAwareSize(16, context)),
@@ -261,6 +294,9 @@ class _SignUpPageState extends State<SignUpPage>
       end: 1.0,
     ).animate(_animationController);
     _animationController.forward();
+    _md = Markdown(
+      data: _termsAndConditionMarkdownData,
+    );
   }
 
   @override
@@ -292,9 +328,11 @@ class _SignUpPageState extends State<SignUpPage>
             _showEmailInput(),
             _showPasswordInput(),
             _showConfirmPasswordInput(),
-            SizedBox(height: screenAwareSize(20, context)),
+            _showTermsAndConditionCheckbox(),
+            _showTermsAndConditionButton(),
+            SizedBox(height: screenAwareSize(10, context)),
             _showPrimaryButton(context),
-            SizedBox(height: screenAwareSize(20, context)),
+            SizedBox(height: screenAwareSize(10, context)),
             _showSecondaryButton(),
           ],
         ),
@@ -328,7 +366,7 @@ class _SignUpPageState extends State<SignUpPage>
         },
         maxLength: 30,
         maxLengthEnforced: true,
-        onSaved: (value) => _name = value,
+        onSaved: (value) => _name = value.trim(),
       ),
     );
   }
@@ -440,7 +478,7 @@ class _SignUpPageState extends State<SignUpPage>
             return 'Age should be over 16 years of old';
           }
         },
-        onSaved: (value) => _age = value,
+        onSaved: (value) => _age = value.trim(),
       ),
     );
   }
@@ -473,7 +511,7 @@ class _SignUpPageState extends State<SignUpPage>
         },
         maxLength: 30,
         maxLengthEnforced: true,
-        onSaved: (value) => _email = value,
+        onSaved: (value) => _email = value.trim(),
       ),
     );
   }
@@ -538,6 +576,42 @@ class _SignUpPageState extends State<SignUpPage>
     );
   }
 
+  Widget _showTermsAndConditionCheckbox() {
+    return Container(
+      child: CheckboxListTile(
+        activeColor: Colors.red,
+        title: Text(
+          "I agree to the Terms and Conditions",
+          style: TextStyle(fontSize: 12),
+        ),
+        value: _termsChecked,
+        onChanged: (bool value) => setState(() => _termsChecked = value),
+        subtitle: !_termsChecked
+            ? Padding(
+                padding: EdgeInsets.fromLTRB(0.0, 0, 0, 0),
+                child: Text(
+                  'Required field',
+                  style: TextStyle(color: Colors.red, fontSize: 12),
+                ),
+              )
+            : null,
+      ),
+    );
+  }
+
+  Widget _showTermsAndConditionButton() {
+    return FlatButton(
+        child: Text(
+          "Read Terms and Conditions",
+          style: TextStyle(
+            decoration: TextDecoration.underline,
+          ),
+        ),
+        onPressed: () {
+          _showInternetAlertDialogue();
+        });
+  }
+
   // submit button
   Widget _showPrimaryButton(context) {
     return SizedBox(
@@ -570,6 +644,46 @@ class _SignUpPageState extends State<SignUpPage>
         },
       ),
       alignment: Alignment.bottomCenter,
+    );
+  }
+
+  void _showInternetAlertDialogue() {
+    showDialog(
+        context: context,
+        builder: (BuildContext context) {
+          return getAlertDialog(context);
+        });
+  }
+
+  SingleChildScrollView getAlertDialog(BuildContext context) {
+    return SingleChildScrollView(
+      child: AlertDialog(
+        shape: RoundedRectangleBorder(
+            borderRadius: BorderRadius.all(Radius.circular(12.0))),
+        content: Column(
+          children: <Widget>[
+            Text(_termsAndConditionMarkdownData),
+            Align(
+              alignment: Alignment.center,
+              child: RaisedButton(
+                onPressed: () {
+                  Navigator.of(context).pop();
+                },
+                child: Text(
+                  'CLOSE',
+                  style: TextStyle(color: Colors.white),
+                ),
+                color: Colors.red,
+                shape: RoundedRectangleBorder(
+                    borderRadius: BorderRadius.circular(10)),
+                elevation: 6.0,
+              ),
+            )
+          ],
+        ),
+        contentPadding: EdgeInsets.all(10),
+        titlePadding: EdgeInsets.all(20),
+      ),
     );
   }
 }

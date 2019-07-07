@@ -5,7 +5,7 @@ import 'package:flutter_test/flutter_test.dart';
 import 'test_helper.dart';
 
 void main() {
-  testWidgets("Welcome Page wird getestet", (WidgetTester tester) async {
+  testWidgets("FAQ Page wird getestet", (WidgetTester tester) async {
     await tester.pumpWidget(TestHelper.buildPage(FAQPage()));
 
     final textFAQ = find.text("FAQ");

@@ -3,6 +3,7 @@ import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
+import 'package:flutter_campus_connected/pages/privacy_policy.dart';
 import 'package:flutter_campus_connected/pages/search_events.dart';
 import 'package:flutter_campus_connected/services/authentication.dart';
 import 'package:flutter_campus_connected/logos/campus_logo.dart';
@@ -200,6 +201,8 @@ class DashboardState extends State<Dashboard> {
     return showDialog(
           context: context,
           child: new AlertDialog(
+            shape: RoundedRectangleBorder(
+                borderRadius: BorderRadius.all(Radius.circular(12.0))),
             title: new Text('Do you want to exit this application?'),
             content: new Text('We hate to see you leave...'),
             actions: <Widget>[
@@ -236,6 +239,8 @@ class DashboardState extends State<Dashboard> {
           drawerItem(context, 'Events', Icons.event_available, 'events'),
           drawerItem(context, 'Create Events', Icons.event, 'login'),
           drawerItem(context, 'FAQ', Icons.question_answer, 'faq'),
+          drawerItem(
+              context, 'Privacy Policy', Icons.announcement, 'privacy_policy'),
           isLoggedIn
               ? drawerItem(context, 'Log Out', Icons.exit_to_app, 'logout')
               : Container(),
@@ -343,20 +348,24 @@ class DashboardState extends State<Dashboard> {
             setState(() {
               if (actionIcon.icon == Icons.search) {
                 onSearchState = true;
-                actionIcon = new Icon(Icons.close);
-                appBarTitle = new TextField(
-                  autofocus: true,
-                  style: new TextStyle(
-                    color: Colors.white,
+                actionIcon = Icon(Icons.close);
+                Container(
+                  padding: EdgeInsets.all(20),
+                  child: appBarTitle = TextField(
+                    maxLines: null,
+                    autofocus: true,
+                    style: new TextStyle(
+                      color: Colors.white,
+                    ),
+                    decoration: new InputDecoration(
+                        border: InputBorder.none,
+                        prefixIcon: new Icon(Icons.search, color: Colors.white),
+                        hintText: "Search events...",
+                        hintStyle: new TextStyle(color: Colors.white)),
+                    onChanged: (value) {
+                      initialSearch(value.trim());
+                    },
                   ),
-                  decoration: new InputDecoration(
-                      border: InputBorder.none,
-                      prefixIcon: new Icon(Icons.search, color: Colors.white),
-                      hintText: "Search events...",
-                      hintStyle: new TextStyle(color: Colors.white)),
-                  onChanged: (value) {
-                    initialSearch(value.trim());
-                  },
                 );
               } else {
                 onSearchState = false;
@@ -495,10 +504,9 @@ class DashboardState extends State<Dashboard> {
                 }))
               : Navigator.of(context).pushNamed('/login');
         } else if (route == 'faq') {
-          Navigator.of(context)
-              .push(new MaterialPageRoute(builder: (BuildContext context) {
-            return FAQPage();
-          }));
+          Navigator.of(context).pushNamed('/faq');
+        } else if (route == 'privacy_policy') {
+          Navigator.of(context).pushNamed('/privacy_policy');
         } else {
           Navigator.of(context).pop();
         }

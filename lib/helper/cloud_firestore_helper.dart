@@ -56,6 +56,10 @@ class FireCloudStoreHelper {
     eventReference.document(docId).delete().catchError((e) {
       print(e);
     });
+    //When event gets deleted -> delete all event users to prevent mal function
+    eventUserReference.where('eventId', isEqualTo: docId).snapshots().listen(
+        (data) =>
+            data.documents.forEach((doc) => deleteEventUser(doc.documentID)));
   }
 
   deleteEventUser(docId) {

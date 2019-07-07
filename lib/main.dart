@@ -1,7 +1,9 @@
 import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
+import 'package:flutter_campus_connected/pages/faq_page.dart';
 import 'package:flutter_campus_connected/pages/password_reset.dart';
+import 'package:flutter_campus_connected/pages/privacy_policy.dart';
 
 import 'package:flutter_campus_connected/services/authentication.dart';
 import 'pages/create_event.dart';
@@ -48,6 +50,8 @@ class MyApp extends StatelessWidget {
             '/logout': (BuildContext context) => new LoginSignUpPage(),
             '/home': (BuildContext context) => new MyHomePage(),
             '/passwordreset': (BuildContext context) => new PasswordResetPage(),
+            '/faq': (BuildContext context) => new FAQPage(),
+            '/privacy_policy': (BuildContext context) => new PrivacyPolicy()
           },
           theme: theme,
           home: new RootPage(),

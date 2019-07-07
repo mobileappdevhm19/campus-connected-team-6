@@ -32,7 +32,41 @@ void main() {
   });
 
   test("UserModel: parses json to user model", () {
-    //expect(UserModel.fromJson(json).displayName.toString(), "test");
-    //expect(UserModel.fromJson(json).faculty, "FK 07");
+    expect(
+        UserModel.fromJson({
+          "displayName": "test",
+          "photoUrl": "test.png",
+          "email": "test@test.com",
+          "age": "25",
+          "faculty": "FK 07",
+          "biography": "HM Student living in Munich",
+          "isEmailVerified": 'true',
+          "uid": "3MqjmE8YmjMeOZJpsWgRtUeSdx41",
+        }).displayName,
+        "test");
+    expect(
+        UserModel.fromJson({
+          "displayName": "test",
+          "photoUrl": "test.png",
+          "email": "test@test.com",
+          "age": "25",
+          "faculty": "FK 07",
+          "biography": "HM Student living in Munich",
+          "isEmailVerified": 'true',
+          "uid": "3MqjmE8YmjMeOZJpsWgRtUeSdx41",
+        }).faculty,
+        "FK 07");
+    expect(
+        UserModel.fromJson({
+          "displayName": "test",
+          "photoUrl": "test.png",
+          "email": "test@test.com",
+          "age": "25",
+          "faculty": "FK 07",
+          "biography": "HM Student living in Munich",
+          "isEmailVerified": 'true',
+          "uid": "3MqjmE8YmjMeOZJpsWgRtUeSdx41",
+        }).isEmailVerified,
+        true);
   });
 }
