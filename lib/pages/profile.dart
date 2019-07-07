@@ -335,6 +335,8 @@ class ProfilePageState extends State<ProfilePage>
     return showDialog(
           context: context,
           child: new AlertDialog(
+            shape: RoundedRectangleBorder(
+                borderRadius: BorderRadius.all(Radius.circular(12.0))),
             title: new Text('Do you want to delete this Event?'),
             content: new Text('Deleted Events can not be restored!'),
             actions: <Widget>[

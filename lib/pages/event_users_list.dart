@@ -117,7 +117,7 @@ class EventUsersList extends StatelessWidget {
         icon: new Icon(
           Icons.arrow_back_ios,
         ),
-        color: const Color(0xFFDDDDDD),
+        color: Colors.white,
         onPressed: () {
           Navigator.of(context).pop();
         },

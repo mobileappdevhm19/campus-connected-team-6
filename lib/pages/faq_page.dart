@@ -8,7 +8,7 @@ class FAQPage extends StatefulWidget {
 }
 
 class FAQPageState extends State<FAQPage> {
-  List<Container> _buildListItemsFromFlowers() {
+  List<Container> _buildListItems() {
     int index = 0;
     return faq.map((faq) {
       var container = Container(
@@ -75,7 +75,7 @@ class FAQPageState extends State<FAQPage> {
           right: true,
           top: true,
           child: ListView(
-            children: _buildListItemsFromFlowers(),
+            children: _buildListItems(),
           ),
         ));
   }

@@ -36,9 +36,6 @@ class _EventViewState extends State<EventView> {
   EventUserModel _eventUserModel = new EventUserModel();
   FireCloudStoreHelper cloudStoreHelper = new FireCloudStoreHelper();
 
-  //bool isLoggedIn = false;
-  //bool isJoinedIn = false;
-
   // For Checking Internet Connection
   Future<bool> checkInternetConnection() async {
     var connectivityResult = await (Connectivity().checkConnectivity());
@@ -47,21 +44,6 @@ class _EventViewState extends State<EventView> {
     }
     return true;
   }
-
-  //to check if a user logged in or not , it will call from initState
-//  _isLoggedIn() async {
-//    auth.getCurrentUser().then((user) {
-//      if (user != null) {
-//        setState(() {
-//          isLoggedIn = true;
-//        });
-//      } else {
-//        setState(() {
-//          isLoggedIn = false;
-//        });
-//      }
-//    });
-//  }
 
   @override
   void initState() {
@@ -77,6 +59,15 @@ class _EventViewState extends State<EventView> {
           headerSliverBuilder: (BuildContext context, bool innerBoxIsScrolled) {
             return <Widget>[
               SliverAppBar(
+                leading: IconButton(
+                  icon: new Icon(
+                    Icons.arrow_back_ios,
+                  ),
+                  color: Colors.white,
+                  onPressed: () {
+                    Navigator.of(context).pop();
+                  },
+                ),
                 expandedHeight: screenAwareSize(250.0, context),
                 floating: false,
                 pinned: true,
@@ -452,6 +443,8 @@ class _EventViewState extends State<EventView> {
     return showDialog(
           context: context,
           child: new AlertDialog(
+            shape: RoundedRectangleBorder(
+                borderRadius: BorderRadius.all(Radius.circular(12.0))),
             title: new Text('Do you want to delete this Event?'),
             content: new Text('Deleted Events can not be restored!'),
             actions: <Widget>[

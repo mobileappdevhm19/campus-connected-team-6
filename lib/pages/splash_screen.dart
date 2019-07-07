@@ -17,7 +17,6 @@ class SplashScreenState extends State<SplashScreen> {
   }
 
   void navigationPage() {
-    //Navigator.of(context).pushReplacementNamed('/login');
     Navigator.of(context).push(new MaterialPageRoute(
         builder: (BuildContext context) => new LoginSignUpPage()));
   }
@@ -31,7 +30,6 @@ class SplashScreenState extends State<SplashScreen> {
   @override
   Widget build(BuildContext context) {
     return new Scaffold(
-      //  body: new Stack(fit: StackFit.expand, children: <Widget>[_showLogo()]),
       body: Stack(fit: StackFit.expand, children: <Widget>[
         Container(
             decoration: BoxDecoration(
@@ -42,17 +40,14 @@ class SplashScreenState extends State<SplashScreen> {
                   end: Alignment.centerRight,
                 ))),
         Column(
-          //mainAxisAlignment: MainAxisAlignment.spaceAround ,
           mainAxisAlignment: MainAxisAlignment.center,
           children: <Widget>[
             CircleAvatar(
               backgroundColor: Colors.white,
               radius: 90.0,
               child: Image.asset('assets/flutter-icon.png'),
-              // child: CampusLogo(),
             ),
             Padding(
-              // padding: EdgeInsets.only(bottom:10.0),
               padding: EdgeInsetsDirectional.only(bottom: 30.0),
             ),
             Text("CAMPUS Connected",
@@ -60,8 +55,19 @@ class SplashScreenState extends State<SplashScreen> {
                   color: Colors.white,
                   fontSize: 20.0,
                   fontWeight: FontWeight.bold,
-                ))
+                )),
           ],
+        ),
+        Positioned(
+          bottom: MediaQuery.of(context).size.height * 0.03,
+          left: MediaQuery.of(context).size.height * 0.06,
+          right: MediaQuery.of(context).size.height * 0.06,
+          child: Text("Copyright © 2019 Campus Connected. All Rights Reserved",
+              style: TextStyle(
+                color: Colors.white,
+                fontSize: 10.0,
+                fontWeight: FontWeight.bold,
+              )),
         ),
       ]),
     );
