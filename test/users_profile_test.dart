@@ -100,10 +100,6 @@ void main() {
 
       final bt = find.byType(IconButton);
       expect(bt, findsOneWidget);
-
-      await tester.tap(bt);
-      await tester.enterText(find.byType(TextField), "123456789");
-      await tester.pump();
     });
   });
 }
